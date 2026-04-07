@@ -12,6 +12,13 @@
     gid: "{{ ibm_mq_host_gid | default(omit) }}"
     state: present
 
+- name: Add root to mqm group
+  ansible.builtin.user:
+    name: root
+    groups: "{{ ibm_mq_host_group }}"
+    append: true
+  become: true
+
 - name: Create mqbrkrs group
   ansible.builtin.group:
     name: "{{ ibm_mq_host_brokers_group }}"

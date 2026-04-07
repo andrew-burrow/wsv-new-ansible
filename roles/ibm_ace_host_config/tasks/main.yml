@@ -31,6 +31,13 @@
     state: present
     default: yes
 
+- name: Add root to mqbrkrs group
+  ansible.builtin.user:
+    name: root
+    groups: "{{ ibm_ace_host_group }}"
+    append: true
+  become: true
+
 - name: Add administrative users to mqbrkrs group
   ansible.builtin.user:
     name: "{{ item }}"
