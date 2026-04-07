@@ -1,0 +1,143 @@
+#
+# :Precis: Install an IBM MQ environment on the host
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+- name: Install rpm-build package
+  ansible.builtin.dnf:
+    name: rpm-build
+    state: present
+
+# MQ Base Installation
+
+- name: Create MQ base build directory
+  ansible.builtin.file:
+    path: "{{ ibm_mq_environment_build_dir }}/base"
+    state: directory
+    mode: '0755'
+
+- name: Extract MQ base installer
+  ansible.builtin.unarchive:
+    src: "{{ ibm_mq_environment_source_dir }}/{{ ibm_mq_environment_package }}"
+    dest: "{{ ibm_mq_environment_build_dir }}/base"
+    remote_src: true
+    creates: "{{ ibm_mq_environment_build_dir }}/base/MQServer"
+
+- name: Create MQ package for environment
+  ansible.builtin.command:
+    cmd: ./crtmqpkg {{ ibm_mq_environment }}
+    chdir: "{{ ibm_mq_environment_build_dir }}/base/MQServer"
+    creates: >-
+      {{ ibm_mq_environment_build_dir }}/base/MQServer/mq_rpms/{{ ibm_mq_environment }}
+  environment:
+    TMPDIR: "{{ ibm_mq_environment_build_dir }}/base/MQServer"
+
+- name: Install MQ base RPMs
+  ansible.builtin.shell:
+    cmd: |
+      rpm --prefix={{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm \
+          -ivh MQSeriesRuntime*.rpm MQSeriesJRE*.rpm MQSeriesGSKit*.rpm \
+               MQSeriesClient*.rpm MQSeriesJava*.rpm MQSeriesMan*.rpm \
+               MQSeriesSample*.rpm MQSeriesSDK*.rpm MQSeriesServer*.rpm \
+               MQSeriesWeb*.rpm
+    chdir: >-
+      {{
+        ibm_mq_environment_build_dir
+      }}/base/MQServer/mq_rpms/{{ ibm_mq_environment }}/x86_64
+    creates: >-
+      {{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm/bin/mqlicense
+
+- name: Accept MQ license
+  ansible.builtin.command:
+    cmd: ./mqlicense -accept
+    chdir: "{{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm/bin"
+    creates: >-
+      {{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm/.license_accepted
+
+- name: Change environment folder permissions
+  ansible.builtin.file:
+    path: "{{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}"
+    mode: '0755'
+    state: directory
+
+# MQ Fixpack Installation
+
+- name: Create MQ fixpack build directory
+  ansible.builtin.file:
+    path: "{{ ibm_mq_environment_build_dir }}/fixpack"
+    state: directory
+    mode: '0755'
+
+- name: Extract MQ fixpack
+  ansible.builtin.unarchive:
+    src: "{{ ibm_mq_environment_source_dir }}/{{ ibm_mq_environment_fixpack_package }}"
+    dest: "{{ ibm_mq_environment_build_dir }}/fixpack"
+    remote_src: true
+    creates: "{{ ibm_mq_environment_build_dir }}/fixpack/crtmqfp"
+
+- name: Create MQ fixpack package
+  ansible.builtin.command:
+    cmd: ./crtmqfp {{ ibm_mq_environment }}
+    chdir: "{{ ibm_mq_environment_build_dir }}/fixpack"
+    creates: "{{ ibm_mq_environment_build_dir }}/fixpack/mq_rpms/{{ ibm_mq_environment }}"
+  environment:
+    TMPDIR: "{{ ibm_mq_environment_build_dir }}/fixpack"
+
+- name: Install MQ fixpack RPMs
+  ansible.builtin.shell:
+    cmd: |
+      rpm --prefix={{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm \
+          -Uvh MQSeriesRuntime*.rpm MQSeriesJRE*.rpm MQSeriesGSKit*.rpm \
+               MQSeriesClient*.rpm MQSeriesJava*.rpm MQSeriesMan*.rpm \
+               MQSeriesSample*.rpm MQSeriesSDK*.rpm MQSeriesServer*.rpm \
+               MQSeriesWeb*.rpm
+    chdir: >-
+      {{ ibm_mq_environment_build_dir }}/fixpack/mq_rpms/{{ ibm_mq_environment }}/x86_64
+
+# Queue Manager Creation
+
+- name: Create queue managers
+  ansible.builtin.command:
+    cmd: crtmqm -lf {{ item.log_size }} {{ item.name }}
+    creates: /var/mqm/qmgrs/{{ item.name }}
+  become_user: "{{ ibm_mq_host_user }}"
+  environment:
+    PATH: >-
+      {{
+        ibm_mq_environment_base_dir
+      }}/{{ ibm_mq_environment }}/mqm/bin:{{ ansible_env.PATH }}
+  loop: "{{ ibm_mq_environment_queue_managers }}"
+
+- name: Start queue managers
+  ansible.builtin.command:
+    cmd: strmqm {{ item.name }}
+  become_user: "{{ ibm_mq_host_user }}"
+  environment:
+    PATH: >-
+      {{
+        ibm_mq_environment_base_dir
+      }}/{{ ibm_mq_environment }}/mqm/bin:{{ ansible_env.PATH }}
+  register: start_qm
+  changed_when: "'started' in start_qm.stdout"
+  failed_when: false
+  loop: "{{ ibm_mq_environment_queue_managers }}"
+
+# User Configuration
+
+- name: Configure mqm user aliases
+  ansible.builtin.blockinfile:
+    path: "/home/{{ ibm_mq_host_user }}/.bashrc"
+    block: >-
+      alias {{
+        ibm_mq_environment
+      }}=". {{
+        ibm_mq_environment_base_dir
+      }}/{{ ibm_mq_environment }}/mqm/bin/setmqenv -s"
+    marker: "# {mark} ANSIBLE MANAGED MQ ALIASES FOR {{ ibm_mq_environment }}"
+    create: true
+    owner: "{{ ibm_mq_host_user }}"
+    group: "{{ ibm_mq_host_group }}"
+    mode: '0644'

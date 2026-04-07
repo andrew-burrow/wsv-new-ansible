@@ -1,0 +1,196 @@
+#
+# :Precis: Install an IBM ACE environment on the host
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+# ACE Installation
+
+- name: Create ACE installation directory
+  ansible.builtin.file:
+    path: "{{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}"
+    state: directory
+    mode: '0755'
+
+- name: Extract ACE installer
+  ansible.builtin.unarchive:
+    src: >-
+      {{ ibm_ace_environment_source_dir }}/{{ ibm_ace_environment_package }}
+    dest: "{{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}"
+    remote_src: true
+    creates: >-
+      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace-{{
+        ibm_ace_environment_version
+      }}
+
+- name: Accept ACE license silently
+  ansible.builtin.command:
+    cmd: ./ace make registry global accept license silently
+    chdir: >-
+      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace-{{
+        ibm_ace_environment_version
+      }}
+    creates: /var/mqsi
+
+- name: Create symbolic link for ACE
+  ansible.builtin.file:
+    src: >-
+      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace-{{
+        ibm_ace_environment_version
+      }}
+    dest: >-
+      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
+    state: link
+
+# Integration Node Creation
+
+- name: Create integration nodes
+  ansible.builtin.command:
+    cmd: >-
+      mqsicreatebroker {{ item.name }}
+      -q {{ item.queue_manager }}
+      -w {{ ibm_ace_environment_work_path }}
+  become_user: "{{ ibm_ace_host_user }}"
+  environment:
+    PATH: >-
+      {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin:{{ ansible_env.PATH }}
+    MQSI_BASE_FILEPATH: >-
+      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
+    LD_LIBRARY_PATH: >-
+      {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/lib
+  register: create_node
+  changed_when: "'BIP1284I' in create_node.stdout"
+  failed_when: false
+  loop: "{{ ibm_ace_environment_integration_nodes }}"
+
+- name: Start integration nodes
+  ansible.builtin.command:
+    cmd: mqsistart {{ item.name }}
+  become_user: "{{ ibm_ace_host_user }}"
+  environment:
+    PATH: >-
+      {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin:{{ ansible_env.PATH }}
+    MQSI_BASE_FILEPATH: >-
+      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
+    LD_LIBRARY_PATH: >-
+      {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/lib
+  register: start_node
+  changed_when: "'BIP1284I' in start_node.stdout"
+  failed_when: false
+  loop: "{{ ibm_ace_environment_integration_nodes }}"
+
+- name: Change HTTPConnector port for integration nodes
+  ansible.builtin.command:
+    cmd: >-
+      mqsichangeproperties {{ item.name }}
+      -b webadmin
+      -o HTTPConnector
+      -n port
+      -v {{ item.port }}
+  become_user: "{{ ibm_ace_host_user }}"
+  environment:
+    PATH: >-
+      {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin:{{ ansible_env.PATH }}
+    MQSI_BASE_FILEPATH: >-
+      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
+    LD_LIBRARY_PATH: >-
+      {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/lib
+  loop: "{{ ibm_ace_environment_integration_nodes }}"
+
+- name: Restart integration nodes
+  ansible.builtin.shell:
+    cmd: |
+      mqsistop {{ item.name }}
+      mqsistart {{ item.name }}
+  become_user: "{{ ibm_ace_host_user }}"
+  environment:
+    PATH: >-
+      {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin:{{ ansible_env.PATH }}
+    MQSI_BASE_FILEPATH: >-
+      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
+    LD_LIBRARY_PATH: >-
+      {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/lib
+  loop: "{{ ibm_ace_environment_integration_nodes }}"
+
+# SSL Certificate Configuration
+
+- name: Create SSL directory
+  ansible.builtin.file:
+    path: "{{ ibm_ace_environment_work_path }}/ssl"
+    state: directory
+    owner: "{{ ibm_ace_host_user }}"
+    group: "{{ ibm_ace_host_group }}"
+    mode: '0770'
+
+- name: Copy certificate p12 file
+  ansible.builtin.copy:
+    src: >-
+      {{
+        ibm_ace_environment_source_dir
+      }}/{{ ibm_ace_environment_cert_p12 }}
+    dest: >-
+      {{
+        ibm_ace_environment_work_path
+      }}/ssl/{{ ibm_ace_environment_cert_p12 }}
+    remote_src: true
+    owner: "{{ ibm_ace_host_user }}"
+    group: "{{ ibm_ace_host_group }}"
+    mode: '0770'
+
+- name: Configure SSL certificate for integration nodes
+  ansible.builtin.command:
+    cmd: >-
+      mqsichangeproperties {{ item.name }}
+      -b webadmin
+      -o HTTPConnector
+      -n sslCertificate
+      -v '{{ ibm_ace_environment_work_path }}/ssl/{{ ibm_ace_environment_cert_p12 }}'
+  become_user: "{{ ibm_ace_host_user }}"
+  environment:
+    PATH: >-
+      {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin:{{ ansible_env.PATH }}
+    MQSI_BASE_FILEPATH: >-
+      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
+    LD_LIBRARY_PATH: >-
+      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace/server/lib
+  loop: "{{ ibm_ace_environment_integration_nodes }}"
+
+- name: Configure SSL password for integration nodes
+  ansible.builtin.command:
+    cmd: >-
+      mqsisetdbparms {{ item.name }}
+      -n brokerTruststore::password
+      -u temp
+      -p {{ ibm_ace_environment_cert_password }}
+  become_user: "{{ ibm_ace_host_user }}"
+  environment:
+    PATH: >-
+      {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin:{{ ansible_env.PATH }}
+    MQSI_BASE_FILEPATH: >-
+      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
+    LD_LIBRARY_PATH: >-
+      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace/server/lib
+  loop: "{{ ibm_ace_environment_integration_nodes }}"
+  when: ibm_ace_environment_cert_password != ""
