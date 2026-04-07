@@ -1,0 +1,37 @@
+#
+# :Precis: Setup localhost for IBM MQ and ACE environments
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+- name: Setup host for IBM MQ and ACE
+  hosts: localhost
+  become: true
+  gather_facts: true
+
+  vars:
+    # Host-level MQ parameters
+    ibm_mq_host_user: mqm
+    ibm_mq_host_uid: 5000
+    ibm_mq_host_group: mqm
+    ibm_mq_host_gid: 5000
+    ibm_mq_host_users: []
+    ibm_mq_host_nofile: 10240
+    ibm_mq_host_nproc: 4096
+    ibm_mq_host_brokers_group: mqbrkrs
+    ibm_mq_host_brokers_gid: 5002
+
+    # Host-level ACE parameters
+    ibm_ace_host_user: aceadmin
+    ibm_ace_host_uid: 5001
+    ibm_ace_host_group: mqbrkrs
+    ibm_ace_host_gid: 5001
+    ibm_ace_host_additional_groups:
+      - mqm
+    ibm_ace_host_users: []
+
+  roles:
+    - ibm_mq_host_config
+    - ibm_ace_host_config

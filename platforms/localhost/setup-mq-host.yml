@@ -1,0 +1,27 @@
+#
+# :Precis: Setup localhost for IBM MQ environments
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+- name: Setup host for IBM MQ
+  hosts: localhost
+  become: true
+  gather_facts: true
+
+  vars:
+    # Host-level MQ parameters
+    ibm_mq_host_user: mqm
+    ibm_mq_host_uid: 5000
+    ibm_mq_host_group: mqm
+    ibm_mq_host_gid: 5000
+    ibm_mq_host_users: []
+    ibm_mq_host_nofile: 10240
+    ibm_mq_host_nproc: 4096
+    ibm_mq_host_brokers_group: mqbrkrs
+    ibm_mq_host_brokers_gid: 5002
+
+  roles:
+    - ibm_mq_host_config
