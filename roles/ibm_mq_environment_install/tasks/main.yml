@@ -106,9 +106,9 @@
   become_user: "{{ ibm_mq_host_user }}"
   environment:
     PATH: >-
-      {{
-        ibm_mq_environment_base_dir
-      }}/{{ ibm_mq_environment }}/mqm/bin:{{ ansible_env.PATH }}
+      {{ ibm_mq_environment_base_dir }}/{{
+        ibm_mq_environment
+      }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
   loop: "{{ ibm_mq_environment_queue_managers }}"
 
 - name: Start queue managers
@@ -117,9 +117,9 @@
   become_user: "{{ ibm_mq_host_user }}"
   environment:
     PATH: >-
-      {{
-        ibm_mq_environment_base_dir
-      }}/{{ ibm_mq_environment }}/mqm/bin:{{ ansible_env.PATH }}
+      {{ ibm_mq_environment_base_dir }}/{{
+        ibm_mq_environment
+      }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
   register: start_qm
   changed_when: "'started' in start_qm.stdout"
   failed_when: false
