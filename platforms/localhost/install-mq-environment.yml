@@ -1,0 +1,31 @@
+#
+# :Precis: Install IBM MQ environment on localhost
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+- name: Install IBM MQ environment
+  hosts: localhost
+  become: true
+  gather_facts: false
+
+  vars:
+    # From ibm_mq_environment_define/defaults/main.yml
+    ibm_mq_environment_base_dir: /opt/ibm
+    ibm_mq_environment: sx1
+    ibm_mq_environment_version: "9.3.0.2"
+    ibm_mq_environment_package: IBM_MQ_9.3.0.2_LINUX_X86-64.tar.gz
+    ibm_mq_environment_source_dir: /var/tmp
+    ibm_mq_environment_build_dir: /var/tmp/sx1/mq-build
+    ibm_mq_environment_fixpack_version: "9.3.0.16"
+    ibm_mq_environment_fixpack_package: 9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz
+    ibm_mq_environment_queue_managers:
+      - name: ASX1J0201
+        log_size: 65535
+      - name: ASX1I0201
+        log_size: 65535
+
+  roles:
+    - ibm_mq_environment_install

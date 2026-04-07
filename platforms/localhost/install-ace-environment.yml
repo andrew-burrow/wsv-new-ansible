@@ -1,0 +1,33 @@
+#
+# :Precis: Install IBM ACE environment on localhost
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+- name: Install IBM ACE environment
+  hosts: localhost
+  become: true
+  gather_facts: false
+
+  vars:
+    # From ibm_ace_environment_define/defaults/main.yml
+    ibm_ace_environment_base_dir: /opt/ibm
+    ibm_ace_environment: sx1
+    ibm_ace_environment_version: "13.0.6.2"
+    ibm_ace_environment_package: 13.0-ACE-LINUXX64-13.0.6.2.tar.gz
+    ibm_ace_environment_source_dir: /var/tmp
+    ibm_ace_environment_work_path: /var/mqsi/sx1
+    ibm_ace_environment_integration_nodes:
+      - name: ACESX1J0201
+        queue_manager: ASX1J0201
+        port: 4543
+      - name: ACESX1I0201
+        queue_manager: ASX1I0201
+        port: 4443
+    ibm_ace_environment_cert_p12: test-cert.p12
+    ibm_ace_environment_cert_password: ""
+
+  roles:
+    - ibm_ace_environment_install

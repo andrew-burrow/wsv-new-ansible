@@ -1,0 +1,49 @@
+#
+# :Precis: Install complete IBM MQ and ACE environment on localhost
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+- name: Install IBM MQ and ACE environment
+  hosts: localhost
+  become: true
+  gather_facts: false
+
+  vars:
+    # From ibm_mq_environment_define/defaults/main.yml
+    ibm_mq_environment_base_dir: /opt/ibm
+    ibm_mq_environment: sx1
+    ibm_mq_environment_version: "9.3.0.2"
+    ibm_mq_environment_package: IBM_MQ_9.3.0.2_LINUX_X86-64.tar.gz
+    ibm_mq_environment_source_dir: /var/tmp
+    ibm_mq_environment_build_dir: /var/tmp/sx1/mq-build
+    ibm_mq_environment_fixpack_version: "9.3.0.16"
+    ibm_mq_environment_fixpack_package: 9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz
+    ibm_mq_environment_queue_managers:
+      - name: ASX1J0201
+        log_size: 65535
+      - name: ASX1I0201
+        log_size: 65535
+
+    # From ibm_ace_environment_define/defaults/main.yml
+    ibm_ace_environment_base_dir: /opt/ibm
+    ibm_ace_environment: sx1
+    ibm_ace_environment_version: "13.0.6.2"
+    ibm_ace_environment_package: 13.0-ACE-LINUXX64-13.0.6.2.tar.gz
+    ibm_ace_environment_source_dir: /var/tmp
+    ibm_ace_environment_work_path: /var/mqsi/sx1
+    ibm_ace_environment_integration_nodes:
+      - name: ACESX1J0201
+        queue_manager: ASX1J0201
+        port: 4543
+      - name: ACESX1I0201
+        queue_manager: ASX1I0201
+        port: 4443
+    ibm_ace_environment_cert_p12: test-cert.p12
+    ibm_ace_environment_cert_password: ""
+
+  roles:
+    - ibm_mq_environment_install
+    - ibm_ace_environment_install
