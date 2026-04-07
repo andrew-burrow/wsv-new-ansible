@@ -1,5 +1,5 @@
 #
-# :Precis: Define parameters for IBM App Connect Enterprise
+# :Precis: Define environment parameters for IBM App Connect Enterprise
 # :Authors: Andrew Burrow
 # :Contact: andrew.burrow@syntegrity.com.au
 #
@@ -9,11 +9,11 @@
 galaxy_info:
   author: Andrew Burrow
   description: >-
-    Define parameters for IBM App Connect Enterprise
+    Define environment parameters for IBM App Connect Enterprise
 
     This *define role* describes the parameters controlling the installation
-    and maintenance of IBM App Connect Enterprise for a host and environment
-    on the host.
+    and maintenance of IBM App Connect Enterprise for an environment on a
+    host.
 
     See `../defaults/main.yml` for details on the parameters.
   company: Syntegrity Solutions

@@ -1,0 +1,49 @@
+#
+# :Precis: Define environment parameters for IBM MQ
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+# Base directory
+#
+# What is the filename prefix for IBM MQ software installation directories?
+ibm_mq_environment_base_dir: /opt/ibm
+
+# Environment identifier
+#
+# What is the short name for this environment?  This is used in directory
+# paths and queue manager names.  Examples: sx1, ts1, ts2, prod
+ibm_mq_environment: sx1
+
+# MQ version and package
+#
+# What version of IBM MQ are we installing?  What is the filename of the
+# installation package?  Where is it located?
+ibm_mq_environment_version: "9.3.0.2"
+ibm_mq_environment_package: "IBM_MQ_9.3.0.2_LINUX_X86-64.tar.gz"
+ibm_mq_environment_source_dir: /var/tmp
+
+# Build directory for RPM creation
+#
+# Where should we create the ephemeral workspace for building custom RPMs?
+# This directory can be deleted after installation.
+ibm_mq_environment_build_dir: "/var/tmp/{{ ibm_mq_environment }}/mq-build"
+
+# MQ fixpack version and package
+#
+# What fixpack level should be applied?  What is the filename of the
+# fixpack package?
+ibm_mq_environment_fixpack_version: "9.3.0.16"
+ibm_mq_environment_fixpack_package: "9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz"
+
+# Queue managers to create
+#
+# List of queue managers to create in this environment.  Each entry
+# specifies the queue manager name and log file size.
+ibm_mq_environment_queue_managers:
+  - name: ASX1J0201
+    log_size: 65535
+  - name: ASX1I0201
+    log_size: 65535

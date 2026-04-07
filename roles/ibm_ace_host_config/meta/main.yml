@@ -1,5 +1,5 @@
 #
-# :Precis: Set up the host for IBM App Connect Enterprise installs
+# :Precis: Config the host for IBM App Connect Enterprise installs
 # :Authors: Andrew Burrow
 # :Contact: andrew.burrow@syntegrity.com.au
 #
@@ -9,7 +9,7 @@
 galaxy_info:
   author: Andrew Burrow
   description: >-
-    Set up the host for IBM App Connect Enterprise installs
+    Config the host for IBM App Connect Enterprise installs
 
     This *action role* sets up the host for environment installs of IBM App
     Connect Enterprise.
@@ -19,4 +19,4 @@ galaxy_info:
   company: Syntegrity Solutions
 
 dependencies:
-  - role: ibm_ace_define
+  - role: ibm_ace_host_define

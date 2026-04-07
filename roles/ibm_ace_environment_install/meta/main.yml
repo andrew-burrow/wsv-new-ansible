@@ -19,5 +19,5 @@ galaxy_info:
   company: Syntegrity Solutions
 
 dependencies:
-  - role: ibm_ace_define
-  - role: ibm_ace_host
+  - role: ibm_ace_host_define
+  - role: ibm_ace_environment_define

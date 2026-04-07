@@ -1,0 +1,31 @@
+#
+# :Precis: Define host parameters for IBM MQ
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+galaxy_info:
+  author: Andrew Burrow
+  description: >-
+    Define host parameters for IBM MQ
+
+    This *define role* describes the parameters controlling the installation
+    and maintenance of MQ for a host.
+
+    The separation between host and environment components of the MQ
+    installation is complicated by the multi-environment hosting.  If the two
+    concerns are not carefully separated then there can be accidental clashes
+    in the host settings from different environments running on the same host.
+
+    In inventory deployments,
+
+    -   DO define these in host vars or host group_vars, e.g.,
+        `host_vars/hostname.yml` or `group_vars/mq_hosts.yml`
+    -   DO NOT define these in environment group_vars, e.g, `ts1_mq.yml`
+
+    See `../defaults/main.yml` for details on the parameters.
+  company: Syntegrity Solutions
+
+dependencies: []

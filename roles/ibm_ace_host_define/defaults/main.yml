@@ -1,0 +1,21 @@
+#
+# :Precis: Define parameters for IBM App Connect Enterprise
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+# Daemon user and groups
+#
+# What is the name and UID of the account to run ACE?  What is the name
+# and GID of the primary group?  Which additional groups should the user
+# belong to?  Which administrative users should be added to the primary
+# group?
+ibm_ace_host_user: aceadmin
+ibm_ace_host_uid: 5001
+ibm_ace_host_group: mqbrkrs
+ibm_ace_host_gid: 5001
+ibm_ace_host_additional_groups:
+  - mqm
+ibm_ace_host_users: []
