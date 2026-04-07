@@ -1,0 +1,50 @@
+#
+# :Precis: Config the host for IBM MQ installs
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+- name: Create mqm group
+  ansible.builtin.group:
+    name: "{{ ibm_mq_host_group }}"
+    gid: "{{ ibm_mq_host_gid | default(omit) }}"
+    state: present
+
+- name: Create mqbrkrs group
+  ansible.builtin.group:
+    name: "{{ ibm_mq_host_brokers_group }}"
+    gid: "{{ ibm_mq_host_brokers_gid | default(omit) }}"
+    state: present
+
+- name: Create mqm user
+  ansible.builtin.user:
+    name: "{{ ibm_mq_host_user }}"
+    uid: "{{ ibm_mq_host_uid | default(omit) }}"
+    group: "{{ ibm_mq_host_group }}"
+    password: "!"
+    state: present
+
+- name: Add administrative users to mqm group
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: "{{ ibm_mq_host_group }}"
+    append: true
+  loop: "{{ ibm_mq_host_users }}"
+  when: ibm_mq_host_users | length > 0
+
+- name: Configure system limits for mqm user
+  ansible.builtin.blockinfile:
+    path: /etc/security/limits.conf
+    block: |
+      {{ ibm_mq_host_user }}    soft    nofile    {{ ibm_mq_host_nofile }}
+      {{ ibm_mq_host_user }}    hard    nofile    {{ ibm_mq_host_nofile }}
+      {{ ibm_mq_host_user }}    soft    nproc     {{ ibm_mq_host_nproc }}
+      {{ ibm_mq_host_user }}    hard    nproc     {{ ibm_mq_host_nproc }}
+    marker: "# {mark} ANSIBLE MANAGED MQM LIMITS"
+
+- name: Install bc package for MQ
+  ansible.builtin.dnf:
+    name: bc
+    state: present

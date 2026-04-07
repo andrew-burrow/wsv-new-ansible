@@ -1,0 +1,59 @@
+#
+# :Precis: Config the host for IBM App Connect Enterprise installs
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+- name: Create aceadmin user
+  ansible.builtin.user:
+    name: "{{ ibm_ace_host_user }}"
+    uid: "{{ ibm_ace_host_uid | default(omit) }}"
+    group: "{{ ibm_ace_host_group }}"
+    groups: "{{ ibm_ace_host_additional_groups }}"
+    password: "!"
+    state: present
+
+- name: Add administrative users to mqbrkrs group
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: "{{ ibm_ace_host_group }}"
+    append: true
+  loop: "{{ ibm_ace_host_users }}"
+  when: ibm_ace_host_users | length > 0
+
+- name: Create ACE profile script
+  ansible.builtin.copy:
+    dest: /etc/profile.d/ace.sh
+    mode: '0644'
+    content: |
+      ace_init()
+      {
+          env=$1
+          if [ -n "${env}" ]; then
+              ACE_BIN=/opt/${env}/ace/server/bin
+              source ${ACE_BIN}/mqsiprofile
+              export ODBCSYSINI="/var/mqsi/${env}/config"
+              export ODBCINI=${ODBCSYSINI}/odbc.ini
+              echo "ODBCINI: $ODBCINI"
+              echo "ODBCSYSINI: $ODBCSYSINI"
+          else
+              echo "USAGE: ace_init <environment name>"
+          fi
+      }
+
+- name: Configure aceadmin bash profile
+  ansible.builtin.blockinfile:
+    path: "/home/{{ ibm_ace_host_user }}/.bash_profile"
+    block: |
+      echo "INFO: to initialise ACE, use \"ace_init <env>\", e.g. \"ace_init sx1\""
+      echo "INFO: to switch environments:"
+      echo "  1) log out"
+      echo "  2) log back in"
+      echo "  3) re-run ace_init with new environment name"
+    marker: "# {mark} ANSIBLE MANAGED ACE INIT"
+    create: true
+    owner: "{{ ibm_ace_host_user }}"
+    group: "{{ ibm_ace_host_group }}"
+    mode: '0644'
