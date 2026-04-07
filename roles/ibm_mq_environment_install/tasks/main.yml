@@ -96,6 +96,11 @@
                MQSeriesWeb*.rpm
     chdir: >-
       {{ ibm_mq_environment_build_dir }}/fixpack/mq_rpms/{{ ibm_mq_environment }}/x86_64
+  register: fixpack_install
+  changed_when: "'Upgrading' in fixpack_install.stdout or 'Installing' in fixpack_install.stdout"
+  failed_when:
+    - fixpack_install.rc != 0
+    - "'is already installed' not in fixpack_install.stderr"
 
 # Queue Manager Creation
 
@@ -122,7 +127,10 @@
       }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
   register: start_qm
   changed_when: "'started' in start_qm.stdout"
-  failed_when: false
+  failed_when:
+    - start_qm.rc != 0
+    - "'already running' not in start_qm.stderr"
+    - "'queue manager running' not in start_qm.stderr"
   loop: "{{ ibm_mq_environment_queue_managers }}"
 
 # User Configuration

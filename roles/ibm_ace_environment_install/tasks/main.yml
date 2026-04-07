@@ -32,7 +32,6 @@
       {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace-{{
         ibm_ace_environment_version
       }}
-    creates: /var/mqsi
 
 - name: Create symbolic link for ACE
   ansible.builtin.file:
