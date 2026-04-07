@@ -1,0 +1,21 @@
+#
+# :Precis: Set up the host for IBM MQ installs
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+galaxy_info:
+  author: Andrew Burrow
+  description: >-
+    Set up the host for IBM MQ installs
+
+    This *action role* sets up the host for environment installs of IBM MQ.
+
+    See `../../ibm_mq_define/defaults/main.yml` for details on the
+    parameters.
+  company: Syntegrity Solutions
+
+dependencies:
+  - role: ibm_mq_define

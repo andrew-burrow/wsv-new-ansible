@@ -1,0 +1,23 @@
+#
+# :Precis: Install an IBM App Connect Enterprise environment on the host
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+galaxy_info:
+  author: Andrew Burrow
+  description: >-
+    Install an IBM App Connect Enterprise environment on the host
+
+    This *action role* performs an environment install of IBM App Connect
+    Enterprise.
+
+    See `../../ibm_ace_define/defaults/main.yml` for details on the
+    parameters.
+  company: Syntegrity Solutions
+
+dependencies:
+  - role: ibm_ace_define
+  - role: ibm_ace_host
