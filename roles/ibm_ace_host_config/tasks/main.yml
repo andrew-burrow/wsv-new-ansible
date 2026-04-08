@@ -22,15 +22,6 @@
     mode: '0775'
     group: "{{ ibm_ace_host_group }}"
 
-- name: Set default ACL for ACE data directory
-  ansible.posix.acl:
-    path: /var/mqsi
-    entity: "{{ ibm_ace_host_group }}"
-    etype: group
-    permissions: rwx
-    state: present
-    default: yes
-
 - name: Add root to mqbrkrs group
   ansible.builtin.user:
     name: root

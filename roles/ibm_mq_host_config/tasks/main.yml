@@ -40,15 +40,6 @@
     mode: '0775'
     group: "{{ ibm_mq_host_group }}"
 
-- name: Set default ACL for MQ data directory
-  ansible.posix.acl:
-    path: /var/mqm
-    entity: "{{ ibm_mq_host_group }}"
-    etype: group
-    permissions: rwx
-    state: present
-    default: yes
-
 - name: Add administrative users to mqm group
   ansible.builtin.user:
     name: "{{ item }}"
