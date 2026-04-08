@@ -46,87 +46,62 @@
 # Integration Node Creation
 
 - name: Create integration nodes
-  ansible.builtin.command:
+  ansible.builtin.shell:
     cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsicreatebroker {{ item.name }}
       -q {{ item.queue_manager }}
       -w {{ ibm_ace_environment_work_path }}
   become_user: "{{ ibm_ace_host_user }}"
-  environment:
-    PATH: >-
-      {{
-        ibm_ace_environment_base_dir
-      }}/{{ ibm_ace_environment }}/ace/server/bin:/usr/local/bin:/usr/bin:/bin
-    MQSI_BASE_FILEPATH: >-
-      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
-    LD_LIBRARY_PATH: >-
-      {{
-        ibm_ace_environment_base_dir
-      }}/{{ ibm_ace_environment }}/ace/server/lib
   register: create_node
   changed_when: "'BIP1284I' in create_node.stdout"
-  failed_when: false
+  failed_when:
+    - create_node.rc != 0
+    - "'BIP1275E' not in create_node.stderr"
+    - "'BIP8087E' not in create_node.stdout"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
 - name: Start integration nodes
-  ansible.builtin.command:
-    cmd: mqsistart {{ item.name }}
+  ansible.builtin.shell:
+    cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      mqsistart {{ item.name }}
   become_user: "{{ ibm_ace_host_user }}"
-  environment:
-    PATH: >-
-      {{
-        ibm_ace_environment_base_dir
-      }}/{{ ibm_ace_environment }}/ace/server/bin:/usr/local/bin:/usr/bin:/bin
-    MQSI_BASE_FILEPATH: >-
-      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
-    LD_LIBRARY_PATH: >-
-      {{
-        ibm_ace_environment_base_dir
-      }}/{{ ibm_ace_environment }}/ace/server/lib
   register: start_node
   changed_when: "'BIP1284I' in start_node.stdout"
-  failed_when: false
+  failed_when:
+    - start_node.rc != 0
+    - "'BIP1286E' not in start_node.stderr"
+    - "'BIP8018E' not in start_node.stdout"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
 - name: Change HTTPConnector port for integration nodes
-  ansible.builtin.command:
+  ansible.builtin.shell:
     cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsichangeproperties {{ item.name }}
       -b webadmin
       -o HTTPConnector
       -n port
       -v {{ item.port }}
   become_user: "{{ ibm_ace_host_user }}"
-  environment:
-    PATH: >-
-      {{
-        ibm_ace_environment_base_dir
-      }}/{{ ibm_ace_environment }}/ace/server/bin:/usr/local/bin:/usr/bin:/bin
-    MQSI_BASE_FILEPATH: >-
-      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
-    LD_LIBRARY_PATH: >-
-      {{
-        ibm_ace_environment_base_dir
-      }}/{{ ibm_ace_environment }}/ace/server/lib
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
 - name: Restart integration nodes
   ansible.builtin.shell:
-    cmd: |
-      mqsistop {{ item.name }}
+    cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      mqsistop {{ item.name }} ;
       mqsistart {{ item.name }}
   become_user: "{{ ibm_ace_host_user }}"
-  environment:
-    PATH: >-
-      {{
-        ibm_ace_environment_base_dir
-      }}/{{ ibm_ace_environment }}/ace/server/bin:/usr/local/bin:/usr/bin:/bin
-    MQSI_BASE_FILEPATH: >-
-      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
-    LD_LIBRARY_PATH: >-
-      {{
-        ibm_ace_environment_base_dir
-      }}/{{ ibm_ace_environment }}/ace/server/lib
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
 # SSL Certificate Configuration
@@ -155,41 +130,29 @@
     mode: '0770'
 
 - name: Configure SSL certificate for integration nodes
-  ansible.builtin.command:
+  ansible.builtin.shell:
     cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsichangeproperties {{ item.name }}
       -b webadmin
       -o HTTPConnector
       -n sslCertificate
       -v '{{ ibm_ace_environment_work_path }}/ssl/{{ ibm_ace_environment_cert_p12 }}'
   become_user: "{{ ibm_ace_host_user }}"
-  environment:
-    PATH: >-
-      {{
-        ibm_ace_environment_base_dir
-      }}/{{ ibm_ace_environment }}/ace/server/bin:/usr/local/bin:/usr/bin:/bin
-    MQSI_BASE_FILEPATH: >-
-      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
-    LD_LIBRARY_PATH: >-
-      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace/server/lib
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
 - name: Configure SSL password for integration nodes
-  ansible.builtin.command:
+  ansible.builtin.shell:
     cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsisetdbparms {{ item.name }}
       -n brokerTruststore::password
       -u temp
       -p {{ ibm_ace_environment_cert_password }}
   become_user: "{{ ibm_ace_host_user }}"
-  environment:
-    PATH: >-
-      {{
-        ibm_ace_environment_base_dir
-      }}/{{ ibm_ace_environment }}/ace/server/bin:/usr/local/bin:/usr/bin:/bin
-    MQSI_BASE_FILEPATH: >-
-      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
-    LD_LIBRARY_PATH: >-
-      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace/server/lib
   loop: "{{ ibm_ace_environment_integration_nodes }}"
   when: ibm_ace_environment_cert_password != ""
