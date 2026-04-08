@@ -54,6 +54,7 @@
       mqsicreatebroker {{ item.name }}
       -q {{ item.queue_manager }}
       -w {{ ibm_ace_environment_work_path }}
+  become: true
   become_user: "{{ ibm_ace_host_user }}"
   register: create_node
   changed_when: "'BIP1284I' in create_node.stdout"
@@ -70,6 +71,7 @@
         ibm_ace_environment_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsistart {{ item.name }}
+  become: true
   become_user: "{{ ibm_ace_host_user }}"
   register: start_node
   changed_when: "'BIP1284I' in start_node.stdout"
@@ -90,6 +92,7 @@
       -o HTTPConnector
       -n port
       -v {{ item.port }}
+  become: true
   become_user: "{{ ibm_ace_host_user }}"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
@@ -101,6 +104,7 @@
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsistop {{ item.name }} ;
       mqsistart {{ item.name }}
+  become: true
   become_user: "{{ ibm_ace_host_user }}"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
@@ -140,6 +144,7 @@
       -o HTTPConnector
       -n sslCertificate
       -v '{{ ibm_ace_environment_work_path }}/ssl/{{ ibm_ace_environment_cert_p12 }}'
+  become: true
   become_user: "{{ ibm_ace_host_user }}"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
@@ -153,6 +158,7 @@
       -n brokerTruststore::password
       -u temp
       -p {{ ibm_ace_environment_cert_password }}
+  become: true
   become_user: "{{ ibm_ace_host_user }}"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
   when: ibm_ace_environment_cert_password != ""

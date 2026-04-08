@@ -108,6 +108,7 @@
   ansible.builtin.command:
     cmd: crtmqm -lf {{ item.log_size }} {{ item.name }}
     creates: /var/mqm/qmgrs/{{ item.name }}
+  become: true
   become_user: "{{ ibm_mq_host_user }}"
   environment:
     PATH: >-
@@ -119,6 +120,7 @@
 - name: Start queue managers
   ansible.builtin.command:
     cmd: strmqm {{ item.name }}
+  become: true
   become_user: "{{ ibm_mq_host_user }}"
   environment:
     PATH: >-
