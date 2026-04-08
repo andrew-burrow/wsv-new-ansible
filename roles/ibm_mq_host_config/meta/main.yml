@@ -13,7 +13,7 @@ galaxy_info:
 
     This *action role* sets up the host for environment installs of IBM MQ.
 
-    See `../../ibm_mq_define/defaults/main.yml` for details on the
+    See `../../ibm_mq_host_define/defaults/main.yml` for details on the
     parameters.
   company: Syntegrity Solutions
 

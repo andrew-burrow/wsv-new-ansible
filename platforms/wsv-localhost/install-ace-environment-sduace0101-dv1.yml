@@ -1,0 +1,86 @@
+#
+# :Precis: Install IBM ACE environment on localhost
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+- name: Install IBM ACE environment
+  hosts: localhost
+  become: true
+  gather_facts: false
+
+  vars:
+    # FROM ibm_ace_host_define
+    #
+    # NOTE: these values must be IDENTICAL to the values in
+    # setup-ace-host-{HOST}.yml.  They are repeated here, so that the action
+    # roles such as ibm_ace_environment_install can make use of them, e.g., to
+    # chmod a folder so that the MQ account can write to it
+
+    # Daemon user and groups
+    #
+    # What is the name and UID of the account to run ACE?  What is the name
+    # and GID of the primary group?  Which additional groups should the user
+    # belong to?  Which administrative users should be added to the primary
+    # group?
+    ibm_ace_host_user: aceadmin
+    ibm_ace_host_uid: 10778
+    ibm_ace_host_group: mqbrkrs
+    ibm_ace_host_gid: 10778
+    ibm_ace_host_additional_groups:
+      - mqm
+    ibm_ace_host_users: []
+
+    # FROM ibm_ace_environment_define
+    #
+
+    # Base directory
+    #
+    # What is the filename prefix for IBM ACE software installation directories?
+    ibm_ace_environment_base_dir: /opt/ibm
+
+    # Environment identifier
+    #
+    # What is the short name for this environment?  This is used in directory
+    # paths and integration node names.  Examples: sx1, ts1, ts2, prod
+    ibm_ace_environment: dv1
+
+    # ACE version and package
+    #
+    # What version of IBM App Connect Enterprise are we installing?  What is
+    # the filename of the installation package?  Where is it located?
+    ibm_ace_environment_version: "13.0.6.2"
+    ibm_ace_environment_package: "13.0-ACE-LINUXX64-13.0.6.2.tar.gz"
+    ibm_ace_environment_source_dir: /opt/ibm-software/ace13
+
+    # Work path for integration nodes
+    #
+    # Where should integration node working directories be created?  This path
+    # is passed to mqsicreatebroker with -w flag.
+    ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
+
+    # Integration nodes to create
+    #
+    # List of integration nodes to create in this environment.  Each entry
+    # specifies the node name, associated queue manager, and HTTP port.
+    ibm_ace_environment_integration_nodes:
+      - name: ACEDV1J0101
+        queue_manager: ASX1J0101
+        port: 4543
+      - name: ACEDV1I0101
+        queue_manager: ASX1I0101
+        port: 4443
+
+    # SSL certificate configuration
+    #
+    # What is the filename of the P12 certificate file?  What is its password?
+    # The certificate file should be in the source directory.
+    ibm_ace_environment_cert_p12: test-cert.p12
+    ibm_ace_environment_cert_password: ""
+
+  roles:
+    - ibm_ace_host_define
+    - ibm_ace_environment_define
+    - ibm_ace_environment_install

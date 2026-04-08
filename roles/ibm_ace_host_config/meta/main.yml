@@ -14,7 +14,7 @@ galaxy_info:
     This *action role* sets up the host for environment installs of IBM App
     Connect Enterprise.
 
-    See `../../ibm_ace_define/defaults/main.yml` for details on the
+    See `../../ibm_ace_host_define/defaults/main.yml` for details on the
     parameters.
   company: Syntegrity Solutions
 

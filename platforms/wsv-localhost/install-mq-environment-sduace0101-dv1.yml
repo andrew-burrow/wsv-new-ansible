@@ -1,0 +1,68 @@
+#
+# :Precis: Install IBM MQ environment on localhost
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+- name: Install IBM MQ environment
+  hosts: localhost
+  become: true
+  gather_facts: false
+
+  vars:
+    # FROM ibm_mq_host_define
+    #
+    # NOTE: these values must be IDENTICAL to the values in
+    # setup-mq-host-{HOST}.yml.  They are repeated here, so that the action
+    # roles such as ibm_mq_environment_install can make use of them, e.g., to
+    # chmod a folder so that the MQ account can write to it
+
+    # Daemon user and groups
+    #
+    # What is the name and UID of the account to run the daemon?  What is
+    # the name and GID of the primary group of the daemon?  Which
+    # administrative users should be added to the primary group of the
+    # daemon?
+    ibm_mq_host_user: mqm
+    ibm_mq_host_uid: 10779
+    ibm_mq_host_group: mqm
+    ibm_mq_host_gid: 10779
+    ibm_mq_host_users: []
+
+    # System resource limits for mqm user
+    #
+    # What are the soft and hard limits for open files (nofile) and processes
+    # (nproc) for the mqm user?  These go in /etc/security/limits.conf.
+    ibm_mq_host_nofile: 10240
+    ibm_mq_host_nproc: 4096
+
+    # FROM ibm_ibm_mq_environment_define
+    #
+
+    # Brokers group GID
+    #
+    # What is the GID for the mqbrkrs secondary group?  If not specified, the
+    # system will auto-assign.
+    # ibm_mq_host_brokers_gid: 5002
+
+    # From ibm_mq_environment_define/defaults/main.yml
+    ibm_mq_environment_base_dir: /opt/ibm
+    ibm_mq_environment: dv1
+    ibm_mq_environment_version: "9.3.0.2"
+    ibm_mq_environment_package: IBM_MQ_9.3.0.2_LINUX_X86-64.tar.gz
+    ibm_mq_environment_source_dir: /opt/ibm-software/mq
+    ibm_mq_environment_build_dir: /var/tmp/dv1/mq-build
+    ibm_mq_environment_fixpack_version: "9.3.0.16"
+    ibm_mq_environment_fixpack_package: 9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz
+    ibm_mq_environment_queue_managers:
+      - name: ADV1J0101
+        log_size: 65535
+      - name: ADV1I0101
+        log_size: 65535
+
+  roles:
+    - ibm_mq_host_define
+    - ibm_mq_environment_define
+    - ibm_mq_environment_install
