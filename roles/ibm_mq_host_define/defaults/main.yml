@@ -25,6 +25,12 @@ ibm_mq_host_users: []
 ibm_mq_host_nofile: 10240
 ibm_mq_host_nproc: 4096
 
+# Brokers group
+#
+# What is the name of the group for integration brokers? This group
+# provides shared access between MQ and ACE components.
+ibm_mq_host_brokers_group: mqbrkrs
+
 # Brokers group GID
 #
 # What is the GID for the mqbrkrs secondary group?  If not specified, the
