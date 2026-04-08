@@ -46,9 +46,9 @@
       {
           env=$1
           if [ -n "${env}" ]; then
-              ACE_BIN=/opt/${env}/ace/server/bin
+              ACE_BIN={{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace-{{ ibm_ace_environment_version }}/server/bin
               source ${ACE_BIN}/mqsiprofile
-              export ODBCSYSINI="/var/mqsi/${env}/config"
+              export ODBCSYSINI="{{ ibm_ace_environment_work_path }}/config"
               export ODBCINI=${ODBCSYSINI}/odbc.ini
               echo "ODBCINI: $ODBCINI"
               echo "ODBCSYSINI: $ODBCSYSINI"
