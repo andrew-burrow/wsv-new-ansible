@@ -15,6 +15,22 @@
     password: "!"
     state: present
 
+- name: Create ACE data directory
+  ansible.builtin.file:
+    path: /var/mqsi
+    state: directory
+    mode: '0775'
+    group: "{{ ibm_ace_host_group }}"
+
+- name: Set default ACL for ACE data directory
+  ansible.posix.acl:
+    path: /var/mqsi
+    entity: "{{ ibm_ace_host_group }}"
+    etype: group
+    permissions: rwx
+    state: present
+    default: yes
+
 - name: Add administrative users to mqbrkrs group
   ansible.builtin.user:
     name: "{{ item }}"
