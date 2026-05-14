@@ -45,7 +45,7 @@
     #
     # What is the short name for this environment?  This is used in directory
     # paths and integration node names.  Examples: sx1, ts1, ts2, prod
-    ibm_ace_environment: dv1
+    ibm_ace_environment: ts1
 
     # ACE version and package
     #
@@ -61,92 +61,112 @@
     # is passed to mqsicreatebroker with -w flag.
     ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
     ibm_ace_operation_mode: "Development"
-    ibm_ace_host: "10.51.35.72"       
-    ibm_ace_host_auth_mode: "active"
-    ibm_ace_host_auth_mode_user: "admin"
-    ibm_ace_host_auth_mode_pwd: "passw0rd"
-    ibm_ace_host_auth_mode_role: "admin"
-    ibm_ace_vault: "Cheid7eiX3"    
-
+    ibm_ace_host: "10.51.35.95"                           
+    ibm_ace_vault: "Tahpigheo7"
+    
     # Integration nodes to create
     #
     # List of integration nodes to create in this environment.  Each entry
     # specifies the node name, associated queue manager, and HTTP port.
     ibm_ace_environment_integration_nodes:
-      - name: ACEDV1J0101
-        queue_manager: ADV1J0101
+      - name: ACETS1J0201
+        queue_manager: ATS1J0201
         port: 4543
         credentials:
         - name: TEMPUS
           type: odbc
-          user: DEV1S_TPC2
-          pass: Dev_1s_Tpc2          
-        - name: EIP
-          type: odbc
-          user: DEV1S_IIBCFG
-          pass: DeV_c1g_d5          
-        - name: ACCTIONR
-          type: odbc
-          user: esb_readDB
-          pass: esb_rD$4DeVb
-        - name: ACCTIONR_EVENT
-          type: odbc
-          user: eip_wrteDB
-          pass: eIp_WR$4DeVb          
+          user: TST1S_TPC2
+          pass: Tst1s_tpc2_Stem01t          
         - name: PCS
           type: odbc
-          user: pcs_user
-          pass: P6c_Us3r_jbxq
+          user: PCS_USER
+          pass: Pcs_user_Wsde03t          
         - name: PCS_CFG
           type: odbc
-          user: pcs_cfg_user
-          pass: P6sd_c5g_Us3r
+          user: PCS_CFG_USER
+          pass: Pcs_user_Wsde03t
+        - name: EIPREPO
+          type: odbc
+          user: TS1S_EIP
+          pass: Tuesday27          
+        - name: EIP
+          type: odbc
+          user: TST1S_IIBCFG
+          pass: TsT_c1g_t5          
+        - name: AVANTI
+          type: odbc
+          user: UAT3T_FINAPP
+          pass: cbmDEV1x          
+        - name: AURION
+          type: odbc
+          user: IIB_TAC_AURION
+          pass: TStx_61P_4ac          
+        - name: ACCTIONR_EVENT
+          type: odbc
+          user: ESB_READTA
+          pass: ESb_R0nly\$4Ta          
+        - name: ACCTIONR
+          type: odbc
+          user: ESB_READTA
+          pass: ESb_R0nly\$4Ta
         integration_servers:
-        - name: IS-dv1-common
+        - name: IS-ts1-common
           port: 7601
           jre_version: 8
-        - name: IS-dv1-tac
+        - name: IS-ts1-tac
           port: 7602
           jre_version: 8
-        - name: IS-dv1-vwa
+        - name: IS-ts1-vwa
           port: 7603
           jre_version: 8     
-      - name: ACEDV1I0101
-        queue_manager: ADV1I0101
+      - name: ACETS1I0201
+        queue_manager: ATS1I0201
         port: 4443
         credentials:
         - name: TEMPUS
           type: odbc
-          user: DEV1S_TPC2
-          pass: Dev_1s_Tpc2         
-        - name: EIP
-          type: odbc
-          user: DEV1S_IIBCFG
-          pass: DeV_c1g_d5          
-        - name: ACCTIONR
-          type: odbc
-          user: esb_readDB
-          pass: esb_rD$4DeVb        
-        - name: ACCTIONR_EVENT
-          type: odbc
-          user: eip_wrteDB
-          pass: eIp_WR$4DeVb          
+          user: TST1S_TPC2
+          pass: Tst1s_tpc2_Stem01t          
         - name: PCS
           type: odbc
-          user: pcs_user
-          pass: P6c_Us3r_jbxq          
+          user: PCS_USER
+          pass: Pcs_user_Wsde03t          
         - name: PCS_CFG
           type: odbc
-          user: pcs_cfg_user
-          pass: P6sd_c5g_Us3r                          
+          user: PCS_CFG_USER
+          pass: Pcs_user_Wsde03t
+        - name: EIPREPO
+          type: odbc
+          user: TS1S_EIP
+          pass: Tuesday27          
+        - name: EIP
+          type: odbc
+          user: TST1S_IIBCFG
+          pass: TsT_c1g_t5          
+        - name: AVANTI
+          type: odbc
+          user: UAT3T_FINAPP
+          pass: cbmDEV1x          
+        - name: AURION
+          type: odbc
+          user: IIB_TAC_AURION
+          pass: TStx_61P_4ac          
+        - name: ACCTIONR_EVENT
+          type: odbc
+          user: ESB_READTA
+          pass: ESb_R0nly\$4Ta          
+        - name: ACCTIONR
+          type: odbc
+          user: ESB_READTA
+          pass: ESb_R0nly\$4Ta
         integration_servers:
-        - name: IS-dv1-common
+        - name: IS-ts1-common
           port: 7501
           jre_version: 8
-        - name: IS-dv1-tac
+        - name: IS-ts1-tac
           port: 7502
           jre_version: 8
-        - name: IS-dv1-vwa
+        - name: IS-ts1-vwa
           port: 7503
           jre_version: 8     
     ibm_mq_host_brokers_group: mqbrkrs
@@ -155,8 +175,8 @@
     #
     # What is the filename of the P12 certificate file?  What is its password?
     # The certificate file should be in the source directory.
-    ibm_ace_environment_cert_p12: sduace0101.services.workcover.vic.gov.au.p12
-    ibm_ace_environment_cert_password: "thai3HaiXuuph9i"
+    ibm_ace_environment_cert_p12: stuace0201.services.workcover.vic.gov.au.p12
+    ibm_ace_environment_cert_password: "AhVie9peiy4To4i"
 
   roles:
     - ibm_ace_host_define

@@ -45,7 +45,7 @@
     #
     # What is the short name for this environment?  This is used in directory
     # paths and integration node names.  Examples: sx1, ts1, ts2, prod
-    ibm_ace_environment: dv1
+    ibm_ace_environment: ps1
 
     # ACE version and package
     #
@@ -61,7 +61,7 @@
     # is passed to mqsicreatebroker with -w flag.
     ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
     ibm_ace_operation_mode: "Development"
-    ibm_ace_host: "10.51.35.72"       
+    ibm_ace_host: "10.51.35.77"
     ibm_ace_host_auth_mode: "active"
     ibm_ace_host_auth_mode_user: "admin"
     ibm_ace_host_auth_mode_pwd: "passw0rd"
@@ -73,8 +73,8 @@
     # List of integration nodes to create in this environment.  Each entry
     # specifies the node name, associated queue manager, and HTTP port.
     ibm_ace_environment_integration_nodes:
-      - name: ACEDV1J0101
-        queue_manager: ADV1J0101
+      - name: ACEPS1J0201
+        queue_manager: APS1J0201
         port: 4543
         credentials:
         - name: TEMPUS
@@ -88,7 +88,7 @@
         - name: ACCTIONR
           type: odbc
           user: esb_readDB
-          pass: esb_rD$4DeVb
+          pass: esb_rD$4DeVb        
         - name: ACCTIONR_EVENT
           type: odbc
           user: eip_wrteDB
@@ -96,23 +96,23 @@
         - name: PCS
           type: odbc
           user: pcs_user
-          pass: P6c_Us3r_jbxq
+          pass: P6c_Us3r_jbxq          
         - name: PCS_CFG
           type: odbc
           user: pcs_cfg_user
           pass: P6sd_c5g_Us3r
         integration_servers:
-        - name: IS-dv1-common
+        - name: IS-ps1-common
           port: 7601
           jre_version: 8
-        - name: IS-dv1-tac
+        - name: IS-ps1-tac
           port: 7602
           jre_version: 8
-        - name: IS-dv1-vwa
+        - name: IS-ps1-vwa
           port: 7603
           jre_version: 8     
-      - name: ACEDV1I0101
-        queue_manager: ADV1I0101
+      - name: ACEPS1I0201
+        queue_manager: APS1I0201
         port: 4443
         credentials:
         - name: TEMPUS
@@ -140,13 +140,13 @@
           user: pcs_cfg_user
           pass: P6sd_c5g_Us3r                          
         integration_servers:
-        - name: IS-dv1-common
+        - name: IS-ps1-common
           port: 7501
           jre_version: 8
-        - name: IS-dv1-tac
+        - name: IS-ps1-tac
           port: 7502
           jre_version: 8
-        - name: IS-dv1-vwa
+        - name: IS-ps1-vwa
           port: 7503
           jre_version: 8     
     ibm_mq_host_brokers_group: mqbrkrs
@@ -155,7 +155,7 @@
     #
     # What is the filename of the P12 certificate file?  What is its password?
     # The certificate file should be in the source directory.
-    ibm_ace_environment_cert_p12: sduace0101.services.workcover.vic.gov.au.p12
+    ibm_ace_environment_cert_p12: sduace0201.services.workcover.vic.gov.au.p12
     ibm_ace_environment_cert_password: "thai3HaiXuuph9i"
 
   roles:

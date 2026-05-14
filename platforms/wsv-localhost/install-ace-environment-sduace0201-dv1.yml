@@ -61,11 +61,11 @@
     # is passed to mqsicreatebroker with -w flag.
     ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
     ibm_ace_operation_mode: "Development"
-    ibm_ace_host: "10.51.35.72"       
+    ibm_ace_host: "10.51.35.76"
     ibm_ace_host_auth_mode: "active"
     ibm_ace_host_auth_mode_user: "admin"
     ibm_ace_host_auth_mode_pwd: "passw0rd"
-    ibm_ace_host_auth_mode_role: "admin"
+    ibm_ace_host_auth_mode_role: "admin"    
     ibm_ace_vault: "Cheid7eiX3"    
 
     # Integration nodes to create
@@ -73,8 +73,8 @@
     # List of integration nodes to create in this environment.  Each entry
     # specifies the node name, associated queue manager, and HTTP port.
     ibm_ace_environment_integration_nodes:
-      - name: ACEDV1J0101
-        queue_manager: ADV1J0101
+      - name: ACEDV1J0201
+        queue_manager: ADV1J0201
         port: 4543
         credentials:
         - name: TEMPUS
@@ -88,7 +88,7 @@
         - name: ACCTIONR
           type: odbc
           user: esb_readDB
-          pass: esb_rD$4DeVb
+          pass: esb_rD$4DeVb        
         - name: ACCTIONR_EVENT
           type: odbc
           user: eip_wrteDB
@@ -96,7 +96,7 @@
         - name: PCS
           type: odbc
           user: pcs_user
-          pass: P6c_Us3r_jbxq
+          pass: P6c_Us3r_jbxq          
         - name: PCS_CFG
           type: odbc
           user: pcs_cfg_user
@@ -111,8 +111,8 @@
         - name: IS-dv1-vwa
           port: 7603
           jre_version: 8     
-      - name: ACEDV1I0101
-        queue_manager: ADV1I0101
+      - name: ACEDV1I0201
+        queue_manager: ADV1I0201
         port: 4443
         credentials:
         - name: TEMPUS
@@ -155,7 +155,7 @@
     #
     # What is the filename of the P12 certificate file?  What is its password?
     # The certificate file should be in the source directory.
-    ibm_ace_environment_cert_p12: sduace0101.services.workcover.vic.gov.au.p12
+    ibm_ace_environment_cert_p12: sduace0201.services.workcover.vic.gov.au.p12
     ibm_ace_environment_cert_password: "thai3HaiXuuph9i"
 
   roles:
