@@ -64,6 +64,18 @@
     - "'BIP8087E' not in create_node.stdout"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
+- name: Create and store the MQ vault key
+  ansible.builtin.shell:
+    cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      mqsivault {{ item.name }} --create --vault-key  {{ ibm_ace_vault }};
+      mqsivault {{ item.name }} --vaultrc-store-key --vault-key {{ ibm_ace_vault }};
+  become: true
+  become_user: "{{ ibm_ace_host_user }}"
+  loop: "{{ ibm_ace_environment_integration_nodes }}"
+
 - name: Start integration nodes
   ansible.builtin.shell:
     cmd: >-
@@ -96,14 +108,43 @@
   become_user: "{{ ibm_ace_host_user }}"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
-- name: Restart integration nodes
+- name: Change HTTPConnector host for integration nodes
   ansible.builtin.shell:
     cmd: >-
       source {{
         ibm_ace_environment_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
-      mqsistop {{ item.name }} ;
-      mqsistart {{ item.name }}
+      mqsichangeproperties {{ item.name }}
+      -b webadmin
+      -o HTTPConnector
+      -n host
+      -v {{ ibm_ace_host }}
+  become: true
+  become_user: "{{ ibm_ace_host_user }}"
+  loop: "{{ ibm_ace_environment_integration_nodes }}"
+
+- name: Configure basic auth for integration node
+  ansible.builtin.shell:
+    cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      mqsichangeauthmode {{ item.name }}
+      -b {{ ibm_ace_host_auth_mode }}
+  become: true
+  become_user: "{{ ibm_ace_host_user }}"
+  loop: "{{ ibm_ace_environment_integration_nodes }}"
+
+- name: Create a webadmin user and password
+  ansible.builtin.shell:
+    cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      mqsiwebuseradmin {{ item.name }}
+      -c -u  {{ ibm_ace_host_auth_mode_user }}
+      -a {{ ibm_ace_environment }}{{ ibm_ace_host_auth_mode_pwd }}
+      -r {{ ibm_ace_host_auth_mode_role }}
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
@@ -154,11 +195,148 @@
       source {{
         ibm_ace_environment_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
-      mqsisetdbparms {{ item.name }}
-      -n brokerTruststore::password
-      -u temp
-      -p {{ ibm_ace_environment_cert_password }}
+      mqsichangeproperties {{ item.name }}
+      -b webadmin
+      -o HTTPConnector
+      -n sslPassword
+      -v {{ ibm_ace_environment_cert_password }}
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
   when: ibm_ace_environment_cert_password != ""
+
+- name: Create integration servers
+  ansible.builtin.shell:
+    cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      mqsicreateexecutiongroup {{ item.0.name }} -e {{ item.1.name }}
+  become: true
+  become_user: "{{ ibm_ace_host_user }}"
+  loop: >-
+    {{
+      ibm_ace_environment_integration_nodes
+      | subelements('integration_servers', skip_missing=True)
+    }}
+
+- name: Configure integration servers port
+  ansible.builtin.shell:
+    cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      mqsichangeproperties {{ item.0.name }}
+      -e {{ item.1.name }}
+      -o HTTPConnector
+      -n ListenerPort
+      -v {{ item.1.port }}
+  become: true
+  become_user: "{{ ibm_ace_host_user }}"
+  loop: >-
+    {{
+      ibm_ace_environment_integration_nodes
+      | subelements('integration_servers', skip_missing=True)
+    }}
+
+- name: Configure integration servers jre version
+  ansible.builtin.shell:
+    cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      ibmint specify jre --version {{ item.1.jre_version }}
+      --integration-node {{ item.0.name }}
+      --integration-server {{ item.1.name }}
+      --verbose
+  become: true
+  become_user: "{{ ibm_ace_host_user }}"
+  loop: >-
+    {{
+      ibm_ace_environment_integration_nodes
+      | subelements('integration_servers', skip_missing=True)
+    }}
+
+- name: Set the JVM system properties
+  ansible.builtin.shell:
+    cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      mqsichangeproperties {{ item.0.name }}
+      -e {{ item.1.name }}
+      -o ComIbmJVMManager
+      -n jvmSystemProperty
+      -v "-Dlog4j.configurationFile=/var/ace/{{ ibm_ace_environment }}/config/eip-vwa-log4j2.xml -Deip.config=/var/ace/{{ ibm_ace_environment }}/config/eip-config.xml"
+  become: true
+  become_user: "{{ ibm_ace_host_user }}"
+  loop: >-
+    {{
+      ibm_ace_environment_integration_nodes
+      | subelements('integration_servers', skip_missing=True)
+    }}
+
+- name: Chown ACE software id tag directory to set the operation mode
+  ansible.builtin.file:
+    path: /opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/swidtag
+    owner: aceadmin
+    group: mqbrkrs
+    recurse: yes
+  become: true
+
+- name: Configure ace operation mode
+  ansible.builtin.shell:
+    cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      ibmint set mode {{ ibm_ace_operation_mode }} --silently
+  become: true
+  become_user: "{{ ibm_ace_host_user }}"
+
+- name: Create the credentials in the vault
+  ansible.builtin.shell:
+    cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      mqsicredentials {{ item.0.name }}
+      --all-integration-servers --create
+      --credential-name {{ item.1.name }}
+      --credential-type {{ item.1.type }}
+      --username {{ item.1.user }}
+      --password {{ item.1.pass }}
+  become: true
+  become_user: "{{ ibm_ace_host_user }}"
+  loop: >-
+    {{
+      ibm_ace_environment_integration_nodes
+      | subelements('credentials', skip_missing=True)
+    }}
+
+- name: Restart integration nodes
+  ansible.builtin.shell:
+    cmd: >-
+      source {{
+        ibm_ace_environment_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      mqsistop {{ item.name }} ;
+      mqsistart {{ item.name }}
+  become: true
+  become_user: "{{ ibm_ace_host_user }}"
+  loop: "{{ ibm_ace_environment_integration_nodes }}"
+
+#- name: Configure SSL password for integration nodes
+#  ansible.builtin.shell:
+#    cmd: >-
+#      source {{
+#        ibm_ace_environment_base_dir
+#      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+#      mqsisetdbparms {{ item.name }}
+#      -n brokerTruststore::password
+#      -u temp
+#      -p {{ ibm_ace_environment_cert_password }}
+#  become: true
+#  become_user: "{{ ibm_ace_host_user }}"
+#  loop: "{{ ibm_ace_environment_integration_nodes }}"
+#  when: ibm_ace_environment_cert_password != ""
