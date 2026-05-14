@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+        <Appenders>
+                <RollingFile name="ApplicationLog" fileName="/var/ace/dv1/logs/tac.log" filePattern="/var/ace/dv1/logs/$${date:yyyy-MM}/tac-%d{MM-dd-yyyy}-%i.log.gz">
+                        <PatternLayout>
+                                <Pattern>[%d{MM/dd/yy HH:mm:ss:SSS} AEST] %level{length=1} %msg%n</Pattern>
+                        </PatternLayout>
+                        <Policies>
+                                <TimeBasedTriggeringPolicy />
+                                <SizeBasedTriggeringPolicy size="250 MB"/>
+                        </Policies>
+                        <DefaultRolloverStrategy max="20"/>
+                </RollingFile>
+                <RollingFile name="AuditLog" fileName="/var/ace/dv1/logs/tac_audit.log" filePattern="/var/ace/dv1/logs/$${date:yyyy-MM}/tac_audit-%d{MM-dd-yyyy}-%i.log.gz">
+                        <PatternLayout>
+                                <Pattern>[%d{MM/dd/yy HH:mm:ss:SSS} AEST] %level{length=1} %msg%n</Pattern>
+                        </PatternLayout>
+                        <Policies>
+                                <TimeBasedTriggeringPolicy />
+                                <SizeBasedTriggeringPolicy size="250 MB"/>
+                        </Policies>
+                        <DefaultRolloverStrategy max="20"/>
+                </RollingFile>
+        </Appenders>
+        <Loggers>
+                <Logger name="AuditLogger" level="info" additivity="false" >
+                        <AppenderRef ref="AuditLog"/>
+                </Logger>
+                <Root level="trace">
+                        <AppenderRef ref="ApplicationLog"/>
+                </Root>
+        </Loggers>
+</Configuration>
