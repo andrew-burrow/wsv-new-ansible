@@ -7,6 +7,7 @@
 ---
 
 - name: Install rpm-build package
+  become: true
   ansible.builtin.dnf:
     name: rpm-build
     state: present
@@ -14,12 +15,14 @@
 # MQ Base Installation
 
 - name: Create MQ base build directory
+  become: true
   ansible.builtin.file:
     path: "{{ ibm_mq_environment_build_dir }}/base"
     state: directory
     mode: '0755'
 
 - name: Extract MQ base installer
+  become: true
   ansible.builtin.unarchive:
     src: "{{ ibm_mq_environment_source_dir }}/{{ ibm_mq_environment_package }}"
     dest: "{{ ibm_mq_environment_build_dir }}/base"
@@ -27,6 +30,7 @@
     creates: "{{ ibm_mq_environment_build_dir }}/base/MQServer"
 
 - name: Create MQ package for environment
+  become: true
   ansible.builtin.command:
     cmd: ./crtmqpkg {{ ibm_mq_environment }}
     chdir: "{{ ibm_mq_environment_build_dir }}/base/MQServer"
@@ -36,6 +40,7 @@
     TMPDIR: "{{ ibm_mq_environment_build_dir }}/base/MQServer"
 
 - name: Install MQ base RPMs
+  become: true
   ansible.builtin.shell:
     cmd: |
       rpm --prefix={{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm \
@@ -51,6 +56,7 @@
       {{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm/bin/mqlicense
 
 - name: Accept MQ license
+  become: true
   ansible.builtin.command:
     cmd: ./mqlicense -accept
     chdir: "{{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm/bin"
@@ -58,6 +64,7 @@
       {{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm/.license_accepted
 
 - name: Change environment folder permissions
+  become: true
   ansible.builtin.file:
     path: "{{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}"
     mode: '0755'
@@ -66,12 +73,14 @@
 # MQ Fixpack Installation
 
 - name: Create MQ fixpack build directory
+  become: true
   ansible.builtin.file:
     path: "{{ ibm_mq_environment_build_dir }}/fixpack"
     state: directory
     mode: '0755'
 
 - name: Extract MQ fixpack
+  become: true
   ansible.builtin.unarchive:
     src: "{{ ibm_mq_environment_source_dir }}/{{ ibm_mq_environment_fixpack_package }}"
     dest: "{{ ibm_mq_environment_build_dir }}/fixpack"
@@ -79,6 +88,7 @@
     creates: "{{ ibm_mq_environment_build_dir }}/fixpack/crtmqfp"
 
 - name: Create MQ fixpack package
+  become: true
   ansible.builtin.command:
     cmd: ./crtmqfp {{ ibm_mq_environment }}
     chdir: "{{ ibm_mq_environment_build_dir }}/fixpack"
@@ -87,6 +97,7 @@
     TMPDIR: "{{ ibm_mq_environment_build_dir }}/fixpack"
 
 - name: Install MQ fixpack RPMs
+  become: true
   ansible.builtin.shell:
     cmd: |
       rpm --prefix={{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm \
@@ -105,11 +116,11 @@
 # Queue Manager Creation
 
 - name: Create queue managers
+  become: true
+  become_user: "{{ ibm_mq_host_user }}"
   ansible.builtin.command:
     cmd: crtmqm -lf {{ item.log_size }} {{ item.name }}
     creates: /var/mqm/qmgrs/{{ item.name }}
-  become: true
-  become_user: "{{ ibm_mq_host_user }}"
   environment:
     PATH: >-
       {{ ibm_mq_environment_base_dir }}/{{
@@ -118,10 +129,10 @@
   loop: "{{ ibm_mq_environment_queue_managers }}"
 
 - name: Start queue managers
-  ansible.builtin.command:
-    cmd: strmqm {{ item.name }}
   become: true
   become_user: "{{ ibm_mq_host_user }}"
+  ansible.builtin.command:
+    cmd: strmqm {{ item.name }}
   environment:
     PATH: >-
       {{ ibm_mq_environment_base_dir }}/{{
@@ -138,6 +149,7 @@
 # User Configuration
 
 - name: Configure mqm user aliases
+  become: true
   ansible.builtin.blockinfile:
     path: "/home/{{ ibm_mq_host_user }}/.bashrc"
     block: >-

@@ -7,25 +7,28 @@
 ---
 
 - name: Create mqm group
+  become: true
   ansible.builtin.group:
     name: "{{ ibm_mq_host_group }}"
     gid: "{{ ibm_mq_host_gid | default(omit) }}"
     state: present
 
 - name: Add root to mqm group
+  become: true
   ansible.builtin.user:
     name: root
     groups: "{{ ibm_mq_host_group }}"
     append: true
-  become: true
 
 - name: Create mqbrkrs group
+  become: true
   ansible.builtin.group:
     name: "{{ ibm_mq_host_brokers_group }}"
     gid: "{{ ibm_mq_host_brokers_gid | default(omit) }}"
     state: present
 
 - name: Create mqm user
+  become: true
   ansible.builtin.user:
     name: "{{ ibm_mq_host_user }}"
     uid: "{{ ibm_mq_host_uid | default(omit) }}"
@@ -34,6 +37,7 @@
     state: present
 
 - name: Create MQ data directory
+  become: true
   ansible.builtin.file:
     path: /var/mqm
     state: directory
@@ -41,6 +45,7 @@
     group: "{{ ibm_mq_host_group }}"
 
 - name: Add administrative users to mqm group
+  become: true
   ansible.builtin.user:
     name: "{{ item }}"
     groups: "{{ ibm_mq_host_group }}"
@@ -49,6 +54,7 @@
   when: ibm_mq_host_users | length > 0
 
 - name: Configure system limits for mqm user
+  become: true
   ansible.builtin.blockinfile:
     path: /etc/security/limits.conf
     block: |
@@ -59,6 +65,7 @@
     marker: "# {mark} ANSIBLE MANAGED MQM LIMITS"
 
 - name: Install bc package for MQ
+  become: true
   ansible.builtin.dnf:
     name: bc
     state: present

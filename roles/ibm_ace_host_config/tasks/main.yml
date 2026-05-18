@@ -7,6 +7,7 @@
 ---
 
 - name: Create aceadmin user
+  become: true
   ansible.builtin.user:
     name: "{{ ibm_ace_host_user }}"
     uid: "{{ ibm_ace_host_uid | default(omit) }}"
@@ -16,6 +17,7 @@
     state: present
 
 - name: Create ACE data directory
+  become: true
   ansible.builtin.file:
     path: /var/mqsi
     state: directory
@@ -23,13 +25,14 @@
     group: "{{ ibm_ace_host_group }}"
 
 - name: Add root to mqbrkrs group
+  become: true
   ansible.builtin.user:
     name: root
     groups: "{{ ibm_ace_host_group }}"
     append: true
-  become: true
 
 - name: Add administrative users to mqbrkrs group
+  become: true
   ansible.builtin.user:
     name: "{{ item }}"
     groups: "{{ ibm_ace_host_group }}"
@@ -50,6 +53,7 @@
 # 'ibm_ace_environment_' roles.  The solution here is safe only in so far as
 # the practice of using `/opt/ibm` is common, BUT `/opt/IBM` is also common
 - name: Create ACE profile script
+  become: true
   ansible.builtin.copy:
     dest: /etc/profile.d/ace.sh
     mode: '0644'
@@ -70,6 +74,7 @@
       }
 
 - name: Configure aceadmin bash profile
+  become: true
   ansible.builtin.blockinfile:
     path: "/home/{{ ibm_ace_host_user }}/.bash_profile"
     block: |
