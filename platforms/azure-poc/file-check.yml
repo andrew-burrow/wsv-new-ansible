@@ -1,0 +1,31 @@
+#
+# File check
+#
+
+---
+
+- name: Validate IBM ACE and MQ installation prerequisites
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars:
+    staging_dir: "/var/tmp"
+    required_files:
+      - 13.0-ACE-LINUXX64-13.0.6.2.tar.gz
+      - 9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz
+      - IBM_MQ_9.3.0.2_LINUX_X86-64.tar.gz
+      - test-cert.cnf
+      - test-cert.p12
+      - test-cert.pem
+
+  tasks:
+    - name: Download required files
+      get_url:
+        url: "https://fe4jiepoviere7ep.blob.core.windows.net/ibm-packages/{{ item }}"
+        dest: "{{ staging_dir }}/{{ item }}"
+      loop: "{{ required_files }}"
+
+    - name: Report validation success
+      ansible.builtin.debug:
+        msg: "All required files present in {{ staging_dir }}"
