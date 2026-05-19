@@ -77,6 +77,12 @@ ibm_ace_environment_webadmin_mode: active
 ibm_ace_environment_webadmin_user: admin
 ibm_ace_environment_webadmin_role: admin
 
+# ACE operation mode
+#
+# What operation mode should the ACE installation be in: development or
+# production?
+ibm_ace_environment_operation_mode: "development"
+
 # SSL certificate configuration
 #
 # What is the filename of the P12 certificate file?  What is its password?

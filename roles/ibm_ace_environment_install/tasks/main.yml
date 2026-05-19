@@ -300,7 +300,7 @@
       source {{
         ibm_ace_environment_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
-      ibmint set mode {{ ibm_ace_operation_mode }} --silently
+      ibmint set mode {{ ibm_ace_environment_operation_mode }} --silently
 
 - name: Create credentials in vault of each integration node
   become: true
