@@ -153,6 +153,11 @@
       -c -u {{ ibm_ace_environment_webadmin_user }}
       -a {{ item.webadmin_secret }}
       -r {{ ibm_ace_environment_webadmin_role }}
+  register: create_login
+  changed_when: create_login.rc == 0
+  failed_when:
+    - create_login.rc != 0
+    - "'BIP2832E' not in create_login.stdout"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
 # SSL Certificate Configuration
