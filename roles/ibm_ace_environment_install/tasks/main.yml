@@ -111,10 +111,10 @@
       -b webadmin
       -o HTTPConnector
       -n port
-      -v {{ item.port }}
+      -v {{ item.webadmin_port }}
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
-- name: Set IP address or hostname of web admin for integration nodes
+- name: Set IP address of web admin for integration nodes
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.shell:
@@ -129,7 +129,7 @@
       -v {{ ibm_ace_environment_webadmin_ip }}
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
-- name: Set the authentication mode of web admin for integration nodes
+- name: Set authentication mode of web admin for integration nodes
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.shell:
@@ -141,7 +141,7 @@
       -b {{ ibm_ace_environment_webadmin_mode }}
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
-- name: Create a login for the web admin of the integration nodes
+- name: Create login on web admin of integration nodes
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.shell:
@@ -151,7 +151,7 @@
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsiwebuseradmin {{ item.name }}
       -c -u {{ ibm_ace_environment_webadmin_user }}
-      -a {{ ibm_ace_environment }}{{ ibm_ace_environment_webadmin_secret }}
+      -a {{ item.webadmin_secret }}
       -r {{ ibm_ace_environment_webadmin_role }}
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
@@ -228,7 +228,7 @@
       | subelements('integration_servers', skip_missing=True)
     }}
 
-- name: Configure integration servers port
+- name: Set port of integration servers
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.shell:
@@ -247,7 +247,7 @@
       | subelements('integration_servers', skip_missing=True)
     }}
 
-- name: Configure integration servers jre version
+- name: Set JRE version of integration servers
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.shell:
@@ -265,7 +265,7 @@
       | subelements('integration_servers', skip_missing=True)
     }}
 
-- name: Set the JVM system properties
+- name: Set JVM system properties of integration servers
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.shell:
@@ -292,7 +292,7 @@
     group: mqbrkrs
     recurse: yes
 
-- name: Configure ace operation mode
+- name: Set ACE operation mode
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.shell:
@@ -302,7 +302,7 @@
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       ibmint set mode {{ ibm_ace_operation_mode }} --silently
 
-- name: Create the credentials in the vault
+- name: Create credentials in vault of each integration node
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.shell:
@@ -314,8 +314,8 @@
       --all-integration-servers --create
       --credential-name {{ item.1.name }}
       --credential-type {{ item.1.type }}
-      --username {{ item.1.user }}
-      --password {{ item.1.pass }}
+      --username {{ item.1.username }}
+      --password {{ item.1.secret }}
   loop: >-
     {{
       ibm_ace_environment_integration_nodes

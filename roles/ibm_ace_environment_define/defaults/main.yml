@@ -33,15 +33,29 @@ ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
 
 # Integration nodes to create
 #
-# List of integration nodes to create in this environment.  Each entry
-# specifies the node name, associated queue manager, and HTTP port.
-ibm_ace_environment_integration_nodes:
-  - name: ACESX1J0201
-    queue_manager: ASX1J0201
-    port: 4543
-  - name: ACESX1I0201
-    queue_manager: ASX1I0201
-    port: 4443
+# What are the specifications of the integration nodes defined in this
+# environment?  The specifications comprise a list of objects that define the
+# following keys:
+#
+# - `name` -- What is the name of the node?
+# - `queue_manager` -- What is the name of the associated queue manager?
+# - `webadmin_port` -- What is the port number of the web admin for the node?
+# - `webadmin_secret` -- What is the secret for the web admin interface?
+# - `credentials` --  What credentials does the node require?  The credentials
+#   are a list of objects, each defining the following keys:
+#
+#   - `name` -- What is the name of the credential?
+#   - `type` -- What is the type of the credential?
+#   - `username` -- What is the username in the credential?
+#   - `secret` -- What is the password in the credential?
+#
+# - `integration_servers` --  What integration servers does the node define?
+#   The servers are a list of objects, each defining the following keys:
+#
+#   - `name` -- What is the name of the server?
+#   - `port` -- What port does the server listen on?
+#   - `jre_version` -- What JRE version does the server run?
+ibm_ace_environment_integration_nodes: []
 
 # Integration node vault secret
 #
@@ -54,14 +68,13 @@ ibm_ace_environment_vault_secret: "passw0rd!"
 #
 # What is the hostname or IP address of the web admin interface?  Is basic
 # authentication on the web admin interface 'active' or 'inactive'?  What is
-# the username, password, and role of the login on the web admin interface?
-# These values are used in common across all integration nodes in the
-# environment.  See `ibm_ace_environment_integration_nodes` for the port
-# numbers, which differentiate the web admin for each integration node
+# the username, and role of the login on the web admin interface?  These
+# values are used in common across all integration nodes in the environment.
+# See `ibm_ace_environment_integration_nodes` for the node-specific port
+# number and password
 ibm_ace_environment_webadmin_ip: 10.51.35.72
 ibm_ace_environment_webadmin_mode: active
 ibm_ace_environment_webadmin_user: admin
-ibm_ace_environment_webadmin_secret: "passw0rd!"
 ibm_ace_environment_webadmin_role: admin
 
 # SSL certificate configuration
