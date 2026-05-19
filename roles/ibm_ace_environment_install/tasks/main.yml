@@ -99,7 +99,7 @@
     - "'BIP8018E' not in start_node.stdout"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
-- name: Change HTTPConnector port for integration nodes
+- name: Set port of web admin for integration nodes
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.shell:
@@ -114,7 +114,7 @@
       -v {{ item.port }}
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
-- name: Change HTTPConnector host for integration nodes
+- name: Set IP address or hostname of web admin for integration nodes
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.shell:
@@ -126,10 +126,10 @@
       -b webadmin
       -o HTTPConnector
       -n host
-      -v {{ ibm_ace_host }}
+      -v {{ ibm_ace_environment_webadmin_ip }}
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
-- name: Configure basic auth for integration node
+- name: Set the authentication mode of web admin for integration nodes
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.shell:
@@ -138,10 +138,10 @@
         ibm_ace_environment_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsichangeauthmode {{ item.name }}
-      -b {{ ibm_ace_host_auth_mode }}
+      -b {{ ibm_ace_environment_webadmin_mode }}
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
-- name: Create a webadmin user and password
+- name: Create a login for the web admin of the integration nodes
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.shell:
@@ -150,9 +150,9 @@
         ibm_ace_environment_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsiwebuseradmin {{ item.name }}
-      -c -u  {{ ibm_ace_host_auth_mode_user }}
-      -a {{ ibm_ace_environment }}{{ ibm_ace_host_auth_mode_pwd }}
-      -r {{ ibm_ace_host_auth_mode_role }}
+      -c -u {{ ibm_ace_environment_webadmin_user }}
+      -a {{ ibm_ace_environment }}{{ ibm_ace_environment_webadmin_secret }}
+      -r {{ ibm_ace_environment_webadmin_role }}
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
 # SSL Certificate Configuration

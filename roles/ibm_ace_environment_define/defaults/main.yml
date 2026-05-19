@@ -50,6 +50,20 @@ ibm_ace_environment_integration_nodes:
 # an environment.
 ibm_ace_environment_vault_secret: "passw0rd!"
 
+# Integration web admin configuration
+#
+# What is the hostname or IP address of the web admin interface?  Is basic
+# authentication on the web admin interface 'active' or 'inactive'?  What is
+# the username, password, and role of the login on the web admin interface?
+# These values are used in common across all integration nodes in the
+# environment.  See `ibm_ace_environment_integration_nodes` for the port
+# numbers, which differentiate the web admin for each integration node
+ibm_ace_environment_webadmin_ip: 10.51.35.72
+ibm_ace_environment_webadmin_mode: active
+ibm_ace_environment_webadmin_user: admin
+ibm_ace_environment_webadmin_secret: "passw0rd!"
+ibm_ace_environment_webadmin_role: admin
+
 # SSL certificate configuration
 #
 # What is the filename of the P12 certificate file?  What is its password?
