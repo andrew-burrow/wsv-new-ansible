@@ -43,6 +43,13 @@ ibm_ace_environment_integration_nodes:
     queue_manager: ASX1I0201
     port: 4443
 
+# Integration node vault secret
+#
+# What is the secret used to encrypt the vault in which the integration nodes
+# store secrets?  This value is used in common across all integration nodes in
+# an environment.
+ibm_ace_environment_vault_secret: "passw0rd!"
+
 # SSL certificate configuration
 #
 # What is the filename of the P12 certificate file?  What is its password?

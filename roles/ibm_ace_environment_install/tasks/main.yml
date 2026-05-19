@@ -76,8 +76,10 @@
       source {{
         ibm_ace_environment_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
-      mqsivault {{ item.name }} --create --vault-key  {{ ibm_ace_vault }};
-      mqsivault {{ item.name }} --vaultrc-store-key --vault-key {{ ibm_ace_vault }};
+      mqsivault {{ item.name }} --create
+      --vault-key {{ ibm_ace_environment_vault_secret }} ;
+      mqsivault {{ item.name }} --vaultrc-store-key
+      --vault-key {{ ibm_ace_environment_vault_secret }}
   loop: "{{ ibm_ace_environment_integration_nodes }}"
 
 - name: Start integration nodes
