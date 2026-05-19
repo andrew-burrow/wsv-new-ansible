@@ -325,6 +325,11 @@
       --credential-type {{ item.1.type }}
       --username {{ item.1.username }}
       --password {{ item.1.secret }}
+  register: create_credential
+  changed_when: create_credential.rc == 0
+  failed_when:
+    - create_credential.rc != 0
+    - "'BIP9505E' not in create_credential.stdout"
   loop: >-
     {{
       ibm_ace_environment_integration_nodes
