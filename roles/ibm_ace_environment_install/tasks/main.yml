@@ -226,6 +226,11 @@
         ibm_ace_environment_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsicreateexecutiongroup {{ item.0.name }} -e {{ item.1.name }}
+  register: create_server
+  changed_when: create_server.rc == 0
+  failed_when:
+    - create_server.rc != 0
+    - "'BIP1151E' not in create_server.stdout"
   loop: >-
     {{
       ibm_ace_environment_integration_nodes
