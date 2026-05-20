@@ -103,16 +103,29 @@ ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
 #   - `name` -- What is the name of the server?
 #   - `port` -- What port does the server listen on?
 #   - `jre_version` -- What JRE version does the server run?
+#
+# VAULT NAMING CONVENTIONS:
+#
+# - `.ibm_ace_environment_integration_nodes[].webadmin_secret`
+#
+#   Use `vault_ibm_ace_node_{NODE_NAME}_webadmin_secret` where
+#   `{NODE_NAME}` is the value of `name` on the node item
+#
+# - `.ibm_ace_environment_integration_nodes[].credentials[].secret`
+#
+#   Use `vault_ibm_ace_node_{NODE_NAME}_credentials_{CRED_NAME}_secret` where
+#   `{NODE_NAME}` is the value of `name` on the node item, and `{CRED_NAME}`
+#   is the value of `name` on the credential item
 ibm_ace_environment_integration_nodes:
   - name: ACESX1J0201
     queue_manager: ASX1J0201
     webadmin_port: 4543
-    webadmin_secret: "passw0rd!"
+    webadmin_secret: "{{ vault_ibm_ace_node_ACESX1J0201_webadmin_secret }}"
     credentials:
       - name: TEMPUS
         type: odbc
         username: DEV1S_TPC2
-        secret: Dev_1s_Tpc2
+        secret: "{{ vault_ibm_ace_node_ACESX1J0201_credentials_TEMPUS_secret }}"
     integration_servers:
       - name: IS-dv1-common
         port: 7601
@@ -123,7 +136,13 @@ ibm_ace_environment_integration_nodes:
 # What is the secret used to encrypt the vault in which the integration nodes
 # store secrets?  This value is used in common across all integration nodes in
 # an environment.
-ibm_ace_environment_vault_secret: "passw0rd!"
+#
+# VAULT NAMING CONVENTIONS:
+#
+# - `.ibm_ace_environment_vault_secret`
+#
+#   Use `vault_ibm_ace_vault_secret`
+ibm_ace_environment_vault_secret: "{{ vault_ibm_ace_vault_secret }}"
 
 # Integration web admin configuration
 #
@@ -149,4 +168,4 @@ ibm_ace_environment_operation_mode: "development"
 # What is the filename of the P12 certificate file?  What is its password?
 # The certificate file should be in the source directory.
 ibm_ace_environment_cert_p12: test-cert.p12
-ibm_ace_environment_cert_secret: "passw0rd!"
+ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_environment_cert_secret }}"
