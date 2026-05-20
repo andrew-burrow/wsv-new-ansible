@@ -1,0 +1,241 @@
+#
+# :Precis: Set role parameters for the EIP DV1 environment
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+#
+# From `/roles/ibm_mq_environment_define/defaults/main.yml`
+
+# Base directory
+#
+# What is the filename prefix for IBM MQ software installation directories?
+ibm_mq_environment_base_dir: /opt/ibm
+
+# Environment identifier
+#
+# What is the short name for this environment?  This is used in directory
+# paths and queue manager names.  Examples: sx1, ts1, ts2, prod
+ibm_mq_environment: sx1
+
+# MQ version and package
+#
+# What version of IBM MQ are we installing?  What is the filename of the
+# installation package?  Where is it located?
+ibm_mq_environment_version: "9.3.0.2"
+ibm_mq_environment_package: "IBM_MQ_9.3.0.2_LINUX_X86-64.tar.gz"
+ibm_mq_environment_source_dir: /opt/ibm-software/mq
+
+# Build directory for RPM creation
+#
+# Where should we create the ephemeral workspace for building custom RPMs?
+# This directory can be deleted after installation.
+ibm_mq_environment_build_dir: "/var/tmp/{{ ibm_mq_environment }}/mq-build"
+
+# MQ fixpack version and package
+#
+# What fixpack level should be applied?  What is the filename of the
+# fixpack package?
+ibm_mq_environment_fixpack_version: "9.3.0.16"
+ibm_mq_environment_fixpack_package: "9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz"
+
+# Queue managers to create
+#
+# List of queue managers to create in this environment.  Each entry
+# specifies the queue manager name and log file size.
+ibm_mq_environment_queue_managers:
+  - name: ADV1J0101
+    log_size: 65535
+  - name: ADV1I0101
+    log_size: 65535
+
+#
+# From `/roles/ibm_ace_environment_define/defaults/main.yml`
+
+# Base directory
+#
+# What is the filename prefix for IBM ACE software installation directories?
+ibm_ace_environment_base_dir: /opt/ibm
+
+# Environment identifier
+#
+# What is the short name for this environment?  This is used in directory
+# paths and integration node names.  Examples: sx1, ts1, ts2, prod
+ibm_ace_environment: dv1
+
+# ACE version and package
+#
+# What version of IBM App Connect Enterprise are we installing?  What is
+# the filename of the installation package?  Where is it located?
+ibm_ace_environment_version: "13.0.6.2"
+ibm_ace_environment_package: "13.0-ACE-LINUXX64-13.0.6.2.tar.gz"
+ibm_ace_environment_source_dir: /opt/ibm-software/ace13
+
+# Work path for integration nodes
+#
+# Where should integration node working directories be created?  This path
+# is passed to mqsicreatebroker with -w flag.
+ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
+
+# Integration nodes to create
+#
+# What are the specifications of the integration nodes defined in this
+# environment?  The specifications comprise a list of objects that define the
+# following keys:
+#
+# - `name` -- What is the name of the node?
+# - `queue_manager` -- What is the name of the associated queue manager?
+# - `webadmin_port` -- What is the port number of the web admin for the node?
+# - `webadmin_secret` -- What is the secret for the web admin interface?
+# - `credentials` --  What credentials does the node require?  The credentials
+#   are a list of objects, each defining the following keys:
+#
+#   - `name` -- What is the name of the credential?
+#   - `type` -- What is the type of the credential?
+#   - `username` -- What is the username in the credential?
+#   - `secret` -- What is the password in the credential?
+#
+# - `integration_servers` --  What integration servers does the node define?
+#   The servers are a list of objects, each defining the following keys:
+#
+#   - `name` -- What is the name of the server?
+#   - `port` -- What port does the server listen on?
+#   - `jre_version` -- What JRE version does the server run?
+#
+# VAULT NAMING CONVENTIONS:
+#
+# - `.ibm_ace_environment_integration_nodes[].webadmin_secret`
+#
+#   Use `vault_ibm_ace_node_{NODE_NAME}_webadmin_secret` where
+#   `{NODE_NAME}` is the value of `name` on the node item
+#
+# - `.ibm_ace_environment_integration_nodes[].credentials[].secret`
+#
+#   Use `vault_ibm_ace_node_{NODE_NAME}_credentials_{CRED_NAME}_secret` where
+#   `{NODE_NAME}` is the value of `name` on the node item, and `{CRED_NAME}`
+#   is the value of `name` on the credential item
+ibm_ace_environment_integration_nodes:
+  - name: ACEDV1J0101
+    queue_manager: ADV1J0101
+    webadmin_port: 4543
+    webadmin_secret: "{{ vault_ibm_ace_node_ACEDV1J0101_webadmin_secret }}"
+    credentials:
+    - name: TEMPUS
+      type: odbc
+      username: DEV1S_TPC2
+      secret: "{{ vault_ibm_ace_node_ACEDV1J0101_credentials_TEMPUS_secret }}"
+    - name: EIP
+      type: odbc
+      username: DEV1S_IIBCFG
+      secret: "{{ vault_ibm_ace_node_ACEDV1J0101_credentials_EIP_secret }}"
+    - name: ACCTIONR
+      type: odbc
+      username: esb_readDB
+      secret: "{{ vault_ibm_ace_node_ACEDV1J0101_credentials_ACCTIONR_secret }}"
+    - name: ACCTIONR_EVENT
+      type: odbc
+      username: eip_wrteDB
+      secret: "{{ vault_ibm_ace_node_ACEDV1J0101_credentials_ACCTIONR_EVENT_secret }}"
+    - name: PCS
+      type: odbc
+      username: pcs_user
+      secret: "{{ vault_ibm_ace_node_ACEDV1J0101_credentials_PCS_secret }}"
+    - name: PCS_CFG
+      type: odbc
+      username: pcs_cfg_user
+      secret: "{{ vault_ibm_ace_node_ACEDV1J0101_credentials_PCS_CFG_secret }}"
+    integration_servers:
+    - name: IS-dv1-common
+      port: 7601
+      jre_version: 8
+    - name: IS-dv1-tac
+      port: 7602
+      jre_version: 8
+    - name: IS-dv1-vwa
+      port: 7603
+      jre_version: 8
+  - name: ACEDV1I0101
+    queue_manager: ADV1I0101
+    port: 4443
+    credentials:
+    - name: TEMPUS
+      type: odbc
+      username: DEV1S_TPC2
+      secret: "{{ vault_ibm_ace_node_ACEDV1I0101_credentials_TEMPUS_secret }}"
+    - name: EIP
+      type: odbc
+      username: DEV1S_IIBCFG
+      secret: "{{ vault_ibm_ace_node_ACEDV1I0101_credentials_EIP_secret }}"
+    - name: ACCTIONR
+      type: odbc
+      username: esb_readDB
+      secret: "{{ vault_ibm_ace_node_ACEDV1I0101_credentials_ACCTIONR_secret }}"
+    - name: ACCTIONR_EVENT
+      type: odbc
+      username: eip_wrteDB
+      secret: "{{ vault_ibm_ace_node_ACEDV1I0101_credentials_ACCTIONR_EVENT_secret }}"
+    - name: PCS
+      type: odbc
+      username: pcs_user
+      secret: "{{ vault_ibm_ace_node_ACEDV1I0101_credentials_PCS_secret }}"
+    - name: PCS_CFG
+      type: odbc
+      username: pcs_cfg_user
+      secret: "{{ vault_ibm_ace_node_ACEDV1I0101_credentials_PCS_CFG_secret }}"
+    integration_servers:
+    - name: IS-dv1-common
+      port: 7501
+      jre_version: 8
+    - name: IS-dv1-tac
+      port: 7502
+      jre_version: 8
+    - name: IS-dv1-vwa
+      port: 7503
+      jre_version: 8
+
+# Integration node vault secret
+#
+# What is the secret used to encrypt the vault in which the integration nodes
+# store secrets?  This value is used in common across all integration nodes in
+# an environment.
+#
+# VAULT NAMING CONVENTIONS:
+#
+# - `.ibm_ace_environment_vault_secret`
+#
+#   Use `vault_ibm_ace_vault_secret`
+ibm_ace_environment_vault_secret: "{{ vault_ibm_ace_vault_secret }}"
+
+# Integration web admin configuration
+#
+# What is the hostname or IP address of the web admin interface?  Is basic
+# authentication on the web admin interface 'active' or 'inactive'?  What is
+# the username, and role of the login on the web admin interface?  These
+# values are used in common across all integration nodes in the environment.
+# See `ibm_ace_environment_integration_nodes` for the node-specific port
+# number and password
+ibm_ace_environment_webadmin_ip: 10.51.35.72
+ibm_ace_environment_webadmin_mode: active
+ibm_ace_environment_webadmin_user: admin
+ibm_ace_environment_webadmin_role: admin
+
+# ACE operation mode
+#
+# What operation mode should the ACE installation be in: development or
+# production?
+ibm_ace_environment_operation_mode: "development"
+
+# SSL certificate configuration
+#
+# What is the filename of the P12 certificate file?  What is its password?
+# The certificate file should be in the source directory
+#
+# VAULT NAMING CONVENTIONS:
+#
+# - `.ibm_ace_environment_cert_secret`
+#
+#   Use `vault_ibm_ace_environment_cert_secret`
+ibm_ace_environment_cert_p12: sduace0101.services.workcover.vic.gov.au.p12
+ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_environment_cert_secret }}"
