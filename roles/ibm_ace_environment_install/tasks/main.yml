@@ -81,6 +81,7 @@
       mqsivault {{ item.name }} --vaultrc-store-key
       --vault-key {{ ibm_ace_environment_vault_secret }}
   loop: "{{ ibm_ace_environment_integration_nodes }}"
+  no_log: true
 
 - name: Start integration nodes
   become: true
@@ -159,6 +160,7 @@
     - create_login.rc != 0
     - "'BIP2832E' not in create_login.stdout"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
+  no_log: true
 
 # SSL Certificate Configuration
 
