@@ -1,0 +1,14 @@
+#
+# :Precis: Install IBM MQ and IBM ACE environments on EIP hosts
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+- name: Install IBM MQ and IBM ACE environments on EIP hosts
+  hosts: all
+  gather_facts: false
+  roles:
+    - ibm_mq_environment_install
+    - ibm_ace_environment_install

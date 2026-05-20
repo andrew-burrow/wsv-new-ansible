@@ -1,0 +1,14 @@
+#
+# :Precis: Configure EIP hosts for IBM MQ and IBM ACE installations
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+- name: Configure EIP hosts for IBM MQ and IBM ACE installations
+  hosts: all
+  gather_facts: false
+  roles:
+    - ibm_mq_host_config
+    - ibm_ace_host_config
