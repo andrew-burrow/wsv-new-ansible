@@ -88,4 +88,4 @@ ibm_ace_environment_operation_mode: "development"
 # What is the filename of the P12 certificate file?  What is its password?
 # The certificate file should be in the source directory.
 ibm_ace_environment_cert_p12: test-cert.p12
-ibm_ace_environment_cert_password: ""
+ibm_ace_environment_cert_secret: "passw0rd!"
