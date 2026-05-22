@@ -1,5 +1,5 @@
 #
-# :Precis: Set role parameters common to ALL hosts in the inventory
+# :Precis: Set role parameters specific to LOCALHOST in AZURE cluster
 # :Authors: Andrew Burrow
 # :Contact: andrew.burrow@syntegrity.com.au
 #
