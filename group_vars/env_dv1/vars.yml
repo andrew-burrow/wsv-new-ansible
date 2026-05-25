@@ -18,7 +18,7 @@ ibm_mq_environment_base_dir: /opt/ibm
 #
 # What is the short name for this environment?  This is used in directory
 # paths and queue manager names.  Examples: sx1, ts1, ts2, prod
-ibm_mq_environment: sx1
+ibm_mq_environment: dv1
 
 # MQ version and package
 #
