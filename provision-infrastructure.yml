@@ -1,7 +1,8 @@
 #
-# :Precis: Configure EIP hosts for IBM MQ and IBM ACE installations
+# :Precis: Provision infrastructure on EIP hosts
 # :Authors: Andrew Burrow
 # :Contact: andrew.burrow@syntegrity.com.au
+# :Notes: This playbook is intended to target the `inf_*` groups
 #
 
 ---

@@ -1,7 +1,8 @@
 #
-# :Precis: Install IBM MQ and IBM ACE environments on EIP hosts
+# :Precis: Provision IBM MQ and IBM ACE environments on EIP hosts
 # :Authors: Andrew Burrow
 # :Contact: andrew.burrow@syntegrity.com.au
+# :Notes: This playbook is intended to target the `env_*` groups
 #
 
 ---
