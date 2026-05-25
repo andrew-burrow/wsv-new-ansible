@@ -158,7 +158,8 @@ ibm_ace_environment_integration_nodes:
       jre_version: 8
   - name: ACEDV1I0101
     queue_manager: ADV1I0101
-    port: 4443
+    webadmin_port: 4443
+    webadmin_secret: "{{ vault_ibm_ace_node_ACEDV1I0101_webadmin_secret }}"
     credentials:
     - name: TEMPUS
       type: odbc
@@ -236,6 +237,6 @@ ibm_ace_environment_operation_mode: "development"
 #
 # - `.ibm_ace_environment_cert_secret`
 #
-#   Use `vault_ibm_ace_environment_cert_secret`
+#   Use `vault_ibm_ace_cert_secret`
 ibm_ace_environment_cert_p12: sduace0101.services.workcover.vic.gov.au.p12
-ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_environment_cert_secret }}"
+ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_cert_secret }}"

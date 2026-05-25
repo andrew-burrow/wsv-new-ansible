@@ -81,7 +81,7 @@
       mqsivault {{ item.name }} --vaultrc-store-key
       --vault-key {{ ibm_ace_environment_vault_secret }}
   loop: "{{ ibm_ace_environment_integration_nodes }}"
-  no_log: true
+  no_log: false
 
 - name: Start integration nodes
   become: true

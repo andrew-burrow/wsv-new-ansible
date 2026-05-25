@@ -111,6 +111,6 @@ ibm_ace_environment_operation_mode: "development"
 #
 # - `.ibm_ace_environment_cert_secret`
 #
-#   Use `vault_ibm_ace_environment_cert_secret`
+#   Use `vault_ibm_ace_cert_secret`
 ibm_ace_environment_cert_p12: test-cert.p12
-ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_environment_cert_secret }}"
+ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_cert_secret }}"
