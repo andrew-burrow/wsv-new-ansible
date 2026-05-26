@@ -152,7 +152,7 @@ ibm_ace_environment_vault_secret: "{{ vault_ibm_ace_vault_secret }}"
 # values are used in common across all integration nodes in the environment.
 # See `ibm_ace_environment_integration_nodes` for the node-specific port
 # number and password
-ibm_ace_environment_webadmin_ip: 10.51.35.72
+ibm_ace_environment_webadmin_ip: HOST-SPECIFIC
 ibm_ace_environment_webadmin_mode: active
 ibm_ace_environment_webadmin_user: admin
 ibm_ace_environment_webadmin_role: admin
@@ -167,5 +167,5 @@ ibm_ace_environment_operation_mode: "development"
 #
 # What is the filename of the P12 certificate file?  What is its password?
 # The certificate file should be in the source directory.
-ibm_ace_environment_cert_p12: test-cert.p12
-ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_environment_cert_secret }}"
+ibm_ace_environment_cert_p12: HOST-SPECIFIC
+ibm_ace_environment_cert_secret: HOST-SPECIFIC
