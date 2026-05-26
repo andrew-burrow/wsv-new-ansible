@@ -85,27 +85,42 @@ ibm_ace_environment_vault_secret: "{{ vault_ibm_ace_vault_secret }}"
 
 # Integration web admin configuration
 #
-# What is the hostname or IP address of the web admin interface?  Is basic
-# authentication on the web admin interface 'active' or 'inactive'?  What is
-# the username, and role of the login on the web admin interface?  These
-# values are used in common across all integration nodes in the environment.
-# See `ibm_ace_environment_integration_nodes` for the node-specific port
-# number and password
-ibm_ace_environment_webadmin_ip: 10.51.35.72
+# Is basic authentication on the web admin interface 'active' or 'inactive'?
+# What is the username, and role of the login on the web admin interface?
+# These values are used in common across all integration nodes in the
+# environment
 ibm_ace_environment_webadmin_mode: active
 ibm_ace_environment_webadmin_user: admin
 ibm_ace_environment_webadmin_role: admin
 
-# ACE operation mode
+# Integration web admin IP address
 #
-# What operation mode should the ACE installation be in: development or
-# production?
-ibm_ace_environment_operation_mode: "development"
+# What is the hostname or IP address of the web admin interface?  This value
+# is common across all integration nodes.  See
+# `ibm_ace_environment_integration_nodes` for the node-specific port number
+# and password
+#
+# HOST OVERRIDE CONVENTIONS:
+#
+# - This value is environment-specific AND host-specific
+# - Mark the value as host specific in the environment variables by setting
+#   the value to "HOST-SPECIFIC" , e.g. in `group_vars/env_dv1/vars.yml`
+# - Set the host-specific value in the host variables of the virtual host of
+#   the environment, e.g, `host_vars/sduace0101-dv1/vars.yml`
+ibm_ace_environment_webadmin_ip: 10.51.35.72
 
 # SSL certificate configuration
 #
 # What is the filename of the P12 certificate file?  What is its password?
 # The certificate file should be in the source directory.
+#
+# HOST OVERRIDE CONVENTIONS:
+#
+# - This value is environment-specific AND host-specific
+# - Mark the value as host specific in the environment variables by setting
+#   the value to "HOST-SPECIFIC" , e.g. in `group_vars/env_dv1/vars.yml`
+# - Set the host-specific value in the host variables of the virtual host of
+#   the environment, e.g, `host_vars/sduace0101-dv1/vars.yml`
 #
 # VAULT NAMING CONVENTIONS:
 #
@@ -114,3 +129,9 @@ ibm_ace_environment_operation_mode: "development"
 #   Use `vault_ibm_ace_cert_secret`
 ibm_ace_environment_cert_p12: test-cert.p12
 ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_cert_secret }}"
+
+# ACE operation mode
+#
+# What operation mode should the ACE installation be in: development or
+# production?
+ibm_ace_environment_operation_mode: "development"
