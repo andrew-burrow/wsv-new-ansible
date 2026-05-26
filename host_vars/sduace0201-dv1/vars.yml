@@ -1,0 +1,17 @@
+#
+# :Precis: Set host-specific environment parameters for sduace0201-dv1
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+# :Notes:
+#
+#    -  Role parameters MUST be drawn from an environment-specific role
+#    -  The role parameter in the corresponding `group_vars/env_*/vars.yml`
+#       file MUST be set to the placeholder value "HOST-SPECIFIC" so that it
+#       is clear that the value is being overriden in this file
+#
+
+---
+
+ibm_ace_environment_webadmin_ip: TBA
+ibm_ace_environment_cert_p12: TBA
+ibm_ace_environment_cert_secret: TBA
