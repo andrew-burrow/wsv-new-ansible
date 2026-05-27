@@ -11,5 +11,8 @@
   hosts: all
   gather_facts: false
   roles:
+    - ibm_host_define
+    - ibm_mq_host_define
+    - ibm_ace_environment_define
     - ibm_mq_host_config
     - ibm_ace_host_config

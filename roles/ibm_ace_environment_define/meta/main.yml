@@ -18,4 +18,5 @@ galaxy_info:
     See `../defaults/main.yml` for details on the parameters.
   company: Syntegrity Solutions
 
-dependencies: []
+dependencies:
+  - role: ibm_host_define

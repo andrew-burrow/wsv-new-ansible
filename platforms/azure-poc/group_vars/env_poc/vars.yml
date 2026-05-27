@@ -43,12 +43,24 @@ ibm_mq_environment_fixpack_package: "9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz"
 
 # Queue managers to create
 #
-# List of queue managers to create in this environment.  Each entry
-# specifies the queue manager name and log file size.
+# What is the list of queue managers to create on each host in the
+# environment?  The specifications comprise a list of objects that define the
+# following keys:
+#
+# - `name` -- What is the host-specific name of the queue manager?
+# - `log_size` -- What is the log file size?
+#
+# HOST OVERRIDE CONVENTIONS:
+#
+# - The `name` value is environment-specific AND host-specific
+# - The host specific value is computed at task execution time from an
+#   expression that uses `ibm_host_index`
+# - The variable SHOULD NOT and NEED NOT be overridden in the host variables
+#   IF expressed in terms of `ibm_host_index`
 ibm_mq_environment_queue_managers:
-  - name: APOCJ0201
+  - name: "APOCJ{{ ibm_host_index }}"
     log_size: 65535
-  - name: APOCI0201
+  - name: "APOCI{{ ibm_host_index }}"
     log_size: 65535
 
 #
@@ -104,28 +116,37 @@ ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
 #   - `port` -- What port does the server listen on?
 #   - `jre_version` -- What JRE version does the server run?
 #
+# HOST OVERRIDE CONVENTIONS:
+#
+# - The `name` and `queue_manager` values are environment-specific AND
+#   host-specific
+# - The host specific value is computed at task execution time from an
+#   expression that uses `ibm_host_index`
+# - The variables SHOULD NOT and NEED NOT be overridden in the host variables
+#   IF expressed in terms of `ibm_host_index`
+#
 # VAULT NAMING CONVENTIONS:
 #
 # - `.ibm_ace_environment_integration_nodes[].webadmin_secret`
 #
-#   Use `vault_ibm_ace_node_{NODE_NAME}_webadmin_secret` where
-#   `{NODE_NAME}` is the value of `name` on the node item
+#   Use `vault_ibm_ace_webadmin_secret`, and note that this indicates the
+#   webadmin secret is not node-specific
 #
 # - `.ibm_ace_environment_integration_nodes[].credentials[].secret`
 #
-#   Use `vault_ibm_ace_node_{NODE_NAME}_credentials_{CRED_NAME}_secret` where
-#   `{NODE_NAME}` is the value of `name` on the node item, and `{CRED_NAME}`
-#   is the value of `name` on the credential item
+#   Use `vault_ibm_ace_credentials_{CRED_NAME}_secret` where `{CRED_NAME}` is
+#   the value of `name` on the credential item, and note that this indicates
+#   the credential secret is not node-specific
 ibm_ace_environment_integration_nodes:
-  - name: ACEPOCJ0201
-    queue_manager: APOCJ0201
+  - name: "ACEPOCJ{{ ibm_host_index }}"
+    queue_manager: "APOCJ{{ ibm_host_index }}"
     webadmin_port: 4543
-    webadmin_secret: "{{ vault_ibm_ace_node_ACEPOCJ0201_webadmin_secret }}"
+    webadmin_secret: "{{ vault_ibm_ace_webadmin_secret }}"
     credentials:
       - name: TEMPUS
         type: odbc
         username: TEMPUS-POC
-        secret: "{{ vault_ibm_ace_node_ACEPOCJ0201_credentials_TEMPUS_secret }}"
+        secret: "{{ vault_ibm_ace_credentials_TEMPUS_secret }}"
     integration_servers:
       - name: IS-POC-common
         port: 7601

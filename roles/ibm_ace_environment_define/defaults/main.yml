@@ -56,18 +56,27 @@ ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
 #   - `port` -- What port does the server listen on?
 #   - `jre_version` -- What JRE version does the server run?
 #
+# HOST OVERRIDE CONVENTIONS:
+#
+# - The `name` and `queue_manager` values are environment-specific AND
+#   host-specific
+# - The host specific value is computed at task execution time from an
+#   expression that uses `ibm_host_index`
+# - The variables SHOULD NOT and NEED NOT be overridden in the host variables
+#   IF expressed in terms of `ibm_host_index`
+#
 # VAULT NAMING CONVENTIONS:
 #
 # - `.ibm_ace_environment_integration_nodes[].webadmin_secret`
 #
-#   Use `vault_ibm_ace_node_{NODE_NAME}_webadmin_secret` where
-#   `{NODE_NAME}` is the value of `name` on the node item
+#   Use `vault_ibm_ace_webadmin_secret`, and note that this indicates the
+#   webadmin secret is not node-specific
 #
 # - `.ibm_ace_environment_integration_nodes[].credentials[].secret`
 #
-#   Use `vault_ibm_ace_node_{NODE_NAME}_credentials_{CRED_NAME}_secret` where
-#   `{NODE_NAME}` is the value of `name` on the node item, and `{CRED_NAME}`
-#   is the value of `name` on the credential item
+#   Use `vault_ibm_ace_credentials_{CRED_NAME}_secret` where `{CRED_NAME}` is
+#   the value of `name` on the credential item, and note that this indicates
+#   the credential secret is not node-specific
 ibm_ace_environment_integration_nodes: []
 
 # Integration node vault secret

@@ -40,10 +40,22 @@ ibm_mq_environment_fixpack_package: "9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz"
 
 # Queue managers to create
 #
-# List of queue managers to create in this environment.  Each entry
-# specifies the queue manager name and log file size.
+# What is the list of queue managers to create on each host in the
+# environment?  The specifications comprise a list of objects that define the
+# following keys:
+#
+# - `name` -- What is the host-specific name of the queue manager?
+# - `log_size` -- What is the log file size?
+#
+# HOST OVERRIDE CONVENTIONS:
+#
+# - The `name` value is environment-specific AND host-specific
+# - The host specific value is computed at task execution time from an
+#   expression that uses `ibm_host_index`
+# - The variable SHOULD NOT and NEED NOT be overridden in the host variables
+#   IF expressed in terms of `ibm_host_index`
 ibm_mq_environment_queue_managers:
-  - name: ASX1J0201
+  - name: "ASX1J{{ ibm_host_index }}"
     log_size: 65535
-  - name: ASX1I0201
+  - name: "ASX1I{{ ibm_host_index }}"
     log_size: 65535
