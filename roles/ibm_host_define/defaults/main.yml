@@ -1,0 +1,20 @@
+#
+# :Precis: Define host parameters for EIP platform
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+# Host index
+#
+# What expression generates the host index from the virtual hostnames in the
+# EIP inventory?  For example, for a virtual hostname `sduace0101-dv1` the
+# host index is `0101`.  The value is used to make environment-specific
+# expressions for IBM MQ queue manager names and IBM ACE integration nodes
+# host-specific.  See `ibm_mq_environment_queue_managers` for an example.
+ibm_host_index: >-
+  {{
+    inventory_hostname.split('-')[0]
+    | regex_replace('^.*?([0-9]+)$', '\1')
+  }}

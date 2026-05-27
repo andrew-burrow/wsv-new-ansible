@@ -1,0 +1,38 @@
+#
+# :Precis: Define host parameters for EIP platfom
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+#
+
+---
+
+galaxy_info:
+  author: Andrew Burrow
+  description: >-
+    Define host parameters for EIP platform
+
+    This *define role* describes the parameters controlling the derivation of
+    host specific names for MQ queue managers and ACE integration nodes.  It
+    defines a single role parameter `ibm_host_index` that is evaluates to the
+    host index based on the current virtual hostname.  This allows
+    expressions, such as `ADV1J{{ ibm_host_index }}`, to be used in
+    environment-specific group vars, and the expression will be evaluated at
+    task execution time into the host-specific value by including the host
+    index.  Across EIP, the host index is typically `0101` or `0202`.
+
+    The separation between host and environment components of the MQ and ACE
+    installations are complicated by the multi-environment hosting.  If the
+    two concerns are not carefully separated then there can be accidental
+    clashes in the host settings from different environments running on the
+    same host.
+
+    In inventory deployments,
+
+    -   DO define these in host vars or host group_vars, e.g.,
+        `host_vars/hostname.yml` or `group_vars/mq_hosts.yml`
+    -   DO NOT define these in environment group_vars, e.g, `ts1_mq.yml`
+
+    See `../defaults/main.yml` for details on the parameters.
+  company: Syntegrity Solutions
+
+dependencies: []
