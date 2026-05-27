@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" monitorInterval="30">
         <Appenders>
-                <RollingFile name="ApplicationLog" fileName="/var/ace/ps1/logs/vwa.log" filePattern="/var/ace/ps1/logs/$${date:yyyy-MM}/vwa-%d{MM-dd-yyyy}-%i.log.gz">
+                <RollingFile name="ApplicationLog" fileName="/var/ace/{{ ibm_ace_environment }}/logs/common.log" filePattern="/var/ace/{{ ibm_ace_environment }}/logs/$${date:yyyy-MM}/common-%d{MM-dd-yyyy}-%i.log.gz">
                         <PatternLayout>
                                 <Pattern>[%d{MM/dd/yy HH:mm:ss:SSS} AEST] %level{length=1} %msg%n</Pattern>
                         </PatternLayout>
@@ -11,7 +11,7 @@
                         </Policies>
                         <DefaultRolloverStrategy max="20"/>
                 </RollingFile>
-                <RollingFile name="AuditLog" fileName="/var/ace/ps1/logs/vwa_audit.log" filePattern="/var/ace/ps1/logs/$${date:yyyy-MM}/vwa_audit-%d{MM-dd-yyyy}-%i.log.gz">
+                <RollingFile name="AuditLog" fileName="/var/ace/{{ ibm_ace_environment }}/logs/common_audit.log" filePattern="/var/ace/{{ ibm_ace_environment }}/logs/$${date:yyyy-MM}/common_audit-%d{MM-dd-yyyy}-%i.log.gz">
                         <PatternLayout>
                                 <Pattern>[%d{MM/dd/yy HH:mm:ss:SSS} AEST] %level{length=1} %msg%n</Pattern>
                         </PatternLayout>
@@ -31,4 +31,3 @@
                 </Root>
         </Loggers>
 </Configuration>
-

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://au.gov.vic.itss.eip/dtd/properties.dtd">
-<properties>
-        <section name="DB">
-                <entry key="EIP.dsn">EIP</entry>
-                <entry key="EIP.schemaName01">DEV1S_IIBCFG</entry>
-        </section>
-</properties>
