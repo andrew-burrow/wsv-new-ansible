@@ -276,6 +276,16 @@
       | subelements('integration_servers', skip_missing=True)
     }}
 
+- name: Install JVM configuration files for environment
+  become: true
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "/var/ace/{{ ibm_ace_environment }}/config/{{ item }}"
+    owner: aceadmin
+    group: mqbrkrs
+    mode: "u=rw,go=r"
+  loop: "{{ ibm_ace_environment_jvm_configs }}"
+
 - name: Set JVM system properties of integration servers
   become: true
   become_user: "{{ ibm_ace_host_user }}"
