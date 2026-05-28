@@ -280,9 +280,9 @@ ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_cert_secret }}"
 # JVM configuration files
 #
 # What JVM configuration files must be installed from the templates in
-# `/roles/ibm_ace_environment_install/templates`?  List each file by its
-# basename.  The task will expand the matching template, and write to
-# `/var/ace/{{ ibm_ace_environment }}/config/`
+# `ibm_ace_environment_install`?  List each file by its basename.  The task
+# will expand the matching template, and write to `/var/ace/{{
+# ibm_ace_environment }}/config/`
 ibm_ace_environment_jvm_configs:
   - eip-common-log4j2.xml
   - eip-config.xml
@@ -292,9 +292,9 @@ ibm_ace_environment_jvm_configs:
 # ODBC configuration files
 #
 # What ODBC configuration files must be installed from the templates in
-# `/roles/ibm_ace_environment_install/templates`?  List each file by its
-# basename.  The task will expand the matching template, and write to
-# `{{ ibm_ace_environment_work_path }}/config/`
+# `ibm_ace_environment_install`?  List each file by its basename.  The task
+# will expand the matching template, and write to `{{
+# ibm_ace_environment_work_path }}/config/`
 ibm_ace_environment_odbc_configs:
   - odbc.ini
   - odbcinst.ini
