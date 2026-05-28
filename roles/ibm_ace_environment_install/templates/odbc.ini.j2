@@ -1,0 +1,226 @@
+;#######################################
+;#### List of data sources stanza ######
+;#######################################
+[ODBC Data Sources]
+ACCTIONR=DataDirect ODBC Oracle Acction Replica
+ACCTIONR_EVENT=DataDirect ODBC Oracle Acction Replica
+EIP=DataDirect ODBC Oracle EIP Config
+TEMPUS=DataDirect ODBC Oracle Tempus
+HICAPS=DataDirect ODBC Oracle HICAPS
+PCS=DataDirect ODBC Oracle PCS Transaction
+PCS_CFG=DataDirect ODBC Oracle PCS Repository
+
+;###########################################
+;###### Individual data source stanzas #####
+;###########################################
+;# Oracle stanza - ACCTIONR
+[ACCTIONR]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=Dev-B Acction Replica db
+HostName=spuxcn0205vm04-vip.services.workcover.vic.gov.au
+PortNumber=1530
+ServiceName=DEVBWREP
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+;# Oracle stanza - ACCTIONR_EVENT
+[ACCTIONR_EVENT]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=Dev-B Acction Replica db
+HostName=spuxcn0205vm04-vip.services.workcover.vic.gov.au
+PortNumber=1530
+ServiceName=DEVBWREP
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+;# Oracle stanza - EIP
+[EIP]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=Dev EIP db
+HostName=spuxcn0205vm04-vip.services.workcover.vic.gov.au
+PortNumber=1530
+ServiceName=DEV1SIIB
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+;# Oracle stanza - TEMPUS
+[TEMPUS]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=Dev Tempus db
+HostName=spuxcn0205vm04-vip.services.workcover.vic.gov.au
+PortNumber=1530
+ServiceName=DEV1STEMP
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+;# Oracle stanza - HICAPS
+[HICAPS]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=Dev HICAPS db
+HostName=spuxcn0205vm04-vip.services.workcover.vic.gov.au
+PortNumber=1530
+ServiceName=DEV1WHICAP
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+;# Oracle stanza - PCS
+[PCS]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=Dev PCS Transaction db
+HostName=spuxcn0205vm04-vip.services.workcover.vic.gov.au
+PortNumber=1530
+ServiceName=DEV1WPCS
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+;# Oracle stanza - PCS_CFG
+[PCS_CFG]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=Dev PCS Repository db
+HostName=spuxcn0205vm04-vip.services.workcover.vic.gov.au
+PortNumber=1530
+ServiceName=DEV1WPCS
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+[AURION]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=Dev AURION Repository db
+HostName=spuxcn0205vm04-vip.services.workcover.vic.gov.au
+PortNumber=1530
+ServiceName=DEV1TAUR11
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+[ASSYST]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=Dev ASSYST App db
+HostName=ora-scn-0202
+PortNumber=1530
+ServiceName=DEV1SASST
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+EnableNcharSupport=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+;# Oracle stanza - AVANTI
+[AVANTI]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=Avanti UAT2 DB
+HostName=ora-scn-0208
+PortNumber=1530
+ServiceName=SPT2TFIN
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+[EIPREPO]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=Dev EIP App db
+HostName=spuxcn0205vm04-vip.services.workcover.vic.gov.au
+PortNumber=1530
+ServiceName=DEV1SEIP
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+[HICAPS]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=Dev HICAPS db
+HostName=spuxcn0205vm04-vip.services.workcover.vic.gov.au
+PortNumber=1530
+ServiceName=DEV1WHICAP
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+[EFILE]
+Driver=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/drivers/lib/UKora95.so
+Description=EFILE UAT3 DB
+HostName=ora-scn-0208
+PortNumber=1530
+ServiceName=SYT3TEFILE
+CatalogOptions=0
+EnableStaticCursorsForLongData=0
+ApplicationUsingThreads=1
+EnableDescribeParam=1
+OptimizePrepare=1
+WorkArounds=536870912
+ProcedureRetResults=1
+ColumnSizeAsCharacter=1
+LoginTimeout=0
+;##########################################
+;###### Mandatory information stanza ######
+;##########################################
+[ODBC]
+InstallDir=/opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/server/ODBC/driver
+UseCursorLib=0
+IANAAppCodePage=4
