@@ -289,6 +289,16 @@ ibm_ace_environment_jvm_configs:
   - eip-tac-log4j2.xml
   - eip-vwa-log4j2.xml
 
+# ODBC configuration files
+#
+# What ODBC configuration files must be installed from the templates in
+# `/roles/ibm_ace_environment_install/templates`?  List each file by its
+# basename.  The task will expand the matching template, and write to
+# `{{ ibm_ace_environment_work_path }}/config/`
+ibm_ace_environment_odbc_configs:
+  - odbc.ini
+  - odbcinst.ini
+
 # ACE operation mode
 #
 # What operation mode should the ACE installation be in: development or
