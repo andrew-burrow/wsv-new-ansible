@@ -348,6 +348,17 @@
       | subelements('credentials', skip_missing=True)
     }}
 
+- name: Install ODBC configuration files for environment
+  become: true
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "{{ ibm_ace_environment_work_path }}/config/{{ item }}"
+    owner: aceadmin
+    group: mqbrkrs
+    mode: "u=rw,go=r"
+  loop: "{{ ibm_ace_environment_odbc_configs }}"
+
+# XXX This should be a handler
 - name: Restart integration nodes
   become: true
   become_user: "{{ ibm_ace_host_user }}"
