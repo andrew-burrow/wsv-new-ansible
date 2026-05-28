@@ -305,6 +305,24 @@
       | subelements('integration_servers', skip_missing=True)
     }}
 
+- name: Install ACE server configuration files
+  become: true
+  become_user: "{{ ibm_ace_host_user }}"
+  ansible.builtin.template:
+    src: server.conf.yaml.j2
+    dest: >-
+      {{ ibm_ace_environment_work_path }}/components/{{
+        node.name
+      }}/servers/{{ server.name }}/server.conf.yaml
+  vars:
+    node: "{{ item.0 }}"
+    server: "{{ item.1 }}"
+  loop: >-
+    {{
+      ibm_ace_environment_integration_nodes
+      | subelements('integration_servers', skip_missing=True)
+    }}
+
 - name: Chown ACE software id tag directory to set the operation mode
   become: true
   ansible.builtin.file:

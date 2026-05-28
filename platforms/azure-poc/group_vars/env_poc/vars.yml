@@ -115,6 +115,8 @@ ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
 #   - `name` -- What is the name of the server?
 #   - `port` -- What port does the server listen on?
 #   - `jre_version` -- What JRE version does the server run?
+#   - `cache_port` -- What port does the integration server listen on to
+#     allow other integration servers to read from its embedded cache?
 #
 # HOST OVERRIDE CONVENTIONS:
 #
@@ -151,6 +153,7 @@ ibm_ace_environment_integration_nodes:
       - name: IS-POC-common
         port: 7601
         jre_version: 8
+      cache_port: 7901
 
 # Integration node vault secret
 #

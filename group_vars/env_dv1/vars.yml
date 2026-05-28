@@ -115,6 +115,8 @@ ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
 #   - `name` -- What is the name of the server?
 #   - `port` -- What port does the server listen on?
 #   - `jre_version` -- What JRE version does the server run?
+#   - `cache_port` -- What port does the integration server listen on to
+#     allow other integration servers to read from its embedded cache?
 #
 # HOST OVERRIDE CONVENTIONS:
 #
@@ -171,12 +173,15 @@ ibm_ace_environment_integration_nodes:
     - name: IS-dv1-common
       port: 7601
       jre_version: 8
+      cache_port: 7901
     - name: IS-dv1-tac
       port: 7602
       jre_version: 8
+      cache_port: 7902
     - name: IS-dv1-vwa
       port: 7603
       jre_version: 8
+      cache_port: 7903
   - name: "ACEDV1I{{ ibm_host_index }}"
     queue_manager: "ADV1I{{ ibm_host_index }}"
     webadmin_port: 4443
@@ -210,12 +215,15 @@ ibm_ace_environment_integration_nodes:
     - name: IS-dv1-common
       port: 7501
       jre_version: 8
+      cache_port: 7801
     - name: IS-dv1-tac
       port: 7502
       jre_version: 8
+      cache_port: 7802
     - name: IS-dv1-vwa
       port: 7503
       jre_version: 8
+      cache_port: 7803
 
 # Integration node vault secret
 #
