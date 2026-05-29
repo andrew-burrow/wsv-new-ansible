@@ -31,6 +31,17 @@ ibm_ace_environment_source_dir: /var/tmp
 # is passed to mqsicreatebroker with -w flag.
 ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
 
+# Root directory for file nodes
+#
+# What is the *absolute* path to the root directory used by ACE message flow
+# nodes that read from and write to the filesystem?
+#
+# - In Ansible, set this value AND use it to define environment-specific
+#   directory paths and symbolic links in `ibm_ace_environment_directories`.
+# - In ACE, EITHER set `rootDirectory` configuration to match OR ensure
+#   absolute paths in the flow configuration match.
+ibm_ace_environment_root_dir: "/var/ace/{{ ibm_ace_environment }}/FILENODES_ROOT_DIR"
+
 # Integration nodes to create
 #
 # What are the specifications of the integration nodes defined in this
@@ -140,6 +151,32 @@ ibm_ace_environment_webadmin_ip: 10.51.35.72
 #   Use `vault_ibm_ace_cert_secret`
 ibm_ace_environment_cert_p12: test-cert.p12
 ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_cert_secret }}"
+
+# Directories and symbolic links for the environment
+#
+# What directories and symbolic links are required by this ACE environment?
+# The specifications comprise a list of objects that define the following
+# keys:
+#
+# - `path` -- What is the absolute path of the directory to create?
+# - `perm` -- What are the permissions of the directory?  An octal string
+#   in the form `"0750"`.
+# - `link` -- What is the path of a symbolic link to create pointing at
+#   this directory?  (Optional)  When present, a symbolic link is created
+#   at this path with `path` as its target.  Typically used to make
+#   network-mounted directories accessible beneath `FILENODES_ROOT_DIR`
+#   so that ACE file nodes can resolve paths relative to their configured
+#   root directory.
+#
+# Use the following variables to parameterise path values to the host or
+# environment:
+#
+# - `ibm_host_name` -- The hostname of the target host
+# - `ibm_ace_environment` -- The environment identifier, e.g. `dv1`
+# - `ibm_ace_environment_root_dir` -- The root directory name configured
+#   for ACE file nodes, e.g. `FILENODES_ROOT_DIR` which typically already
+#   includes `ibm_ace_environment`
+ibm_ace_environment_directories: []
 
 # JVM configuration files
 #
