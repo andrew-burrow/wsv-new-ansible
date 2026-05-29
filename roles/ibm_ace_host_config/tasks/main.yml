@@ -37,6 +37,18 @@
   loop: "{{ ibm_ace_host_users }}"
   when: ibm_ace_host_users | length > 0
 
+# XXX Difficulty here is that we need to source the same 'mqsiprofile' as
+# defined by the parameters from the 'ibm_ace_environment_define' role, namely
+# with the expression:
+#
+#     {{
+#       ibm_ace_environment_base_dir
+#     }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile
+#
+# The solution is to define 'ibm_ace_environment_base_dir' at the cluster
+# level, so that it is known in both 'ibm_ace_host_' and
+# 'ibm_ace_environment_' roles.  The solution here is safe only in so far as
+# the practice of using `/opt/ibm` is common, BUT `/opt/IBM` is also common
 - name: Create ACE profile script
   ansible.builtin.copy:
     dest: /etc/profile.d/ace.sh
@@ -46,9 +58,9 @@
       {
           env=$1
           if [ -n "${env}" ]; then
-              ACE_BIN={{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace-{{ ibm_ace_environment_version }}/server/bin
+              ACE_BIN=/opt/ibm/${env}/ace/server/bin
               source ${ACE_BIN}/mqsiprofile
-              export ODBCSYSINI="{{ ibm_ace_environment_work_path }}/config"
+              export ODBCSYSINI="/var/mqsi/${env}/config"
               export ODBCINI=${ODBCSYSINI}/odbc.ini
               echo "ODBCINI: $ODBCINI"
               echo "ODBCSYSINI: $ODBCSYSINI"
