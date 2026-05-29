@@ -6,6 +6,18 @@
 
 ---
 
+# Host name
+#
+# What expression generates the host name from the virtual hostnames in the
+# EIP inventory?  For example, for a virtual hostname `sduace0101-dv1` the
+# host name is `sduace0101`.  The value is used to make environment-specific
+# expressions for IBM MQ queue manager names and IBM ACE integration nodes
+# host-specific.  See `ibm_ace_environment_directories` for an example.
+ibm_host_name: >-
+  {{
+    inventory_hostname.split('-')[0]
+  }}
+
 # Host index
 #
 # What expression generates the host index from the virtual hostnames in the
