@@ -40,6 +40,53 @@
   loop: "{{ ibm_ace_host_users }}"
   when: ibm_ace_host_users | length > 0
 
+- name: Install packages required for network filesystems
+  become: true
+  ansible.builtin.dnf:
+    name:
+      - cifs-utils
+      - nfs-utils
+    state: present
+
+- name: Create CIFS credential files for mount points
+  become: true
+  ansible.builtin.copy:
+    content: "{{ item.credential_secret }}"
+    dest: "{{ item.credential_file }}"
+    owner: root
+    group: root
+    mode: '0600'
+  loop: >-
+    {{
+      ibm_ace_host_mounts
+      | selectattr('type', 'equalto', 'cifs')
+      | list
+      | community.general.groupby_as_dict('credential_file')
+      | dict2items
+      | map(attribute='value')
+      | map('first')
+      | list
+    }}
+  no_log: true
+
+- name: Mount network filesystems for ACE
+  become: true
+  ansible.posix.mount:
+    src: "{{ item.server }}"
+    path: "{{ item.mount_point }}"
+    fstype: "{{ item.type }}"
+    opts: >-
+      {{
+        item.options
+        + ((',credentials=' + item.credential_file
+        + ',uid=' + item.uid
+        + ',gid=' + item.gid) if item.type == 'cifs' else '')
+      }}
+    state: mounted
+    dump: 0
+    passno: 0
+  loop: "{{ ibm_ace_host_mounts }}"
+
 # XXX Difficulty here is that we need to source the same 'mqsiprofile' as
 # defined by the parameters from the 'ibm_ace_environment_define' role, namely
 # with the expression:
