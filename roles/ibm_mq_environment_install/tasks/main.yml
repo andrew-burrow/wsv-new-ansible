@@ -43,7 +43,7 @@
   become: true
   ansible.builtin.shell:
     cmd: |
-      rpm --prefix={{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm \
+      rpm --prefix={{ ibm_mq_host_base_dir }}/{{ ibm_mq_environment }}/mqm \
           -ivh MQSeriesRuntime*.rpm MQSeriesJRE*.rpm MQSeriesGSKit*.rpm \
                MQSeriesClient*.rpm MQSeriesJava*.rpm MQSeriesMan*.rpm \
                MQSeriesSample*.rpm MQSeriesSDK*.rpm MQSeriesServer*.rpm \
@@ -53,20 +53,20 @@
         ibm_mq_environment_build_dir
       }}/base/MQServer/mq_rpms/{{ ibm_mq_environment }}/x86_64
     creates: >-
-      {{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm/bin/mqlicense
+      {{ ibm_mq_host_base_dir }}/{{ ibm_mq_environment }}/mqm/bin/mqlicense
 
 - name: Accept MQ license
   become: true
   ansible.builtin.command:
     cmd: ./mqlicense -accept
-    chdir: "{{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm/bin"
+    chdir: "{{ ibm_mq_host_base_dir }}/{{ ibm_mq_environment }}/mqm/bin"
     creates: >-
-      {{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm/.license_accepted
+      {{ ibm_mq_host_base_dir }}/{{ ibm_mq_environment }}/mqm/.license_accepted
 
 - name: Change environment folder permissions
   become: true
   ansible.builtin.file:
-    path: "{{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}"
+    path: "{{ ibm_mq_host_base_dir }}/{{ ibm_mq_environment }}"
     mode: '0755'
     state: directory
 
@@ -100,7 +100,7 @@
   become: true
   ansible.builtin.shell:
     cmd: |
-      rpm --prefix={{ ibm_mq_environment_base_dir }}/{{ ibm_mq_environment }}/mqm \
+      rpm --prefix={{ ibm_mq_host_base_dir }}/{{ ibm_mq_environment }}/mqm \
           -Uvh MQSeriesRuntime*.rpm MQSeriesJRE*.rpm MQSeriesGSKit*.rpm \
                MQSeriesClient*.rpm MQSeriesJava*.rpm MQSeriesMan*.rpm \
                MQSeriesSample*.rpm MQSeriesSDK*.rpm MQSeriesServer*.rpm \
@@ -123,7 +123,7 @@
     creates: /var/mqm/qmgrs/{{ item.name }}
   environment:
     PATH: >-
-      {{ ibm_mq_environment_base_dir }}/{{
+      {{ ibm_mq_host_base_dir }}/{{
         ibm_mq_environment
       }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
   loop: "{{ ibm_mq_environment_queue_managers }}"
@@ -135,7 +135,7 @@
     cmd: strmqm {{ item.name }}
   environment:
     PATH: >-
-      {{ ibm_mq_environment_base_dir }}/{{
+      {{ ibm_mq_host_base_dir }}/{{
         ibm_mq_environment
       }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
   register: start_qm
@@ -156,7 +156,7 @@
       alias {{
         ibm_mq_environment
       }}=". {{
-        ibm_mq_environment_base_dir
+        ibm_mq_host_base_dir
       }}/{{ ibm_mq_environment }}/mqm/bin/setmqenv -s"
     marker: "# {mark} ANSIBLE MANAGED MQ ALIASES FOR {{ ibm_mq_environment }}"
     create: true

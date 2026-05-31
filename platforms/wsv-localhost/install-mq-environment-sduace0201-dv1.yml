@@ -48,7 +48,7 @@
     # ibm_mq_host_brokers_gid: 5002
 
     # From ibm_mq_environment_define/defaults/main.yml
-    ibm_mq_environment_base_dir: /opt/ibm
+    ibm_mq_host_base_dir: /opt/ibm
     ibm_mq_environment: dv1
     ibm_mq_environment_version: "9.3.0.2"
     ibm_mq_environment_package: IBM_MQ_9.3.0.2_LINUX_X86-64.tar.gz

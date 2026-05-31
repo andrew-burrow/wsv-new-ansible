@@ -6,6 +6,11 @@
 
 ---
 
+# Base directory
+#
+# What is the filename prefix for IBM MQ software installation directories?
+ibm_mq_host_base_dir: /opt/ibm
+
 # Daemon user and groups
 #
 # What is the name and UID of the account to run the daemon?  What is
