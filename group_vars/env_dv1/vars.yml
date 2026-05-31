@@ -91,6 +91,17 @@ ibm_ace_environment_source_dir: /opt/ibm-software/ace13
 # is passed to mqsicreatebroker with -w flag.
 ibm_ace_environment_work_path: "/var/mqsi/{{ ibm_ace_environment }}"
 
+# Root directory for file nodes
+#
+# What is the *absolute* path to the root directory used by ACE message flow
+# nodes that read from and write to the filesystem?
+#
+# - In Ansible, set this value AND use it to define environment-specific
+#   directory paths and symbolic links in `ibm_ace_environment_directories`.
+# - In ACE, EITHER set `rootDirectory` configuration to match OR ensure
+#   absolute paths in the flow configuration match.
+ibm_ace_environment_root_dir: "/var/ace/{{ ibm_ace_environment }}/FILENODES_ROOT_DIR"
+
 # Integration nodes to create
 #
 # What are the specifications of the integration nodes defined in this
@@ -284,6 +295,206 @@ ibm_ace_environment_webadmin_ip: 10.51.35.72
 #   Use `vault_ibm_ace_cert_secret`
 ibm_ace_environment_cert_p12: sduace0101.services.workcover.vic.gov.au.p12
 ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_cert_secret }}"
+
+# Directories and symbolic links for the environment
+#
+# What directories and symbolic links are required by this ACE environment?
+# The specifications comprise a list of objects that define the following
+# keys:
+#
+# - `path` -- What is the absolute path of the directory to create?
+# - `perm` -- What are the permissions of the directory?  An octal string
+#   in the form `"0750"`.
+# - `link` -- What is the path of a symbolic link to create pointing at
+#   this directory?  (Optional)  When present, a symbolic link is created
+#   at this path with `path` as its target.  Typically used to make
+#   network-mounted directories accessible beneath `FILENODES_ROOT_DIR`
+#   so that ACE file nodes can resolve paths relative to their configured
+#   root directory.
+#
+# Use the following variables to parameterise path values to the host or
+# environment:
+#
+# - `ibm_host_name` -- The hostname of the target host
+# - `ibm_ace_environment` -- The environment identifier, e.g. `dv1`
+# - `ibm_ace_environment_root_dir` -- The root directory name configured
+#   for ACE file nodes, e.g. `FILENODES_ROOT_DIR` which typically already
+#   includes `ibm_ace_environment`
+ibm_ace_environment_directories:
+  - path: "{{ ibm_ace_environment_root_dir }}/TPCBatch"
+    perm: "0750"
+  - path: "{{ ibm_ace_environment_root_dir }}/TPCBatch/Load"
+    perm: "0750"
+  - path: "{{ ibm_ace_environment_root_dir }}/TPCBatch/Load/IN"
+    perm: "0750"
+  - path: "{{ ibm_ace_environment_root_dir }}/TPCBatch/Load/ARCHIVE"
+    perm: "0750"
+  - path: "{{ ibm_ace_environment_root_dir }}/TACBonusCalc"
+    perm: "0750"
+  - path: "{{ ibm_ace_environment_root_dir }}/TACBonusCalc/OUT"
+    perm: "0750"
+  - path: "/mnt/tpc/{{ ibm_ace_environment }}"
+    perm: "0750"
+  - path: "/mnt/tpc/logs/{{ ibm_ace_environment }}"
+    perm: "0750"
+  - path: "/mnt/tpc/logs/{{ ibm_ace_environment }}/{{ ibm_host_name }}"
+    perm: "0750"
+  - path: "/mnt/tpc/{{ ibm_ace_environment }}/TPCBatch"
+    perm: "0750"
+    link: "{{ ibm_ace_environment_root_dir }}/TPCBatch"
+  - path: "/mnt/tpc/{{ ibm_ace_environment }}/TPCBatch/Load"
+    perm: "0750"
+  - path: "/mnt/tpc/{{ ibm_ace_environment }}/TPCBatch/Load/IN"
+    perm: "0750"
+  - path: "/mnt/tpc/{{ ibm_ace_environment }}/TPCBatch/Load/ARCHIVE"
+    perm: "0750"
+  - path: "/mnt/tpc/{{ ibm_ace_environment }}/extract"
+    perm: "0750"
+    link: "{{ ibm_ace_environment_root_dir }}/extract"
+  - path: "/mnt/tpc/{{ ibm_ace_environment }}/extract/aurion"
+    perm: "0750"
+  - path: "/mnt/tpc/{{ ibm_ace_environment }}/extract/aurion/out"
+    perm: "0750"
+  - path: "/mnt/tpc/{{ ibm_ace_environment }}/extract/aurion/archive"
+    perm: "0750"
+  - path: "/opt/{{ ibm_ace_environment }}/utils"
+    perm: "0775"
+  - path: "/opt/{{ ibm_ace_environment }}/utils/report_generator"
+    perm: "0775"
+  - path: "/opt/{{ ibm_ace_environment }}/utils/report_generator/lib"
+    perm: "0775"
+    link: "/opt/staging/utils/report_generator/lib"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP"
+    perm: "0750"
+    link: "{{ ibm_ace_environment_root_dir }}/CSP"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/EDI"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/EDI/IN"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/EDI/RPT"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/EDI/Manual"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/ROL"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/ROL/IN"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/ROL/RPT"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/COL"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/COL/IN"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/COL/RPT"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/CAB"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/CAB/IN"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/CAB/RPT"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/CAB/Manual"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/POS"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/POS/IN"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/POS/RPT"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/CSP/POS/Manual"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin"
+    perm: "0750"
+    link: "{{ ibm_ace_environment_root_dir }}/OracleFin"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/TACGL"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/TACGL/IN"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/EIPGL"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/EIPGL/IN"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/VPCSGL"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/VPCSGL/IN"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/PayrollGL"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/PayrollGL/IN"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/ACCTIONGL"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/ACCTIONGL/IN"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/TACProjects"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/TACProjects/IN"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/EIPProject"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/EIPProject/IN"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/EIPProject/RPT"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/AurionProjects"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/AurionProjects/IN"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/DaptiveProjects"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/DaptiveProjects/IN"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/AurionEmployeeUpdates"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/OracleFin/AurionEmployeeUpdates/IN"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/Riskware"
+    perm: "0750"
+    link: "{{ ibm_ace_environment_root_dir }}/Riskware"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/Riskware/OrgData"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/Riskware/EmpData"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/Riskware/OrgData/IN"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/Riskware/OrgData/OUT"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/Riskware/EmpData/IN"
+    perm: "0750"
+  - path: "/mnt/wsv/{{ ibm_ace_environment }}/Riskware/EmpData/OUT"
+    perm: "0750"
+  - path: "/mnt/alert/{{ ibm_ace_environment }}"
+    perm: "0750"
+  - path: "/mnt/alert/{{ ibm_ace_environment }}/incident"
+    perm: "0750"
+    link: "{{ ibm_ace_environment_root_dir }}/incident"
+  - path: "/mnt/alert/{{ ibm_ace_environment }}/incident/controlm"
+    perm: "0750"
+  - path: "/mnt/alert/{{ ibm_ace_environment }}/incident/xymon"
+    perm: "0750"
+  - path: "/mnt/alert/{{ ibm_ace_environment }}/incident/wla"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/FMS"
+    perm: "0750"
+    link: "{{ ibm_ace_environment_root_dir }}/FMS"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/FMS/westpac"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/FMS/westpac/incoming"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/FMS/westpac/outgoing"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/FMS/westpac/incoming/statements"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/FMS/westpac/outgoing/payments"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/FMS/aurion"
+    perm: "0750"
+  - path: "/mnt/tac/{{ ibm_ace_environment }}/FMS/aurion/incoming"
+    perm: "0750"
 
 # JVM configuration files
 #
