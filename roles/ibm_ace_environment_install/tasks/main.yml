@@ -11,7 +11,7 @@
 - name: Create ACE installation directory
   become: true
   ansible.builtin.file:
-    path: "{{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}"
+    path: "{{ ibm_ace_host_base_dir }}/{{ ibm_ace_environment }}"
     state: directory
     mode: '0755'
 
@@ -20,10 +20,10 @@
   ansible.builtin.unarchive:
     src: >-
       {{ ibm_ace_environment_source_dir }}/{{ ibm_ace_environment_package }}
-    dest: "{{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}"
+    dest: "{{ ibm_ace_host_base_dir }}/{{ ibm_ace_environment }}"
     remote_src: true
     creates: >-
-      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace-{{
+      {{ ibm_ace_host_base_dir }}/{{ ibm_ace_environment }}/ace-{{
         ibm_ace_environment_version
       }}
 
@@ -32,7 +32,7 @@
   ansible.builtin.command:
     cmd: ./ace make registry global accept license silently
     chdir: >-
-      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace-{{
+      {{ ibm_ace_host_base_dir }}/{{ ibm_ace_environment }}/ace-{{
         ibm_ace_environment_version
       }}
 
@@ -40,11 +40,11 @@
   become: true
   ansible.builtin.file:
     src: >-
-      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace-{{
+      {{ ibm_ace_host_base_dir }}/{{ ibm_ace_environment }}/ace-{{
         ibm_ace_environment_version
       }}
     dest: >-
-      {{ ibm_ace_environment_base_dir }}/{{ ibm_ace_environment }}/ace
+      {{ ibm_ace_host_base_dir }}/{{ ibm_ace_environment }}/ace
     state: link
 
 # Integration Node Creation
@@ -55,7 +55,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsicreatebroker {{ item.name }}
       -q {{ item.queue_manager }}
@@ -74,7 +74,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsivault {{ item.name }} --create
       --vault-key {{ ibm_ace_environment_vault_secret }} ;
@@ -89,7 +89,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsistart {{ item.name }}
   register: start_node
@@ -106,7 +106,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsichangeproperties {{ item.name }}
       -b webadmin
@@ -121,7 +121,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsichangeproperties {{ item.name }}
       -b webadmin
@@ -136,7 +136,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsichangeauthmode {{ item.name }}
       -b {{ ibm_ace_environment_webadmin_mode }}
@@ -148,7 +148,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsiwebuseradmin {{ item.name }}
       -c -u {{ ibm_ace_environment_webadmin_user }}
@@ -195,7 +195,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsichangeproperties {{ item.name }}
       -b webadmin
@@ -210,7 +210,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsichangeproperties {{ item.name }}
       -b webadmin
@@ -225,7 +225,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsicreateexecutiongroup {{ item.0.name }} -e {{ item.1.name }}
   register: create_server
@@ -245,7 +245,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsichangeproperties {{ item.0.name }}
       -e {{ item.1.name }}
@@ -264,7 +264,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       ibmint specify jre --version {{ item.1.jre_version }}
       --integration-node {{ item.0.name }}
@@ -313,7 +313,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsichangeproperties {{ item.0.name }}
       -e {{ item.1.name }}
@@ -347,7 +347,7 @@
 - name: Chown ACE software id tag directory to set the operation mode
   become: true
   ansible.builtin.file:
-    path: /opt/ibm/{{ ibm_ace_environment }}/ace-13.0.6.2/swidtag
+    path: "{{ ibm_ace_host_base_dir }}/{{ ibm_ace_environment }}/ace-13.0.6.2/swidtag"
     owner: aceadmin
     group: mqbrkrs
     recurse: yes
@@ -358,7 +358,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       ibmint set mode {{ ibm_ace_environment_operation_mode }} --silently
 
@@ -368,7 +368,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsicredentials {{ item.0.name }}
       --all-integration-servers --create
@@ -405,7 +405,7 @@
   ansible.builtin.shell:
     cmd: >-
       source {{
-        ibm_ace_environment_base_dir
+        ibm_ace_host_base_dir
       }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
       mqsistop {{ item.name }} ;
       mqsistart {{ item.name }}

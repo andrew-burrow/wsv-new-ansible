@@ -66,11 +66,6 @@ ibm_mq_environment_queue_managers:
 #
 # From `/roles/ibm_ace_environment_define/defaults/main.yml`
 
-# Base directory
-#
-# What is the filename prefix for IBM ACE software installation directories?
-ibm_ace_environment_base_dir: /opt/ibm
-
 # Environment identifier
 #
 # What is the short name for this environment?  This is used in directory

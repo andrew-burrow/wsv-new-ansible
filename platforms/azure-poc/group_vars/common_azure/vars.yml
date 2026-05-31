@@ -43,6 +43,11 @@ ibm_mq_host_brokers_gid: 5002
 #
 # From `/roles/ibm_ace_host_define/defaults/main.yml`
 
+# Base directory
+#
+# What is the filename prefix for IBM ACE software installation directories?
+ibm_ace_host_base_dir: /opt/ibm
+
 # Daemon user and groups
 #
 # What is the name and UID of the account to run ACE?  What is the name

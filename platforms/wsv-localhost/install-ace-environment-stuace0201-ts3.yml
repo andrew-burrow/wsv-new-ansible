@@ -39,7 +39,7 @@
     # Base directory
     #
     # What is the filename prefix for IBM ACE software installation directories?
-    ibm_ace_environment_base_dir: /opt/ibm
+    ibm_ace_host_base_dir: /opt/ibm
 
     # Environment identifier
     #
