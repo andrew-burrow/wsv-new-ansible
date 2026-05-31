@@ -19,3 +19,37 @@ ibm_ace_host_gid: 5001
 ibm_ace_host_additional_groups:
   - mqm
 ibm_ace_host_users: []
+
+# Mount points to create on the host
+#
+# What are the NFS and CIFS mount points required by this host?  The
+# specifications comprise a list of objects that define the following keys:
+#
+# - `mount_point` -- What is the local mount point path?
+# - `type` -- What is the filesystem type?  Either `nfs` or `cifs`.
+# - `server` -- What is the remote server address and export path?
+#   For NFS: `SERVER:/export/path`
+#   For CIFS: `//SERVER/share`
+# - `options` -- What are the mount options?  A string of comma-separated
+#   options as they would appear in fstab.  Do not include the credentials
+#   option here; it is derived from `credential_file`.
+# - `uid` -- What local user should own the mount?  (CIFS only)
+# - `gid` -- What local group should own the mount?  (CIFS only)
+# - `credential_file` -- What is the path to the credential file?  (CIFS
+#   only)  Typically `/usr/local/.auth/{SERVER}.auth`.
+# - `credential_secret` -- What are the contents of the credential file?
+#   (CIFS only)  A string in the format:
+#
+#     username=DOMAIN\user
+#     password=secret
+#
+# VAULT NAMING CONVENTIONS:
+#
+# - `.ibm_ace_host_mounts[].credential_secret`
+#
+#   Use `vault_ibm_ace_host_mounts_{NAME}_secret` where `{NAME}` is a
+#   short identifier for the server, e.g. `SDWFTP0101` or `alert_dev`.
+#   Note that one credential file typically serves multiple mount points
+#   sharing the same server.
+#
+ibm_ace_host_mounts: []
