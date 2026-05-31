@@ -276,6 +276,27 @@
       | subelements('integration_servers', skip_missing=True)
     }}
 
+- name: Create file-system directories for environment
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "{{ item.perm }}"
+    owner: iibadmin
+    group: mqbrkrs
+  loop: "{{ ibm_ace_environment_directories }}"
+
+- name: Create file-system symbolic links for environment
+  ansible.builtin.file:
+    src: "{{ item.path }}"
+    path: "{{ item.link }}"
+    state: link
+  loop: >-
+    {{
+      ibm_ace_environment_directories
+      | selectattr('link', 'defined')
+      | list
+    }}
+
 - name: Install JVM configuration files for environment
   become: true
   ansible.builtin.template:
