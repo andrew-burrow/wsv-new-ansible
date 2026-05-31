@@ -56,3 +56,65 @@ ibm_ace_host_gid: 10778
 ibm_ace_host_additional_groups:
   - mqm
 ibm_ace_host_users: []
+
+# Mount points to create on the host
+#
+# What are the NFS and CIFS mount points required by this host?  The
+# specifications comprise a list of objects that define the following keys:
+#
+# - `mount_point` -- What is the local mount point path?
+# - `type` -- What is the filesystem type?  Either `nfs` or `cifs`.
+# - `server` -- What is the remote server address and export path?
+#   For NFS: `SERVER:/export/path`
+#   For CIFS: `//SERVER/share`
+# - `options` -- What are the mount options?  A string of comma-separated
+#   options as they would appear in fstab.  Do not include the credentials
+#   option here; it is derived from `credential_file`.
+# - `uid` -- What local user should own the mount?  (CIFS only)
+# - `gid` -- What local group should own the mount?  (CIFS only)
+# - `credential_file` -- What is the path to the credential file?  (CIFS
+#   only)  Typically `/usr/local/.auth/{SERVER}.auth`.
+# - `credential_secret` -- What are the contents of the credential file?
+#   (CIFS only)  A string in the format:
+#
+#     username=DOMAIN\user
+#     password=secret
+#
+# VAULT NAMING CONVENTIONS:
+#
+# - `.ibm_ace_host_mounts[].credential_secret`
+#
+#   Use `vault_ibm_ace_host_mounts_{NAME}_secret` where `{NAME}` is a
+#   short identifier for the server, e.g. `SDWFTP0101` or `alert_dev`.
+#   Note that one credential file typically serves multiple mount points
+#   sharing the same server.
+#
+ibm_ace_host_mounts:
+  - mount_point: /mnt/tpc
+    type: nfs
+    server: "SPSTN20202:/vol/EDI_STG_vol01"
+    options: "tcp,nolock,rsize=32768,wsize=32768,intr,noatime,actimeo=3"
+  - mount_point: /mnt/tac
+    type: cifs
+    server: "//SDWFTP0101/Interface/tac/iiblanding"
+    options: "rw,sec=ntlmssp"
+    uid: iibadmin
+    gid: mqbrkrs
+    credential_file: /usr/local/.auth/SDWFTP0101.auth
+    credential_secret: "{{ vault_ibm_ace_host_mounts_SDWFTP0101_secret }}"
+  - mount_point: /mnt/wsv
+    type: cifs
+    server: "//SDWFTP0101/Interface/wsv/iiblanding"
+    options: "rw,sec=ntlmssp"
+    uid: iibadmin
+    gid: mqbrkrs
+    credential_file: /usr/local/.auth/SDWFTP0101.auth
+    credential_secret: "{{ vault_ibm_ace_host_mounts_SDWFTP0101_secret }}"
+  - mount_point: /mnt/alert
+    type: cifs
+    server: "//sdstn20101-c.melb.devad/alert_dev"
+    options: "rw,sec=ntlmssp"
+    uid: iibadmin
+    gid: mqbrkrs
+    credential_file: /usr/local/.auth/alert_dev.auth
+    credential_secret: "{{ vault_ibm_ace_host_mounts_alert_dev_secret }}"
