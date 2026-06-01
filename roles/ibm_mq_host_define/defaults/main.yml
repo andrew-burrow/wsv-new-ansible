@@ -41,3 +41,9 @@ ibm_mq_host_brokers_group: mqbrkrs
 # What is the GID for the mqbrkrs secondary group?  If not specified, the
 # system will auto-assign.
 ibm_mq_host_brokers_gid: 5002
+
+# Version of itsshelpers repository to deploy
+#
+# Which branch/commit/tag of the itsshelper Git repository is aligned with
+# this repository?
+ibm_mq_host_itsshelper_version: eip_ansible_app

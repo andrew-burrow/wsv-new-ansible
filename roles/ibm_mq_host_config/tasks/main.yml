@@ -69,3 +69,38 @@
   ansible.builtin.dnf:
     name: bc
     state: present
+
+- name: Deploy itsshelper repository
+  become: true
+  ansible.builtin.git:
+    repo: "ssh://git@spudopa201.melb.ad:7999/pup/itsshelper.git"
+    dest: /opt/itsshelper
+    version: eip_ansible_app
+
+- name: Symlink MQ scripts
+  become: true
+  ansible.builtin.file:
+    src: /opt/itsshelper/files/eip_scripts/iibwmq
+    dest: /opt/scripts
+    state: link
+
+- name: Symlink MQ scripts mqapps
+  become: true
+  ansible.builtin.file:
+    src: /opt/itsshelper/files/eip_scripts/mqapps
+    dest: /opt/scripts/mqapps
+    state: link
+
+- name: Symlink MQ properties
+  become: true
+  ansible.builtin.file:
+    src: /opt/itsshelper/files/eip_properties/iibwmq
+    dest: /opt/properties
+    state: link
+
+- name: Symlink MQ properties for mqapps
+  become: true
+  ansible.builtin.file:
+    src: /opt/itsshelper/files/eip_properties/iibwmq
+    dest: /opt/scripts/properties
+    state: link
