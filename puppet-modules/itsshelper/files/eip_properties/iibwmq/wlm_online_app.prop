@@ -1,0 +1,29 @@
+WLM_LIST=(OnlineClaim TransportAccidentInjuredPerson Form OnlineForm AvantiForm OnlineAvanti Nid)
+
+declare -A WLM_POLICY_NAME ADDITIONAL_INSTANCES
+
+for WLM in ${WLM_LIST[*]} ; do
+  WLM_POLICY_NAME[${WLM}]=WLM_${WLM}
+done
+
+case "${env}" in
+  "sv1" | "pr1") 
+    ADDITIONAL_INSTANCES[OnlineClaim]=2
+    ADDITIONAL_INSTANCES[TransportAccidentInjuredPerson]=2
+    ADDITIONAL_INSTANCES[Form]=2
+    ADDITIONAL_INSTANCES[OnlineForm]=2
+    ADDITIONAL_INSTANCES[AvantiForm]=2
+    ADDITIONAL_INSTANCES[OnlineAvanti]=2
+	ADDITIONAL_INSTANCES[Nid]=2
+    ;;
+  *) 
+    ADDITIONAL_INSTANCES[OnlineClaim]=2
+    ADDITIONAL_INSTANCES[TransportAccidentInjuredPerson]=2
+    ADDITIONAL_INSTANCES[Form]=2
+    ADDITIONAL_INSTANCES[OnlineForm]=2
+    ADDITIONAL_INSTANCES[AvantiForm]=2
+    ADDITIONAL_INSTANCES[OnlineAvanti]=2
+	ADDITIONAL_INSTANCES[Nid]=2
+    ;;
+esac
+

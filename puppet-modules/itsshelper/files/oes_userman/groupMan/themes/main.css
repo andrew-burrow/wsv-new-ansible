@@ -1,0 +1,779 @@
+ 
+
+/*******************************************************************************
+*** INDEX **********************************************************************
+********************************************************************************
+**
+* - GENERAL/BODY
+* - HEADER
+* - MENU
+* - CONTENT
+* - SUBCONTENT
+* - FOOTER
+* - FORMS
+* - TABLES
+**
+*******************************************************************************/
+
+
+/* GENERAL/BODY ------------------------------------------------------------- */
+
+/* Zero default margin & padding around common elements */
+blockquote, body, dd, dl, dt, fieldset, form, h1, h2, h3, h4, h5, h6, hr, li, ol, p, ul
+{
+	margin: 0;
+	padding: 0;
+}
+
+body
+{
+	min-width: 744px;
+	padding: 10px 10px 25px 10px;
+	background-color: #FFFFFF;
+	color: #000000;
+	font-size: 70%;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	line-height: 1.4;
+}
+
+* html body
+{
+	w\idth: expression(document.body.clientWidth < 764 ? "744px" : "auto");
+}
+
+a:link
+{
+	color: #336699;
+}
+
+a:visited
+{
+	color: #336699;
+}
+
+a:hover, a:focus
+{
+	text-decoration: none;
+}
+
+hr 
+{
+	margin-top: 1em;
+	border: 0;
+	height: 1px;
+	background-color: #000000;
+	color: #000000;
+}
+
+input, select, table, textarea
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 100%;
+}
+
+.hidden
+{
+	position: absolute;
+	left: -9999px;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	margin-bottom: -1px;
+	font-size: 1px;
+	line-height: 1px;
+}
+
+.clearer
+{
+	clear: both;
+	height: 1px;
+	overflow: hidden;
+	margin-bottom: -1px;
+	font-size: 1px;
+	line-height: 1px;
+}
+
+.footer-clearer
+{
+	width: 364px;
+	clear: both;
+	height: 1px;
+	overflow: hidden;
+	margin-bottom: -1px;
+	font-size: 1px;
+	line-height: 1px;
+}
+
+/* HEADER ------------------------------------------------------------------- */
+
+* html #header
+{
+	min-width: 744px;
+	width:expression(document.body.clientWidth < 764 ? "744px" : "auto" );
+	height: 1px;
+}
+
+/* Fix for logo spacing inside a H1 */
+#header p
+{
+	margin-bottom: 3px;
+}
+
+* html #header p 
+{
+	margin-bottom: 4px;
+}
+
+#header table
+{
+	border: 0;
+	width: 100%;
+}
+
+#logo
+{
+	display: inline;
+	float: left;
+	width: 400px;
+	margin-top: 8px;
+	margin-right: -353px;
+	margin-left: 10px;
+	margin-bottom: 8px;
+}
+
+#siteInformation
+{
+	display: inline;
+	float: right;
+	height: 1.1em;
+	margin-right: 10px;
+}
+
+#siteInformation ul
+{
+	list-style: none;
+}
+
+#siteInformation li
+{
+	float: left;
+	margin-left: 0.5em;
+	border-left: 1px solid #666666;
+	padding-left: 0.5em;
+	line-height: 1.1;
+}
+
+#siteInformation li.first
+{
+	border-left: 0 none #FFFFFF;
+}
+
+#siteInformation a
+{
+	color: #666666;
+	text-decoration: none;
+}
+
+#siteInformation a:hover
+{
+	text-decoration: underline;
+}
+
+
+/* MENU --------------------------------------------------------------------- */
+
+
+#menu
+{
+	clear:both;
+	float:inherit;
+	position:static;
+	height: 42px;
+	width: inherit;
+	border-top: 4px solid #205B81;
+	border-bottom:4px solid #205B81;
+	border-left: 1px solid #E0E0E0;
+	border-right: 1px solid #E0E0E0;
+	background-color: #669ACC;
+	text-indent:10px;
+
+}
+
+#menu ul{
+	display:block;
+	position:relative;
+	list-style: none; 
+	text-align: left;
+	padding:0;
+	margin:0;
+
+	}
+	
+	
+#menu li{
+	display:inline;
+	color:#FFFFFF;
+	height:inherit;
+	font-weight: bold;
+	text-align: left;
+	font-size: small;
+	
+	}
+
+
+#menu ul ul{
+	width: inherit;
+	display:block;
+	position:relative;
+	list-style: none; 
+	text-align: left;
+	margin-top: 0.1em;
+	border-top:1px solid #000000;
+	background-color: #FFFFFF;
+	height:21px;
+	}
+	
+#menu ul li ul li{
+	display: inline;
+	position:relative;
+	color:#CCCCCC;
+	font-weight:normal;
+	font-size:11px;
+	text-decoration:none;
+	padding-right:20px;
+	width: 20%;
+}
+
+
+#menu ul li ul li.highlight
+{
+	color:#333333;
+	font-weight:bold;
+	position: relative;
+}
+
+#menu img
+{
+	width:16px;
+	height:16px;
+	vertical-align:bottom;
+	padding-right:5px;
+	position:relative;
+}
+
+#menu table
+{
+	border: 0;
+	width: 100%;
+}
+/* CONTENT ------------------------------------------------------------------ */
+
+#content
+{
+	min-width: 744px;
+	width:expression(document.body.clientWidth < 764 ? "744px" : "auto" );
+	border-left: 1px solid #EDEDED;
+	border-right: 1px solid #EDEDED;
+	padding-bottom: 38px;
+	background-repeat: repeat-y;
+	background-position: 100% 0;
+	background-color:#FFFFFF;
+}
+
+
+#contentMain
+{
+	display: block;
+	float: left;
+	width: 100%;
+	background-repeat: repeat-x;
+	margin:0;
+	border-top: 1px solid #E0E0E0;
+}
+
+#contentMainInner {
+	width: 730px; 
+	vertical-align:top; 
+	padding:10px;
+	}
+
+.contentButtons {
+	width: 500px; 
+	vertical-align:top; 
+	text-align:right;
+	border:none;
+	}
+
+
+#contentMain .heading
+{
+	color: #000000;
+	font-size: 100%;
+	padding: 10px;
+	text-transform: uppercase;
+	font-weight: bold;
+	background-color: #F5F5F5;
+	border-bottom:1px solid #E0E0E0;
+}
+
+#content h1, #contentMain h1
+{
+	color: #205B81;
+	font-size: 160%;
+	font-weight: bold;
+	padding: 1em 0.5em 0.5em 0.5em;
+}
+
+#content h2, #contentMain h2
+{
+	margin-top: 1em;
+	color: #585858;
+	font-size: 135%;
+	margin-bottom: 0em;
+	text-transform: none;
+	font-weight: bold;
+	
+}
+
+#content h3, #contentMain h3
+{
+	font-size: 100%;
+	margin-top: 1em;
+
+}
+
+#content h4, #contentMain h4
+{
+	margin-top: 1em;
+	font-size: 100%;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#content p, #contentMain p, #contentMainInner p
+{
+	margin-top: 1em;
+	line-height:1.5;
+}
+
+
+#contentMain ul
+{
+	margin-top: 1em;
+	list-style: none;
+}
+
+#contentMain ul li
+{
+	margin-top: 0.5em;
+	padding-left: 15px;
+	background-repeat: no-repeat;
+	background-position: 0 0.5em;
+}
+
+#contentMain ol
+{
+	margin: 1em 0 0 2em;
+}
+
+#contentMain ol li
+{
+	margin-top: 0.5em;
+}
+
+
+#content .backToTop
+{
+	margin-top: 2em;
+	border-bottom: 1px solid #E0E0E0;
+	text-align: right;
+}
+
+.backToTop a
+{
+	position: relative;
+	top: 8px;
+}
+
+
+
+/* SUBCONTENT --------------------------------------------------------------- */
+
+
+#contentSubLeft
+{
+	float: left;
+	display:block;
+	position:static;
+	width: 70%;
+	w\idth: 70%;
+	padding: 19px 10px 0px 10px;
+	background-repeat: repeat-y;
+}
+
+
+#contentSubRight
+{
+	float: right;
+	display:block;
+	position:static;
+	width: 24%;
+	w\idth: 24%;
+	margin-top: 1em;
+	margin-right: 5px;
+	background-repeat: repeat-y;
+}
+
+
+
+
+/* FOOTER ------------------------------------------------------------------- */
+
+#footer
+{
+	clear: both;
+	border-top: 4px solid #205B81;
+	padding-top: 7px;
+	padding-bottom: 1em;
+	padding-left: 10px;
+	color: #666666;
+}
+
+* html #footer
+{
+	height: 1px;
+}
+
+#footer table
+{
+	border: 0;
+	width: 100%;
+}
+
+#footer p
+{
+	float: left;
+	margin-right: 5em;
+}
+
+#footer ul
+{
+	float: left;
+	margin-right: 3em;
+	padding-top: 0.25em;
+	list-style: none;
+	line-height: 1.1;
+}
+
+#footer li
+{
+	float: left;
+}
+
+#footer li.first
+{
+	margin-right: 0.5em;
+	border-right: 1px solid #666666;
+	padding-right: 0.5em;
+}
+
+#footer a
+{
+	color: #666666;
+	text-decoration: none;
+}
+
+#footer a:hover, #footer a:focus, #footer a:active
+{
+	text-decoration: underline;
+}
+
+#downloads
+{
+	float: right;
+	min-width: 160px;
+}
+
+#downloads p
+{
+	margin-right: 0.5em;
+}
+
+#downloads ul
+{
+	float: left;
+	margin-top: -5px;
+	margin-right: 0;
+}
+
+#downloads li
+{
+	position: relative;
+	width: 21px;
+	height: 21px;
+	overflow: hidden;
+	margin-left: 0.5em;
+}
+
+#disclaimer
+{
+	float: left;
+	min-width: 220px;
+}
+
+/* FORMS -------------------------------------------------------------------- */
+
+form 
+
+{
+	
+}
+
+
+
+input.button
+{
+	margin-top: 1em;
+	height: 1.7em;
+	border: 1px solid #D0D0D0;
+	border-right-color: #9495A2;
+	border-bottom-color: #9495A2;
+	padding-right: 1px;
+	padding-left: 1px;
+	background-color: #FFFFFF;
+	background-repeat: repeat-x;
+	background-position: 0 100%;
+	background:  url("../images/button_bg.gif") bottom right repeat;
+	font-weight: bold;
+}
+
+.required
+{
+	color: #CC0000;
+}
+
+#content .errorList h2
+{
+	color: #CC0000;
+	font-size: 100%;
+	font-weight: bold;
+}
+
+#content .errorList ul
+{
+	margin-top: 0;
+	list-style-image: url(../images/icons/bullet_diamond.gif);
+	list-style-type:circle;
+	padding-bottom: 15px;
+	padding-left: 25px;
+
+}
+
+
+
+/*==========================================
+ Tables
+==========================================*/
+
+
+#content table
+{
+	width: 100%;
+	border: 0 none #FFFFFF;
+	border-top: 1px solid #000000;
+}
+
+
+#content th
+{
+	padding: 1px 10px 3px 10px;
+	background-color: #205B81;
+	background-repeat: no-repeat;
+	background-position: 100% 50%;
+	color: #FFF;
+	text-align: left;
+	vertical-align: top;
+	text-transform: uppercase;
+}
+#content th.leftBorder
+{
+	border-left: 1px solid #FFFFFF;
+}
+
+#content th.rightBorder
+{
+	border-right: 1px solid #FFFFFF;
+}
+
+
+.th a
+{
+	color: #FFFFFF;
+}
+
+
+#content td
+{
+	border: 0 none #FFFFFF;
+	border-right: 1px none #E0E0E0;
+	border-bottom: 1px solid #E0E0E0;
+	padding: 4px 4px 4px 10px;
+	vertical-align: top;
+	text-align: left;
+}
+
+#content td.leftBorder
+{
+	border-left: 1px solid #E0E0E0;
+}
+
+#content td.rightBorder
+{
+	border-right: 1px solid #E0E0E0;
+}
+
+#content td.comment
+{
+	background-color: #FFFFFF;
+	width: 600px;
+}
+
+#content td.first
+{
+	width:25%;
+}
+
+#content td.white
+{
+	background-color: #FFFFFF;
+	border: none;
+}
+
+#content td.info
+{
+	width:5%;
+}
+
+#content td.subTitle
+{
+	background-color: #E0E0E0;
+	color:#333333;
+	font-weight:bold;
+}
+
+#content .indent
+{
+	margin-left: 1em;
+}
+
+#content td.innerTable
+{
+	border-bottom: none;
+}
+
+#content td a
+{
+	font-weight: bold;
+}
+
+#content td.center
+{
+	text-align: center;
+}
+
+#content td p
+{
+	padding:2px;
+	/*changed from 0 by KERZL1 to
+	 *imitate spacing of sample html page
+	 */
+}
+
+
+
+/*==========================================
+ ORR Tables
+==========================================*/
+
+#content table.priorPolicy thead th {
+	background-color:#85B8EB;
+	text-transform: uppercase;
+}
+
+#content table.currentPolicy thead th {
+	background-color: #6699CC;
+	text-transform: uppercase;
+}
+
+#content th.priorPolicy {
+	background-color: #8EB8EB;
+	text-transform: uppercase;
+}
+
+#content th.currentPolicy {
+	background-color: #6699CC;
+	text-transform: uppercase;
+}
+
+
+#content table.searchPolicy thead tr th {
+	border-right: 1px solid #FFFFFF; 
+	text-transform: uppercase;
+}
+
+#content table.priorPolicy thead tr th {
+	border-right: 1px solid #FFFFFF; 
+	text-transform: uppercase;
+}
+#content table tbody tr.alt td {
+	background-color: #F5F5F5;
+}
+
+#content table.searchPolicy tbody tr td {
+	border-right: 1px solid #E0E0E0; 
+}
+
+#content table.priorPolicy tbody tr td {
+	border-right: 1px solid #E0E0E0; 
+}
+
+#content table.currentPolicy tbody tr td {
+	border-right: 1px solid #E0E0E0; 
+}
+
+/****** Not used yet Ruler Tables*******/
+
+#content table.ruler tbody tr.ruled td {
+	border-top: 1px solid #205B81;
+	border-bottom: 1px solid #205B81;
+	padding-top: 3px;
+}
+
+#content table.ruler tbody tr.ruled td.first {
+	border-left: 1px solid #205B81;
+}
+
+
+.url
+{
+	color: #666666 !important;
+	font-weight: normal !important;
+	text-decoration: none !important;
+}
+
+.url:hover
+{
+	text-decoration: underline !important;
+}
+
+#content .errorlist {
+	border-bottom: 1px solid #E0E0E0;
+}
+
+#contentOtherPosition {
+	display: none;
+}
+
+#contentAgentDRRSubmission {
+	display: none;
+}

@@ -1,0 +1,85 @@
+* runmqsc command file template
+* fms_iib_app.template
+* relies on fms_iib_app.template.map
+
+
+* ---------------------------------------------------
+* Set Auth Records - Service Component Queues
+* ---------------------------------------------------
+
+set authrec -
+    objtype(queue) -
+    profile('SC.FMS.FILE.**') -
+    principal('__CLUSUSER__') -
+    authrmv(all) -
+    authadd(put, inq, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('SC.FMS.FILE.**') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+    
+* ---------------------------------------------------
+* Set Auth Records - Entity Service Queues
+* ---------------------------------------------------
+
+set authrec -
+    objtype(queue) -
+    profile('ES.FMS.FILE.**') -
+    principal('__CLUSUSER__') -
+    authrmv(all) -
+    authadd(put, inq, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('ES.FMS.FILE.**') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+
+* ---------------------------------------------------
+* Define Queues - SC_FMSExport
+* ---------------------------------------------------
+
+define ql('SC.FMS.FILE.EXPORT.REQ.BOQ.V1') -
+    descr('Backout Queue for SC_FMSExport') -
+    replace
+
+define ql('SC.FMS.FILE.EXPORT.REQ.V1') -
+    descr('Request Queue for SC_FMSExport') -
+    boqname('SC.FMS.FILE.EXPORT.REQ.BOQ.V1') -
+    bothresh(3) -
+    replace
+
+define ql('SC.FMS.FILE.EXPORT.EX.V1') -
+	descr('Exception Queue for SC_FMSExport') -
+	replace
+ 
+* ---------------------------------------------------
+* Define Queues - SC_FMSImport
+* ---------------------------------------------------
+
+define ql('ES.FMS.FILE.IMPORT.RESP.V1') -
+    descr('Response Queue for ES_FMSImport') -
+    replace
+
+define ql('SC.FMS.FILE.IMPORT.REQ.BOQ.V1') -
+    descr('Backout Queue for SC_FMSImport') -
+    replace
+
+define ql('SC.FMS.FILE.IMPORT.REQ.V1') -
+    descr('Request Queue for SC_FMSImport') -
+    boqname('SC.FMS.FILE.IMPORT.REQ.BOQ.V1') -
+    bothresh(3) -
+    replace
+
+define ql('SC.FMS.FILE.IMPORT.EX.V1') -
+	descr('Exception Queue for SC_FMSImport') -
+	replace
+ 
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

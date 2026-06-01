@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://localhost/groupMan/reporting" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://localhost/groupMan/reporting">
+<types>
+<xsd:schema targetNamespace="http://localhost/groupMan/reporting">
+ <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+ <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+</xsd:schema>
+</types>
+<message name="ws_generateReportRequest">
+  <part name="email" type="xsd:string" />
+  <part name="company" type="xsd:string" />
+  <part name="companyDN" type="xsd:string" />
+  <part name="env" type="xsd:string" />
+  <part name="reportType" type="xsd:string" />
+</message>
+<message name="ws_generateReportResponse">
+  <part name="return" type="xsd:string" />
+</message>
+
+<portType name="ws_generateReportPortType">
+  <operation name="generateReport">
+    <input message="tns:ws_generateReportRequest"/>
+    <output message="tns:ws_generateReportResponse"/>
+  </operation>
+</portType>
+<binding name="ws_generateReportBinding" type="tns:ws_generateReportPortType">
+  <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+  <operation name="generateReport">
+    <soap:operation soapAction="http://linvm110.services.workcover.vic.gov.au/groupMan/reporting/ws_generateReport.php" style="rpc"/>
+    <input><soap:body use="encoded" namespace="http://localhost/groupMan/reporting" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="http://localhost/groupMan/reporting" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+</binding>
+<service name="ws_generateReportService">
+  <port name="ws_generateReportPort" binding="ws_generateReportBinding">
+    <soap:address location="http://linvm110.services.workcover.vic.gov.au/groupMan/reporting/ws_generateReport.php"/>
+  </port>
+</service>
+</definitions>
+

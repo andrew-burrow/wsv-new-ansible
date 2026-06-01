@@ -1,0 +1,193 @@
+#
+# 
+#
+# program:	"configure-federated-ldap-standalone.jy"
+# date:		Tuesday 26 2016
+# pupose:	Configure ldap federated repository for a standalone server
+# usage: 	"configure-federated-ldap-standalone.jy <props file> 
+#		where <props file> is formatted like a windows .ini file with a [SECURITY] section and the following properties
+#		repo		- a label for the repository, e.g. 'enldap'
+#		admin_user 	- user name for the WAS admin user, e.g. cn=WASADMIN_Novus-TSTA,ou=admin,o=vwa
+#		bind_user 	- ldap bind user
+#		ldap_host	- FQDN of ldap host, e.g. devldbendlap.services.workcover.vic.gov.au
+#		ldap_port	- secure port for ldap, e.g. 636
+#		realm_name	- SSO domain's realm name, e.g. enldap.services.workcover.vic.gov.au
+#		root_signer_cert- full path to root signer certificate, e.g. /opt/IBM/SOE/ICAD/config/novus/POT/test-org-ca-edir.cer
+
+
+import ConfigParser
+import re
+
+def print_usage():
+	print "USAGE: configure-federated-ldap-standalone.jy 'property file'"
+
+
+if len(sys.argv) != 1:
+	print_usage
+	sys.exit(-1)
+	
+props_file = sys.argv[0]
+
+props = ConfigParser.ConfigParser()
+props.read(props_file)
+section = 'SECURITY'
+
+
+def getProperty(prop_name):
+	prop_value = ''
+	if props.has_option(section, prop_name):
+		prop_value = props.get(section, prop_name)
+		print "PROPERTY: %s = %s" % (prop_name, prop_value)
+		return prop_value
+	else:
+		print 'ERROR: missing property: %s' % prop_name
+		sys.exit(1)
+
+repo = getProperty('repo')
+admin_user = getProperty('admin_user')
+bind_user = getProperty('bind_user')
+bind_pass = getProperty('bind_pass')
+ldap_host = getProperty('ldap_host')
+ldap_port = getProperty('ldap_port')
+realm_name = getProperty('realm_name')
+root_signer_cert = getProperty('root_signer_cert')
+op_user = getProperty('op_user')
+op_group = getProperty('op_group')
+monitor_group = getProperty('monitor_group')
+admin_group = getProperty('admin_group')
+
+_excp_ = 0
+
+print "INFO: adding root signer..."
+certs = AdminTask.listSignerCertificates('[-keyStoreName NodeDefaultTrustStore]').splitlines()
+root_cert_exists = 0
+for cert in certs:
+	alias = cert[cert.find('alias')+6:cert.find(']')]
+	if alias == 'enldap':
+		print('INFO: Root signer cert already exists.')
+		root_cert_exists = 1
+if not (root_cert_exists):
+	print 'INFO: Adding root signer cert.'
+	args = '[-keyStoreName NodeDefaultTrustStore -certificateAlias enldap -certificateFilePath %s -base64Encoded true]' % root_signer_cert
+	AdminTask.addSignerCertificate(args)
+	print "IMPORTANT INFO: saving... configuration incomplete... re-run after restart of dmgr..."
+	AdminConfig.save()
+	sys.exit(1)
+	
+
+repos = AdminTask.listIdMgrRepositories()
+default_realm =  AdminTask.getIdMgrDefaultRealm()
+#if this is a re-run
+if repos.find(repo) >= 0:
+	print "ERROR: removing LDAP repository if it exists: %s..." % repo
+	realms = AdminTask.listIdMgrRealms().split()
+	print "DEBUG: realms - %s" % realms
+	print "DEBUG: realm_name - %s" % realm_name
+
+	if realm_name in realms:
+		realm_base_entries = AdminTask.listIdMgrRealmBaseEntries('[-name %s ]' % realm_name).split()
+		print "DEBUG: realm_base_entries - %s" % realm_base_entries
+		fileBaseEntry = "o=defaultWIMFileBasedRealm"
+		if not fileBaseEntry in realm_base_entries:
+			print "INFO: temporary add %s" % fileBaseEntry
+			AdminTask.addIdMgrRealmBaseEntry('[-name %s -baseEntry %s]' % (realm_name, fileBaseEntry))
+		vwaBaseEntry = "o=vwa"
+		if vwaBaseEntry in realm_base_entries:
+			print "INFO: removing base entry %s" % vwaBaseEntry
+			AdminTask.deleteIdMgrRealmBaseEntry('[ -name %s -baseEntry o=vwa ]' % realm_name)
+	print "INFO: removing repository: %s" % repo
+	AdminTask.deleteIdMgrRepository('[-id %s]' % repo)
+	
+	
+print "INFO: creating LDAP Repository config: %s ..." % repo
+AdminTask.createIdMgrLDAPRepository('[-default true -id enldap -adapterClassName com.ibm.ws.wim.adapter.ldap.LdapAdapter -ldapServerType NDS -sslConfiguration -certificateMapMode exactdn -supportChangeLog none -certificateFilter -loginProperties cn]')
+
+print "INFO: adding LDAP Repository config to %s ..." % repo
+AdminTask.addIdMgrLDAPServer('[-id enldap -host %s -bindDN %s -bindPassword %s -referal ignore -sslEnabled true -ldapServerType NDS -sslConfiguration -certificateMapMode exactdn -certificateFilter -authentication simple -port 636]' % (ldap_host, bind_user, bind_pass)) 
+
+print "INFO: adding base entry to %s..." % repo
+AdminTask.addIdMgrRepositoryBaseEntry('[-id %s -name o=vwa -nameInRepository o=vwa]' % repo)
+if default_realm != realm_name:
+	print "INFO: changing realm name from %s to %s..." % (default_realm, realm_name)
+	AdminTask.renameIdMgrRealm('[-name %s -newName %s ]' % (default_realm, realm_name))
+
+print "INFO: configuring admin WIM user registry for %s ..." % repo
+AdminTask.configureAdminWIMUserRegistry('[-realmName %s -verifyRegistry false ]' % realm_name)
+
+print "INFO: updating repository base entry for %s ..." % repo
+AdminTask.updateIdMgrRepositoryBaseEntry('[-id enldap -name o=vwa -nameInRepository o=vwa]')
+
+print "INFO: saving...."
+AdminConfig.save()
+
+print "INFO: validating admin user %s ..." % admin_user
+try:
+	AdminTask.validateAdminName('[-registryType WIMUserRegistry -adminUser %s ]' % admin_user) 
+except:
+        type_, _value_, _tbck_ = sys.exc_info()
+        result = `_value_`
+        _excp_ = 1
+if (_excp_):
+        print "IMPORTANT INFO: need to restart the dmgr before validating the admin user"
+	sys.exit(1)
+
+	
+print "INFO: configuring WIM User Registry with admin user: %s ..." % admin_user
+AdminTask.configureAdminWIMUserRegistry('[-autoGenerateServerId true -primaryAdminId %s -ignoreCase true -customProperties -verifyRegistry false ]' % admin_user) 
+print "INFO: saving..."
+AdminConfig.save()
+print "INFO: updating realm %s ..." % realm_name
+AdminTask.updateIdMgrRealm('[-name %s -allowOperationIfReposDown false]' % realm_name) 
+print "INFO: adding realm base entry..."
+AdminTask.addIdMgrRealmBaseEntry('[-name %s -baseEntry o=vwa]' % realm_name)
+print "INFO: adding ldap host realm as trusted %s ..." % ldap_host
+AdminTask.addTrustedRealms('[-communicationType inbound -realmList ' + ldap_host + ':' + ldap_port + ' ]') 
+print "INFO: setting to WIM (federated) registry... "
+AdminTask.configureAdminWIMUserRegistry('[-verifyRegistry false ]')
+
+AdminTask.setAdminActiveSecuritySettings('[-activeUserRegistry WIMUserRegistry -enableGlobalSecurity true -appSecurityEnabled true]')
+
+realm_base_entries = AdminTask.listIdMgrRealmBaseEntries('[-name %s ]' % realm_name).split()
+fileBaseEntry = "o=defaultWIMFileBasedRealm"
+if fileBaseEntry in realm_base_entries:
+	print "INFO: removing base %s entry from realm" % fileBaseEntry
+	AdminTask.deleteIdMgrRealmBaseEntry('[ -name %s -baseEntry %s ]' % (realm_name, fileBaseEntry))
+
+print "INFO: removing admin user/group assignments"
+grouproles=AdminTask.listGroupIDsOfAuthorizationGroup()
+for role in 'monitor', 'configurator', 'administrator', 'deployer', 'iscadmins', 'operator', 'adminsecuritymanager':
+	p = re.compile('.*' + role + '=\[(.*?)\]')
+	m = p.match(grouproles)
+	for group in (admin_group, monitor_group, op_group):
+		if m and m.group(1).find(group) >= 0:
+			print 'deleting group %s from role %s' % (group,role)
+ 			AdminTask.removeGroupsFromAdminRole('[-groupids [%s] -roleName %s]' % (group,role))
+userroles=AdminTask.listUserIDsOfAuthorizationGroup()
+for role in 'monitor', 'configurator', 'administrator', 'deployer', 'iscadmins', 'operator', 'adminsecuritymanager':
+	p = re.compile('.*' + role + '=\[(.*?)\]')
+	m = p.match(userroles)
+	user = op_user
+	if m and m.group(1).find(user) >= 0:
+		print 'deleting user %s from role %s' % (user,role)
+		AdminTask.removeUsersFromAdminRole('[-userids [%s] -roleName %s]' % (user,role))
+
+
+AdminConfig.save()
+print "INFO: saving"
+
+print "INFO: adding console users and groups... "
+AdminConfig.reset()
+AdminTask.mapGroupsToAdminRole('[-roleName administrator -groupids [ %s ] -accessids [ group:%s/cn=%s,ou=groups,o=vwa ] ]' % (admin_group,realm_name,admin_group) )
+AdminTask.mapGroupsToAdminRole('[-roleName monitor -groupids [ %s ]  -accessids [ group:%s/cn=%s,ou=groups,o=vwa ]]' % (monitor_group,realm_name,monitor_group) )
+AdminTask.mapGroupsToAdminRole('[-roleName operator -groupids [ %s ]  -accessids [ group:%s/cn=%s,ou=groups,o=vwa ]]' % (op_group,realm_name,op_group) )
+AdminTask.mapUsersToAdminRole('[-userids [ %s ] -roleName operator]' % op_user)
+
+# ensure AUTH aliases are not pre-pended with node name
+AdminTask.setAdminActiveSecuritySettings('[-customProperties [ "com.ibm.websphere.security.JAASAuthData.removeNodeNameGlobal=true" ] ]')
+
+print "INFO: saving..." 
+AdminConfig.save()
+#AdminNodeManagement.syncActiveNodes()
+#AdminNodeManagement.restartActiveNodes()
+print "CONFIGURATION COMPLETE: restart server for configuration to take effect..." 
+sys.exit(0)

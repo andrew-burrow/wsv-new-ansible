@@ -1,0 +1,39 @@
+import sys
+import re
+
+def updateNode(node_name):
+	starting_port=10020
+	server_name = "nodeagent"
+	portNameList=[
+		'BOOTSTRAP_ADDRESS',
+		'CSIV2_SSL_MUTUALAUTH_LISTENER_ADDRESS',
+		'CSIV2_SSL_SERVERAUTH_LISTENER_ADDRESS',
+		'DCS_UNICAST_ADDRESS',
+		'IPC_CONNECTOR_ADDRESS',
+		'NODE_DISCOVERY_ADDRESS',
+		'NODE_IPV6_MULTICAST_DISCOVERY_ADDRESS',
+		'NODE_MULTICAST_DISCOVERY_ADDRESS',
+		'ORB_LISTENER_ADDRESS',
+		'OVERLAY_UDP_LISTENER_ADDRESS',
+		'OVERLAY_TCP_LISTENER_ADDRESS',
+		'SAS_SSL_SERVERAUTH_LISTENER_ADDRESS',
+		'SOAP_CONNECTOR_ADDRESS',
+		'XDAGENT_PORT',
+	]
+	for port_name in portNameList:
+		print "Modifying nodeagent " +port_name+ " on "+node_name+" to port "+starting_port.toString()
+		AdminTask.modifyServerPort(server_name, '[-nodeName '+node_name+' -endPointName '+port_name+' -port '+starting_port.toString()+' -modifyShared true]')
+		starting_port+=1
+	#endfor
+#enddef
+
+nodes = AdminConfig.getid('/Node:/').split()
+for node in nodes:
+	node_name = AdminConfig.showAttribute(node, 'name')
+	nodeArray = []
+	if re.search('Node01', node_name):
+		nodeArray.append(node_name)
+	for member in nodeArray:
+		print "=============================="
+		updateNode(member)
+AdminConfig.save()

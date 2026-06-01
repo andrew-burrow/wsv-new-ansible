@@ -1,0 +1,19 @@
+WLM_LIST=(Employer AcctionReplicaClaim)
+
+declare -A WLM_POLICY_NAME ADDITIONAL_INSTANCES
+
+for WLM in ${WLM_LIST[*]} ; do
+  WLM_POLICY_NAME[${WLM}]=WLM_${WLM}
+done
+
+case "${env}" in
+  "sv1" | "pr1") 
+    ADDITIONAL_INSTANCES[Employer]=2
+    ADDITIONAL_INSTANCES[AcctionReplicaClaim]=2
+    ;;
+  *) 
+    ADDITIONAL_INSTANCES[Employer]=2
+    ADDITIONAL_INSTANCES[AcctionReplicaClaim]=2
+    ;;
+esac
+

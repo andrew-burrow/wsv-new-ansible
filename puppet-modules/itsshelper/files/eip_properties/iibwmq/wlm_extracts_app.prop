@@ -1,0 +1,18 @@
+WLM_LIST=(Extracts AurionExtract)
+
+declare -A WLM_POLICY_NAME ADDITIONAL_INSTANCES
+
+for WLM in ${WLM_LIST[*]} ; do
+  WLM_POLICY_NAME[${WLM}]=WLM_${WLM}
+done
+
+case "${env}" in
+  "sv1" | "pr1") 
+    ADDITIONAL_INSTANCES[Extracts]=2
+    ADDITIONAL_INSTANCES[AurionExtract]=10
+    ;;
+  *) 
+    ADDITIONAL_INSTANCES[Extracts]=2
+    ADDITIONAL_INSTANCES[AurionExtract]=5
+    ;;
+esac

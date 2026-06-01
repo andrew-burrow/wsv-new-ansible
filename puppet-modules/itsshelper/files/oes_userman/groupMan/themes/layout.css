@@ -1,0 +1,149 @@
+ 
+body{
+margin:0;
+padding:0;
+line-height: 1.5em;
+}
+
+b{font-size: 110%;}
+em{color: red;}
+
+
+#topsection{
+
+height: 90px; /*Height of top section*/
+}
+
+#topsection h1{
+margin: 0;
+padding-top: 0px;
+}
+
+#contentwrapper{
+float: left;
+width: 100%;
+}
+
+#contentcolumn{
+margin-left: 200px; /*Set left margin to LeftColumnWidth*/
+}
+
+#leftcolumn{
+float: left;
+width: 200px; /*Width of left column*/
+margin-left: -100%;
+
+}
+
+#footer{
+clear: left;
+width: 100%;
+background: black;
+
+text-align: center;
+padding: 4px 0;
+}
+
+#footer a{
+color: #FFFF80;
+}
+
+.innertube{
+margin: 10px; /*Margins for inner DIV inside each column (to provide padding)*/
+margin-top: 0;
+}
+
+
+
+
+/*
+Theme: inphecthyuz
+Author: Infected-FX
+URL: www.infectedfx.net
+Country: Mexico
+*/
+
+
+
+table {
+	border-spacing:1px;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:10px;
+	background-color:#E7E7E7;
+	color: #b7b7b7;
+}
+
+caption {
+	font-weight: bold;
+	background: #669acc;
+	border-bottom:2px solid #669acc;
+	color: #FFF;
+	padding:10px;
+}
+
+td, th {
+	padding: 4px;
+}
+
+thead th {
+	text-align: center;
+	background: #F5F5F5;
+	color: #666;
+	border: 1px solid #FFF;
+
+}
+
+tbody th {
+	font-weight: bold;
+}
+
+tbody tr {
+	background-color:#FFF; 
+	text-align:left;
+	}
+
+tbody tr.odd 	{
+	background: #f9f9f9;
+	border-top:1px solid #FFF;
+}
+
+tbody th a:link, tbody th a:visited{
+	color:#A70303;
+	padding:3px 0px 0px 18px;
+	}
+tbody th a:hover{
+	color:black;
+	padding:3px 0px 0px 18px;
+	}
+
+tbody tr td { 
+	height:30px;
+	background: #FFF;
+	border: 1px solid #FFF;
+	}
+
+tbody tr.odd td{ 
+	background: #f9f9f9;
+	border-top:1px solid #FFF;
+	}
+
+table td a:link, table td a:visited {
+	color: #1975D7;
+	text-decoration: none;
+}
+
+table td a:hover {
+	color: #50ADEA;
+	border-bottom:2px solid #8FD5FF;
+	text-decoration: none ;
+}
+
+
+tfoot th, tfoot td {
+	background-color:#E7E7E7; padding:10px;
+	text-align:center; 
+	font-family:Georgia, "Times New Roman", Times, serif;
+	font-size:22px; font-weight:bold; font-style:italic;
+	border-bottom:3px solid #CCC;
+	border-top:1px solid #DFDFDF;
+}

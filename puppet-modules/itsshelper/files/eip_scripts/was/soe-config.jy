@@ -1,0 +1,176 @@
+# Date: 12 October, 2015
+# Description:
+#    ITSS Standard Operating Environment WebSphere configurations
+#	- dmgr heap size
+#	- set bind host on all ports and configure to use dedicated IP-address
+#	- enable HPEL logging on all configured JVM's (including nodeagents and dmgr)
+# Usage:
+#    wasadmin.sh -lang jython -f soe_config.jy <ini file>
+#
+#    e.g. wsadmin -lang jython -f soe_config.jy soe_config.ini
+#
+# Example ini file:
+#
+# [LOGGING]
+# HPEL_enable = true
+# HPEL_purge_size = 100
+# [DMGR]
+# heapsize = 1024
+# [SECURITY]
+# upgradeCerts = true|false
+#
+#
+#-----------------------------------------------------------------
+#
+
+
+import ConfigParser
+import re
+
+def print_usage():
+	print 'USAGE: soe_config.py <property file>'
+	
+if len(sys.argv) != 1:
+	print_usage
+	sys.exit(-1)
+	
+bind_host = ""
+props_file = sys.argv[0]
+
+props = ConfigParser.ConfigParser()
+props.read(props_file)
+
+def getProperty(section, prop_name):
+	prop_value = ''
+	if props.has_option(section, prop_name):
+		prop_value = props.get(section, prop_name)
+		print "PROPERTY: %s = %s" % (prop_name, prop_value)
+		return prop_value
+	else:
+		print 'INFO: property not specified: %s' % prop_name
+		return None
+
+
+	
+def enableHPEL(server_entry, purge_size, purge_time, enableHPEL):
+	s_name = AdminConfig.showAttribute(server, "serverName")
+	print('\n>>> Enable HPEL for JVM: %s.\n' % s_name)
+	if enableHPEL == "true":
+		enableRAS = "false"
+	elif enableHPEL == "false":
+		enableRAS = "true"
+	else:
+		print('ERROR: \'%s\' is not a valid value for \'HPEL_ENABLE\' (true of false).' % enableHPEL)
+		sys.exit(1)
+
+	p = re.compile('.*/nodes/(.*)\|')
+	m = p.match(server_entry)
+	node_name = m.group(1)
+
+	HPELService = AdminConfig.getid('/Node:%s/Server:%s/HighPerformanceExtensibleLogging:/' % (node_name, s_name))
+	RASLogging = AdminConfig.getid('/Node:%s/Server:%s/RASLoggingService:/' % (node_name, s_name))
+	print('INFO: Setting HPEL logging to \'%s\' and RAS logging to \'%s\' for server: %s' % (enableHPEL, enableRAS, s_name))
+	print('DEBUG: \nHPELService: %s, \nRASLogging: %s' % (HPELService, RASLogging))
+	AdminConfig.modify(HPELService, '[[enable %s]]' % enableHPEL )
+	if purge_size:
+		HPELLog = AdminConfig.list("HPELLog", HPELService)
+		AdminConfig.modify(HPELLog, "[[purgeMaxSize %s][purgeBySizeEnabled true]]" % purge_size)
+	if purge_time:
+		HPELLog = AdminConfig.list("HPELLog", HPELService)
+		AdminConfig.modify(HPELLog, "[[purgeMinTime %s][purgeByTimeEnabled true]]" % purge_time)
+
+	AdminConfig.modify(RASLogging, '[[enable %s]]' % enableRAS )
+
+def setProperty(obj_id, property_name, property_value, property_collection_name):
+	#print "DEBUG: obj_id - %s" % obj_id
+	props = AdminConfig.showAttribute(obj_id, property_collection_name)
+	
+	p = re.compile('.*' + property_name + '(\(.*?\))')
+	m = p.match(props)
+	if m == None:
+		#print "DEBUG: prop_name < %s > not in props < %s >" % (property_name, props)
+		print "Creating %s = %s on object, %s" % (property_name, property_value, obj_id)
+		AdminConfig.create('Property', obj_id, '[ [name %s]  [value %s] ]' % (property_name, property_value) )
+	else:
+		print "Updating %s = %s on object, %s" % (property_name, property_value, obj_id)
+		prop_id = m.group(1)
+		AdminConfig.modify(prop_id, '[ [name %s]  [value %s] ]' % (property_name, property_value) )
+
+
+def setBindHost(server_entry, host):
+	end_points = AdminConfig.list('NamedEndPoint', server_entry)
+	server_name = AdminConfig.showAttribute(server_entry, 'serverName') 
+	p = re.compile('.*/nodes/(.*)\|')
+	m = p.match(server_entry)
+	node_name = m.group(1)
+	
+	for end_point in end_points.split():
+		end_point_name = AdminConfig.showAttribute(end_point, 'endPointName')
+		print "setting bindhost on %s to %s for %s" % (server_name, host, end_point_name)
+		if end_point_name.find('MULTICAST_DISCOVERY_ADDRESS') < 0:
+			AdminTask.modifyServerPort(server_name, '[ -nodeName %s -endPointName %s -host %s -modifyShared]' % (node_name, end_point_name, host) )
+		else:
+			print 'INFO: skipping nodeagent endpoint %s' % end_point_name
+
+		
+		 
+def getBindHost(obj_id):
+	p = re.compile('.*nodes/(.*?)(/|\|).*')
+	m = p.match(obj_id)
+	node_name = m.group(1)
+	node_obj = AdminConfig.getid('/Node:%s' % node_name)
+	bind_host = AdminConfig.showAttribute(node_obj, 'hostName')
+	return bind_host
+
+def setHeapSize(servername, max):
+	print "INFO: setting min and max heap size for server %s to %s" % (servername, max)
+	AdminTask.setJVMProperties('[-serverName %s -maximumHeapSize %s -initialHeapSize %s]' % (servername, max, max))
+
+
+#get the PURGESIZE, PURGETIME
+section = 'LOGGING'
+purge_size = getProperty(section, 'HPEL_purge_size')
+purge_time = getProperty(section, 'HPEL_purge_time')
+hpel_enable = getProperty(section, 'HPEL_enable')
+section = 'DMGR'
+dmgr_heap_size = getProperty(section, 'heapsize')
+
+#set com.ibm.CORBA.LocalHost and com.ibm.CORBA.LocalHost on ORB Service
+orbs = AdminConfig.getid('/ObjectRequestBroker:/').split()
+for orb in orbs:
+	bind_host = getBindHost(orb)
+	setProperty(orb, 'com.ibm.CORBA.LocalHost', bind_host, 'properties')
+	setProperty(orb, 'com.ibm.ws.orb.transport.useMultiHome', 'false', 'properties')
+
+#set com.ibm.websphere.network.useMultiHome on JVM
+jvms = AdminConfig.getid('/JavaVirtualMachine:/').split()
+for jvm in jvms:
+	setProperty(jvm, 'com.ibm.websphere.network.useMultiHome', 'false', 'systemProperties')
+				
+
+servers = AdminConfig.list('ServerEntry').splitlines()
+
+for server in servers:
+	server_name = AdminConfig.showAttribute(server, "serverName")
+	if (server_name.count('IHS') == 0) and (server_name.count('ihs') == 0):
+		enableHPEL(server, purge_size, purge_time, hpel_enable)
+	bind_host = getBindHost(server)
+	setBindHost(server, bind_host)
+	if server_name == 'dmgr':
+		setHeapSize(server_name, dmgr_heap_size)
+	#end if
+#end for
+
+# SECURITY 
+section = 'SECURITY'
+
+# upgrade cert strength
+upgradeCerts = getProperty(section, 'upgradeCerts')
+if upgradeCerts == 'true':
+    print "INFO: upgrading cert strength"
+    AdminTask.convertCertForSecurityStandard('[-fipsLevel SP800-131 -signatureAlgorithm SHA256withRSA -keySize 2048 ]')
+
+
+
+AdminConfig.save()
+

@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<agent-input>
+  <variables>
+    <variable name='sharedLocation' value='/opt/IMShared'/>
+  </variables>
+  <server>
+    <repository location='/opt/staging/WebSphere8550'/>
+    <repository location='/opt/staging/WebSphere8556'/>
+    <repository location='/opt/staging/Supplements8550'/>
+    <repository location='/opt/staging/Supplements8556'/>
+    <repository location='/opt/staging/WebSphereJDK7040/JAVA7'/>
+    <repository location='/opt/staging/WebSphereJDK7090'/>
+  </server>
+  <profile id='IBM HTTP Server V8.5_pr1' installLocation='/opt/pr1/HTTPServer'>
+    <data key='eclipseLocation' value='/opt/pr1/HTTPServer'/>
+    <data key='user.import.profile' value='false'/>
+    <data key='cic.selector.os' value='linux'/>
+    <data key='cic.selector.arch' value='x86'/>
+    <data key='cic.selector.ws' value='gtk'/>
+    <data key='user.ihs.http.server.service.name' value='none'/>
+    <data key='user.ihs.httpPort' value='80'/>
+    <data key='user.ihs.installHttpService' value='false'/>
+    <data key='cic.selector.nl' value='en'/>
+  </profile>
+  <install modify='false'>
+    <!-- IBM HTTP Server for WebSphere Application Server 8.5.5.6 -->
+    <offering profile='IBM HTTP Server V8.5_pr1' id='com.ibm.websphere.IHS.v85' version='8.5.5006.20150529_0536' features='arch.64bit,core.feature' installFixes='none'/>
+  </install>
+  <profile id='IBM WebSphere Application Server V8.5_pr1' installLocation='/opt/pr1/WebSphere/AppServer'>
+    <data key='eclipseLocation' value='/opt/pr1/WebSphere/AppServer'/>
+    <data key='user.import.profile' value='false'/>
+    <data key='cic.selector.os' value='linux'/>
+    <data key='cic.selector.arch' value='x86'/>
+    <data key='cic.selector.ws' value='gtk'/>
+    <data key='cic.selector.nl' value='en'/>
+  </profile>
+  <install modify='false'>
+   <!-- IBM WebSphere SDK Java Technology Edition (Optional) 7.0.9.0 -->
+    <offering profile='IBM WebSphere Application Server V8.5_pr1' id='com.ibm.websphere.IBMJAVA.v70' version='7.0.9000.20150528_2007' features='com.ibm.sdk.7' installFixes='none'/>
+    <!-- IBM WebSphere Application Server Network Deployment 8.5.5.6 -->
+    <offering profile='IBM WebSphere Application Server V8.5_pr1' id='com.ibm.websphere.ND.v85' version='8.5.5006.20150529_0536' features='com.ibm.sdk.6_64bit,core.feature,ejbdeploy,embeddablecontainer,thinclient' installFixes='none'/>
+  </install>
+  <profile id='Web Server Plug-ins for IBM WebSphere Application Server V8.5_pr1' installLocation='/opt/pr1/WebSphere/Plugins'>
+    <data key='eclipseLocation' value='/opt/pr1/WebSphere/Plugins'/>
+    <data key='user.import.profile' value='false'/>
+    <data key='cic.selector.os' value='linux'/>
+    <data key='cic.selector.arch' value='x86'/>
+    <data key='cic.selector.ws' value='gtk'/>
+    <data key='cic.selector.nl' value='en'/>
+  </profile>
+  <install modify='false'>
+    <!-- Web Server Plug-ins for IBM WebSphere Application Server 8.5.5.6 -->
+    <offering profile='Web Server Plug-ins for IBM WebSphere Application Server V8.5_pr1' id='com.ibm.websphere.PLG.v85' version='8.5.5006.20150529_0536' features='com.ibm.jre.6_64bit,core.feature' installFixes='none'/>
+  </install>
+  <preference name='com.ibm.cic.common.core.preferences.eclipseCache' value='${sharedLocation}'/>
+  <preference name='com.ibm.cic.common.core.preferences.connectTimeout' value='30'/>
+  <preference name='com.ibm.cic.common.core.preferences.readTimeout' value='45'/>
+  <preference name='com.ibm.cic.common.core.preferences.downloadAutoRetryCount' value='0'/>
+  <preference name='offering.service.repositories.areUsed' value='false'/>
+  <preference name='com.ibm.cic.common.core.preferences.ssl.nonsecureMode' value='false'/>
+  <preference name='com.ibm.cic.common.core.preferences.http.disablePreemptiveAuthentication' value='false'/>
+  <preference name='http.ntlm.auth.kind' value='NTLM'/>
+  <preference name='http.ntlm.auth.enableIntegrated.win32' value='true'/>
+  <preference name='com.ibm.cic.common.core.preferences.preserveDownloadedArtifacts' value='true'/>
+  <preference name='com.ibm.cic.common.core.preferences.keepFetchedFiles' value='false'/>
+  <preference name='PassportAdvantageIsEnabled' value='false'/>
+  <preference name='com.ibm.cic.common.core.preferences.searchForUpdates' value='false'/>
+  <preference name='com.ibm.cic.agent.ui.displayInternalVersion' value='false'/>
+  <preference name='com.ibm.cic.common.sharedUI.showErrorLog' value='true'/>
+  <preference name='com.ibm.cic.common.sharedUI.showWarningLog' value='true'/>
+  <preference name='com.ibm.cic.common.sharedUI.showNoteLog' value='true'/>
+</agent-input>

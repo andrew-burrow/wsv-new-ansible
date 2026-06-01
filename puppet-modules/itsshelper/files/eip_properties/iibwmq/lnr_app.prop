@@ -1,0 +1,51 @@
+# Relies on some exported environment variables:
+# ENV
+QMGR_TEMPLATE=${CONFIGDIR}/lnr_app.template
+QMTYPE=Apps
+CLUSTER=${ENV^^} # upper case
+ENV=$CLUSTER
+env=${ENV,,} # lower case
+if [ -z "$HOST" ] ; then
+	HOST=$(hostname)
+fi
+E=$(echo $HOST | cut -c 2 | tr "[:lower:]" "[:upper:]")
+#large message
+T=L
+NUM=$(echo $HOST | cut -c 7-)
+QMGRNAME=$(echo ${ENV}${E}${T}${NUM} | tr "[:lower:]" "[:upper:]")
+QMHOST=$HOST
+
+#
+# Set the userids which will be assigned onto non-admin
+# client channels
+CLUSUSER=_mq_clus
+#
+# Customise the LNR user for prod vs non-prod.
+# non-prod accounts have the suffix "_np"
+# Recognise prod because of the 'p' in the 2nd character of the host name
+if [ "$E" == "A" ] || [ "$E" == "P" ] ; then
+	USERSUFFIX="_pr"
+	USERPREFIX=""
+else
+	USERSUFFIX="_np"
+	USERPREFIX=""
+fi
+LNRUSER=${USERPREFIX}mq_lnr${USERSUFFIX}
+
+#
+# Define site specific host values
+EXHIBITION="02"
+HANSEN="01"
+
+HOSTSITE=${NUM:0:2}
+if [ "$HOSTSITE" = "$HANSEN" ] ; then
+	QLOCATION="HANSEN"
+else
+	QLOCATION="EXHIBITION"
+fi
+
+if [ "$ENV" == "PA1" ] || [ "$ENV" == "PR1" ] ; then
+    SSLPEER="OU=Organizational_CA, O=ENTERPRISE, L=Melbourne, ST=VIC, C=AU"
+else
+    SSLPEER="OU=${ENV}\/IBM MQ Client, O=ITSS, L=Melbourne, ST=VIC, C=AU"
+fi

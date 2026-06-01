@@ -1,0 +1,127 @@
+* runmqsc command file template
+* oes_iib_app.template
+* relies on oes_iib_apps.template.map
+
+* ---------------------------------------------------
+
+* ---------------------------------------------------
+* Set Auth Records - Entity Service Queues
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('ES.EMPLOYER.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.EMPLOYER.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+* ---------------------------------------------------
+* Set Auth Records - Service Component Queues
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('SC.ACCTION.STP.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.ACCTION.STP.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+
+* ---------------------------------------------------
+* Set Auth Records - VWA MF Integration Queues
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('ACCTION.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ACCTION.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+* ---------------------------------------------------
+* Define Queues - ES_Employer
+* ---------------------------------------------------
+
+define ql('ES.EMPLOYER.BOQ.V1') -
+	descr('Backout Queue for ES_Employer') -
+	replace
+	
+define ql('ES.EMPLOYER.REQ.V1') -
+	descr('Request Queue for ES_Employer') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.EMPLOYER.BOQ.V1') -
+	bothresh(3) -
+	replace
+	
+define ql('ES.EMPLOYER.RESP.V1') -
+	descr('Replies to ES_Employer') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - SC_ACCtionSTP
+* ---------------------------------------------------
+
+define ql('SC.ACCTION.STP.BOQ.V1') -
+	descr('Backout Queue for SC_ACCtionSTP') -
+	replace
+	
+define ql('SC.ACCTION.STP.REQ.V1') -
+	descr('Request Queue for SC_ACCtionSTP') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.ACCTION.STP.BOQ.V1') -
+	bothresh(3) -
+	replace
+	
+define ql('SC.ACCTION.STP.EX.V1') -
+	descr('Exception for one-way calls to SC_ACCtionSTP') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - VWA MF Integration Queues
+* ---------------------------------------------------
+
+define qr('ACCTION.REQ.V1') -
+	descr('Request Q for VWA MF') -
+	rqmname('__VWA_MF_QMGR__') -
+	rname('EIP.ACC.REQ') -
+	replace
+
+define qr('ACCTION.RESP.ALIAS.V1') -
+	descr('Reply Q Alias for Response from VWA MF') -
+	rqmname('__QMGRNAME__') -
+	rname('ACCTION.RESP.V1') -
+	replace
+
+define ql('ACCTION.RESP.V1') -
+	descr('Replies from VWA MF') -
+	replace
+
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

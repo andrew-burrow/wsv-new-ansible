@@ -1,0 +1,148 @@
+* runmqsc command file template
+* novus_apps.template
+* relies on novus_apps.template.map
+
+* ---------------------------------------------------
+* Create client channel for Novus application
+define chl(NOVUS.__QMGRNAME__) -
+        chltype(svrconn) -
+        descr('Novus connects to QM via this channel') -
+        trptype(tcp) -
+        mcauser('__NOVUSUSER__') -
+        maxinst(20) -
+        replace
+
+* Set SHARECNV(0) for IDM because of connection failure problem
+* encountered in Dev on 16 Feb 2016 with client version 7.1.0.9 and
+* MQ server version 8.0.0.2. 
+* Problem was invalid data, causing errors AMQ9208, AMQ9999, AMQ9207
+* and AMQ6183, and FDC with probe ID CO618000
+define channel(IDM.__QMGRNAME__) +
+        chltype(SVRCONN) +
+        mcauser('__NOVUSUSER__') +
+	sharecnv(0) +
+        REPLACE
+
+* Allow Novus application access by user
+* Access to qmgr
+set authrec -
+        objtype(qmgr) -
+        principal('__NOVUSUSER__') -
+        authrmv(all) -
+        authadd(connect, -
+                dsp, -
+                inq)
+
+set authrec -
+        objtype(queue) -
+        profile('IDVAULT.NOVUS.REQ') -
+        principal('__NOVUSUSER__') -
+        authrmv(all) -
+        authadd(put)
+
+set authrec -
+        objtype(queue) -
+        profile('SYSTEM.MQCONTEXT.ADMIN.QUEUE') -
+        principal('__NOVUSUSER__') -
+        authadd(chg)
+
+set authrec -
+        objtype(queue) -
+        profile('SYSTEM.DEFAULT.MODEL.QUEUE') -
+        principal('__NOVUSUSER__') -
+        authrmv(all) -
+        authadd(get, dsp)
+
+set authrec -
+        objtype(queue) -
+        profile('SYSTEM.ADMIN.COMMAND.QUEUE') -
+        principal('__NOVUSUSER__') -
+        authrmv(all) -
+        authadd(put)
+
+
+
+set authrec -
+        objtype(queue) -
+        profile('NOVUS.**') -
+        principal('__NOVUSUSER__') -
+        authrmv(all) -
+        authadd(browse, -
+                chg, -
+                clr, -
+                crt, -
+                dlt, -
+                dsp, -
+                get, -
+                put, -
+                inq)
+
+set authrec -
+        objtype(queue) -
+        profile('IDM.**') -
+        principal('__NOVUSUSER__') -
+        authrmv(all) -
+        authadd(browse, -
+                chg, -
+                clr, -
+                crt, -
+                dlt, -
+                dsp, -
+                get, -
+                put, -
+                inq)
+
+set authrec -
+        objtype(queue) -
+        profile('NOVUS.**') -
+        principal('__MQCLUSUSER__') -
+        authrmv(all) -
+        authadd(put, setall, inq, dsp)
+
+define ql(NOVUS.POT.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.CFGD.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.CFGM.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.STGA.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.DEVA.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.DEVB.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.TSTA.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.TSTB.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.SYSTA.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.SYSTB.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.SYSTC.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.SVT.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.PSUP.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.TRNG.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.PAT.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.PROD.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.PRDA.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+define ql(NOVUS.SNDP.IDM.REQ) cluster(__CLUSNAME__) CLWLRANK(__QRANK__) replace
+
+
+define ql(NOVUS.POT.IDM.RESP) replace
+define ql(NOVUS.CFGD.IDM.RESP) replace
+define ql(NOVUS.CFGM.IDM.RESP) replace
+define ql(NOVUS.STGA.IDM.RESP) replace
+define ql(NOVUS.DEVA.IDM.RESP) replace
+define ql(NOVUS.DEVB.IDM.RESP) replace
+define ql(NOVUS.TSTA.IDM.RESP) replace
+define ql(NOVUS.TSTB.IDM.RESP) replace
+define ql(NOVUS.SYSTA.IDM.RESP) replace
+define ql(NOVUS.SYSTB.IDM.RESP) replace
+define ql(NOVUS.SYSTC.IDM.RESP) replace
+define ql(NOVUS.SVT.IDM.RESP) replace
+define ql(NOVUS.PSUP.IDM.RESP) replace
+define ql(NOVUS.TRNG.IDM.RESP) replace
+define ql(NOVUS.PAT.IDM.RESP) replace
+define ql(NOVUS.PROD.IDM.RESP) replace
+define ql(NOVUS.PRDA.IDM.RESP) replace
+define ql(NOVUS.SNDP.IDM.RESP) replace
+
+refresh security(*) type(authserv)
+
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)
+
+

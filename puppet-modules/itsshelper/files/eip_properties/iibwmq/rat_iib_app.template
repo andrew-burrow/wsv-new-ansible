@@ -1,0 +1,66 @@
+* runmqsc command file template
+* rat_iib_app.template
+* relies on rat_iib_app.template.map
+
+* ---------------------------------------------------
+
+set authrec -
+        objtype(queue) -
+        profile('RATACCTION.REQ.V1') -
+        principal('__CLUSUSER__') -
+        authrmv(all) -
+        authadd(put,inq,setall)
+
+define qlocal('RATACCTION.BLOBREQ.V1') -
+	descr('COBOL messages for RAT hit this queue from legacy EntireX') -
+	replace
+define qlocal('RATACCTION.XMLREQ.V1') -
+	descr('XML messages for RAT hit this queue from new EntireX') -
+	replace
+
+* This script originally created RATACCTION.REQ.V1 as a local queue
+* In order for this script to work as an update to a queue manager
+* and to build a new queue manager, we create the local queue
+* immediately delete it, and then create the queue as a alias.
+* 
+* If this process has already occured, the script will fail because
+* the create of the qlocal will fail. If that occurs, the script must
+* be updated again. :-(
+define qlocal('RATACCTION.REQ.V1') -
+	replace
+delete qlocal('RATACCTION.REQ.V1') -
+	authrec(no) -
+	purge
+	
+* Redefine the qalias to point to RATACCTION.XMLREQ.V1 instead
+* of RATACCTION.BLOBREQ.V1 when EntireX is upgraded to produce XML messages.
+* 
+define qalias('RATACCTION.REQ.V1') -
+	descr('EntireX hits this queue. Point to Qlocal for EntireX version') -
+	cluster('__CLUSNAME__') -
+	TARGTYPE(queue) -
+	TARGET('RATACCTION.BLOBREQ.V1') -
+	replace
+	
+define qremote('VWQ.ACCTION.PROVIDER.Q') -
+	descr('Route datagram output to mainframe via cluster qmgr name') -
+	rqmname('__VWA_MF_QMGR__') -
+	rname('VWQ.ACCTION.PROVIDER.Q') -
+	xmitq(' ') -
+	replace
+
+* -------- TEST ONLY
+* ----set authrec -
+* ----   objtype(queue) -
+* ----        profile('RAT.OUT.TEST') -
+* ----        principal('__CLUSUSER__') -
+* ----        authadd(all)
+
+* ----define ql('RAT.OUT.TEST') replace
+* -------- end TEST ONLY
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)
+
+

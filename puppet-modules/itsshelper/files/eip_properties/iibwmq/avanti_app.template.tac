@@ -1,0 +1,16 @@
+DEFINE QREMOTE ('TES.CPS.REQUEST') +
+       RNAME('IDMS.PTY.REQUEST') +
+       RQMNAME('__TAC_MF_QMGR__') +
+       REPLACE
+
+DEFINE QALIAS ('TES.CPS.REQUEST.__AVANTI_ENV__') - 
+       TARGTYPE(QUEUE) -
+	   TARGET('TES.CPS.REQUEST') -
+	   REPLACE
+       
+* sample SUB for non-integrated environments
+* DEFINE QL('TES.CPS.REPLY.BLD.BUCKET') REPLACE
+* DEFINE SUB(TES.CPS.REQUEST.SUB.BLD) +
+* SUBSTR('/avanti/tes.cps.request/BLD') +
+* DEST('TES.CPS.REPLY.BLD.BUCKET') +
+* REPLACE

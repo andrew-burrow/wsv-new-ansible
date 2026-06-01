@@ -1,0 +1,20 @@
+WLM_LIST=(BonusCalculationRules FlatFileGenernator Employee)
+
+declare -A WLM_POLICY_NAME ADDITIONAL_INSTANCES
+
+for WLM in ${WLM_LIST[*]} ; do
+  WLM_POLICY_NAME[${WLM}]=WLM_${WLM}
+done
+
+case "${env}" in
+  "sv1" | "pr1")
+    ADDITIONAL_INSTANCES[BonusCalculationRules]=2
+    ADDITIONAL_INSTANCES[FlatFileGenernator]=2
+    ADDITIONAL_INSTANCES[Employee]=2
+    ;;
+  *)
+    ADDITIONAL_INSTANCES[BonusCalculationRules]=2
+    ADDITIONAL_INSTANCES[FlatFileGenernator]=2
+    ADDITIONAL_INSTANCES[Employee]=2
+    ;;
+esac

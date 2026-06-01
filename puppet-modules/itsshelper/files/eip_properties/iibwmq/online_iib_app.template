@@ -1,0 +1,183 @@
+* runmqsc command file template
+* online_iib_app.template
+* relies on online_iib_apps.template.map
+
+* ---------------------------------------------------
+
+* ---------------------------------------------------
+* Set Auth Records - Consumer Service Queues
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('CS.AVANTI.FORM.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('CS.AVANTI.FORM.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+	
+
+* ---------------------------------------------------
+* Set Auth Records - Entity Service Queues
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('ES.TRANSPORTACCIDENT.INJUREDPERSON.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.TRANSPORTACCIDENT.INJUREDPERSON.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+	
+set authrec -
+	objtype(queue) -
+	profile('ES.ONLINECLAIM.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.ONLINECLAIM.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.FORM.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.FORM.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+* ---------------------------------------------------
+* Set Auth Records - Service Component Queues
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('SC.ONLINE.AVANTI.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.ONLINE.AVANTI.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.ONLINE.FORM.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.ONLINE.FORM.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+
+* ---------------------------------------------------
+* Define Queues - CS_AvantiForm
+* ---------------------------------------------------
+	
+define ql('CS.AVANTI.FORM.RESP.V1') -
+	descr('Replies to CS_AvantiForm') -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - ES_TransportAccidentInjuredPerson
+* ---------------------------------------------------
+	
+define ql('ES.TRANSPORTACCIDENT.INJUREDPERSON.RESP.V1') -
+	descr('Replies to ES_TransportAccidentInjuredPerson') -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - ES_OnlineClaim
+* ---------------------------------------------------
+	
+define ql('ES.ONLINECLAIM.RESP.V1') -
+	descr('Replies to ES_OnlineClaim') -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - ES_Form
+* ---------------------------------------------------
+
+define ql('ES.FORM.BOQ.V1') -
+	descr('Backout Queue for ES_Form') -
+	replace
+	
+define ql('ES.FORM.REQ.V1') -
+	descr('Request Queue for ES_Form') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.FORM.BOQ.V1') -
+	bothresh(1) -
+	replace
+
+define ql('ES.FORM.RESP.V1') -
+	descr('Replies to ES_Form') -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - SC_OnlineAvanti
+* ---------------------------------------------------
+
+define ql('SC.ONLINE.AVANTI.BOQ.V1') -
+	descr('Backout Queue for SC_OnlineAvanti') -
+	replace
+	
+define ql('SC.ONLINE.AVANTI.REQ.V1') -
+	descr('Request Queue for SC_OnlineAvanti') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.ONLINE.AVANTI.BOQ.V1') -
+	bothresh(1) -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - SC_OnlineForm
+* ---------------------------------------------------
+
+define ql('SC.ONLINE.FORM.BOQ.V1') -
+	descr('Backout Queue for SC_OnlineForm') -
+	replace
+	
+define ql('SC.ONLINE.FORM.REQ.V1') -
+	descr('Request Queue for SC_OnlineForm') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.ONLINE.FORM.BOQ.V1') -
+	bothresh(1) -
+	replace
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

@@ -1,0 +1,186 @@
+
+/*==========================================
+ Tables
+==========================================*/
+
+
+#content table
+{
+	width: 100%;
+	border: 0 none #FFFFFF;
+}
+
+
+
+#content caption
+{
+	margin-top: 1.5em;
+	padding-left: 10px;
+	font-weight: bold;
+	text-transform: uppercase;
+	text-align: left;
+}
+
+* html #content caption
+{
+	padding-bottom: 1em;
+}
+
+#content caption em
+{
+	display: block;
+	text-transform: none;
+	font-weight: normal;
+	font-style: normal;
+}
+.stepNav 
+{
+	clear:both;
+	float:left;
+	margin-top: 1em;
+	width:100%;
+	border-bottom: 4px solid #205B81;
+}
+
+.stepNav th
+{
+	border: 1px solid #205B81;
+	border-bottom-color: #205B81;
+	border-left-color: #205B81;
+	padding: 1px 10px 3px 10px;
+	background-color: #669ACC;
+	background-repeat: no-repeat;
+	background-position: 100% 50%;
+	color: #FFF;
+	text-align: left;
+	vertical-align: top;
+	font-size: small;
+}
+
+.stepNav td.stepSelected
+{
+	border-left: 1px solid #999;
+	border-right: 1px solid #999;
+	border-top: 1px solid #FFFFFF;
+	border-bottom: 1px solid #FFFFFF;
+	padding: 4px 10px 5px 10px;
+	vertical-align: top;
+	background-color: #E0E0E0;
+	color:#666666;
+	font-weight:bold;
+}
+
+.stepNav td
+{
+	border: 1px solid #F5F5F5;
+	border-right: 1px solid #E0E0E0;
+	padding: 4px 10px 5px 10px;
+	vertical-align: top;
+	color: #999;
+}
+
+#content th
+{
+	padding: 1px 10px 3px 10px;
+	background-color: #205B81;
+	background-repeat: no-repeat;
+	background-position: 100% 50%;
+	color: #FFF;
+	text-align: left;
+	vertical-align: top;
+}
+#content th.first
+{
+	border-left: 0 none #FFFFFF;
+}
+
+#content th.last
+{
+	border-right: 0 none #FFFFFF;
+}
+
+#content th.sortDown
+{
+	background-color: #6699CC;
+}
+
+#content th.sortUp
+{
+	background-color: #6699CC;
+}
+
+.th a
+{
+	color: #FFFFFF;
+}
+
+
+#content td
+{
+	border: 0 none #FFFFFF;
+	border-right: 1px none #E0E0E0;
+	border-bottom: 1px solid #E0E0E0;
+	padding: 4px 4px 4px 10px; 
+	vertical-align: top;
+}
+
+#content td.first
+{
+	width:25%; 
+}
+
+#content td a
+{
+	font-weight: bold;
+}
+
+#content td.center
+{
+	text-align: center;
+}
+
+#content table tr.month td.first
+{
+	font-weight: bold;
+}
+
+#content table tr.month td.last
+{
+	vertical-align: middle;
+	text-align: right;
+}
+
+/*==========================================
+ Ruler tables
+==========================================*/
+#content table.greybar tbody tr.alt td {
+	background-color: #F5F5F5;
+}
+
+#content table.ruler tbody tr.ruled td {
+	border-top: 1px solid #205B81;
+	border-bottom: 1px solid #205B81;
+	padding-top: 3px;
+}
+
+#content table.ruler tbody tr.ruled td.first {
+	border-left: 1px solid #205B81;
+}
+
+#content table.ruler tbody tr.ruled td.last {
+	border-right: 1px solid #205B81;
+}
+
+
+.url
+{
+	color: #666666 !important;
+	font-weight: normal !important;
+	text-decoration: none !important;
+}
+
+.url:hover
+{
+	text-decoration: underline !important;
+}
+ 

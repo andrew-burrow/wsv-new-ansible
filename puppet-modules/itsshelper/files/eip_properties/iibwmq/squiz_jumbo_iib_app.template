@@ -1,0 +1,168 @@
+* runmqsc command file template
+* squiz_jumbo_iib_app.template
+* relies on squiz_jumbo_iib_apps.template.map
+
+
+* ---------------------------------------------------
+* Set Auth Records - Consumer Service Queues
+* ---------------------------------------------------
+
+set authrec -
+    objtype(queue) -
+    profile('CS.FILESUBMISSION.**') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+    objtype(queue) -    
+    profile('CS.FILESUBMISSION.**') -
+    principal('__CLUSUSER__') -
+    authrmv(all) -
+    authadd(put, inq, setall)
+
+
+* ---------------------------------------------------
+* Set Auth Records - Entity Service Queues
+* ---------------------------------------------------
+
+set authrec -
+    objtype(queue) -
+    profile('ES.SQUIZ.**') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+    objtype(queue) -    
+    profile('ES.SQUIZ.**') -
+    principal('__CLUSUSER__') -
+    authrmv(all) -
+    authadd(put, inq, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('ES.FILESUBMISSION.**') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+    objtype(queue) -    
+    profile('ES.FILESUBMISSION.**') -
+    principal('__CLUSUSER__') -
+    authrmv(all) -
+    authadd(put, inq, setall)
+
+
+* ---------------------------------------------------
+* Set Auth Records - Service Component Queues
+* ---------------------------------------------------
+
+set authrec -
+    objtype(queue) -
+    profile('SC.SQUIZ.**') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('SC.SQUIZ.**') -
+    principal('__CLUSUSER__') -
+    authrmv(all) -
+    authadd(put, inq, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('SC.AVANTI.FILESUBMISSION.**') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('SC.AVANTI.FILESUBMISSION.**') -
+    principal('__CLUSUSER__') -
+    authrmv(all) -
+    authadd(put, inq, setall)
+
+
+* ---------------------------------------------------
+* Define Queues - ES_SquizFileSubmission
+* ---------------------------------------------------
+
+define ql('ES.SQUIZ.FILESUBMISSION.RESP.V1') -
+	descr('Response Queue for ES_SquizFileSubmission') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_SquizFileSubmission
+* ---------------------------------------------------
+
+define ql('SC.SQUIZ.FILESUBMISSION.REQ.BOQ.V1') -
+	descr('Backout Queue for SC_SquizFileSubmission') -
+	replace
+
+define ql('SC.SQUIZ.FILESUBMISSION.REQ.V1') -
+	descr('Request Queue for SC_SquizFileSubmission') -
+	boqname('SC.SQUIZ.FILESUBMISSION.REQ.BOQ.V1') -
+	bothresh(3) -
+	replace
+
+define ql('SC.SQUIZ.FILESUBMISSION.EX.V1') -
+	descr('Exception Queue for SC_SquizFileSubmission') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - CS_FileSubmission
+* ---------------------------------------------------
+
+define ql('CS.FILESUBMISSION.RESP.V1') -
+	descr('Response Queue for CS_FileSubmission') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - ES_FileSubmission
+* ---------------------------------------------------
+
+define ql('ES.FILESUBMISSION.REQ.BOQ.V1') -
+	descr('Backout Queue for ES_FileSubmission') -
+	replace
+
+define ql('ES.FILESUBMISSION.REQ.V1') -
+	descr('Request Queue for ES_FileSubmission') -
+	boqname('ES.FILESUBMISSION.REQ.BOQ.V1') -
+	bothresh(3) -
+	replace
+
+define ql('ES.FILESUBMISSION.RESP.V1') -
+	descr('Response Queue for ES_FileSubmission') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_AvantiFileSubmission
+* ---------------------------------------------------
+
+define ql('SC.AVANTI.FILESUBMISSION.REQ.BOQ.V1') -
+	descr('Backout Queue for SC_AvantiFileSubmission') -
+	replace
+
+define ql('SC.AVANTI.FILESUBMISSION.REQ.V1') -
+	descr('Request Queue for SC_AvantiFileSubmission') -
+	boqname('SC.AVANTI.FILESUBMISSION.REQ.BOQ.V1') -
+	bothresh(3) -
+	replace
+
+define ql('SC.AVANTI.FILESUBMISSION.EX.V1') -
+	descr('Exception Queue for SC_AvantiFileSubmission') -
+	replace
+
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

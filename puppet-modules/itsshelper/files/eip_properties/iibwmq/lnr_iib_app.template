@@ -1,0 +1,53 @@
+* runmqsc command file template
+* lnr_iib_app.template
+* relies on lnr_iib_app.template.map
+
+* ---------------------------------------------------
+* Set Auth Records
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('LNR.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('LNR.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+ 
+* ---------------------------------------------------
+* Create queues for LNR application
+* ---------------------------------------------------
+
+define ql('LNR.B2BG.PROVIDER.BOQ') -
+	descr('Capture failed messages') -
+	replace
+
+define ql('LNR.B2BG.PROVIDER.Q.__QLOCATION__') -
+	descr('Site specific LNR B2B provider queue') -
+	cluster('__CLUSNAME__') -
+	boqname('LNR.B2BG.PROVIDER.BOQ') -
+	bothresh(3) -
+	replace
+
+define qa('LNR.B2BG.PROVIDER.Q') -
+	descr('Alias to get B2B messages from site specific queue') -
+	targtype(queue) -
+	target('LNR.B2BG.PROVIDER.Q.__QLOCATION__') -
+	replace
+
+define qa('LNR.PROVIDER.Q') -
+	descr('Alias to put messages to LNR App at local site') -
+	TARGTYPE(queue) -
+	TARGET('LNR.PROVIDER.Q.__QLOCATION__') -
+	replace
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

@@ -1,0 +1,29 @@
+# Relies on some exported environment variables:
+# ENV
+QMGR_TEMPLATE=${CONFIGDIR}/csp_iib_app.template
+QMTYPE=Apps
+CLUSTER=${ENV^^} # upper case
+env=${ENV,,} # lower case
+if [ -z "$HOST" ] ; then
+        HOST=$(hostname)
+fi
+E=$(echo $HOST | cut -c 2 | tr "[:lower:]" "[:upper:]")
+T=$(echo $HOST | cut -c 5 | tr "[:lower:]" "[:upper:]")
+NUM=$(echo $HOST | cut -c 7-)
+QMGRNAME=$(echo ${ENV}${E}${T}${NUM} | tr "[:lower:]" "[:upper:]")
+QMHOST=$HOST
+
+#
+# Set the userids which will be assigned onto non-admin
+# client channels
+EXHIBITION="02"
+HANSEN="01"
+CLUSUSER=_mq_clus
+IIBUSER=iibadmin
+
+#CLWLPRTY set to route traffic to both systems equally by default
+if [ "${NUM:0:2}" == "$HANSEN" ]; then
+        QPRIORITY=0
+else
+        QPRIORITY=0
+fi

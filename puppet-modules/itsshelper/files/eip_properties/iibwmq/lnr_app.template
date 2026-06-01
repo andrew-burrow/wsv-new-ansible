@@ -1,0 +1,76 @@
+* runmqsc command file template
+* lnr_app.template
+* relies on lnr_app.template.map
+
+* ---------------------------------------------------
+* Set Auth Records
+* ---------------------------------------------------
+
+set authrec -
+	objtype(qmgr) -
+	principal('__LNRUSER__') -
+	authrmv(all) -
+	authadd(connect, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('LNR.**') -
+	principal('__LNRUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('LNR.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+* ---------------------------------------------------
+* Create Channel and Channel Auth Records
+* ---------------------------------------------------
+define chl(LNR.__QMGRNAME__) -
+	chltype(svrconn) -
+	descr('LNR connects to QM via this channel') -
+	trptype(tcp) -
+	mcauser('*NOACCESS') -
+	maxinst(20) -
+	sslciph(TLS_RSA_WITH_AES_128_CBC_SHA256) -
+	sslcauth(required) -
+	sslpeer('__SSLPEER__') -
+	replace
+
+set chlauth(LNR.__QMGRNAME__) -
+	type(sslpeermap) -
+	descr('Map CN=WAS LNR to user __LNRUSER__') -
+	sslpeer('CN=WAS LNR') -
+	address('*') -
+	usersrc(map) -
+	mcauser('__LNRUSER__') -
+	chckclnt(asqmgr) -
+	action(replace)
+	
+
+* ---------------------------------------------------
+* Define Queues
+* ---------------------------------------------------
+define ql('LNR.PROVIDER.Q.__QLOCATION__') -
+	descr('Site specific LNR provider queue') -
+	cluster('__CLUSNAME__') -
+	replace
+
+define qa('LNR.PROVIDER.Q') -
+	descr('Alias to get messages from B2B IIB') -
+	TARGTYPE(queue) -
+	TARGET('LNR.PROVIDER.Q.__QLOCATION__') -
+	replace
+	
+define qa('LNR.B2BG.PROVIDER.Q') -
+	descr('Alias to send B2B messages to site specific queue') -
+	targtype(queue) -
+	target('LNR.B2BG.PROVIDER.Q.__QLOCATION__') -
+	replace
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

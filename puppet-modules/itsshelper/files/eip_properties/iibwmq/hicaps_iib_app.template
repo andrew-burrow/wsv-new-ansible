@@ -1,0 +1,284 @@
+* runmqsc command file template
+* hicaps_iib_apps.template
+* relies on hicaps_iib_apps.template.map
+
+* ---------------------------------------------------
+
+set authrec -
+        objtype(queue) -
+        profile('HICAPS.**') -
+        principal('__CLUSUSER__') -
+        authrmv(all) -
+        authadd(put, setall)
+
+set authrec -
+        objtype(queue) -
+        profile('HICAPS.RES.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(put, setall, setid, passall, passid, inq, dsp)
+
+set authrec -
+        objtype(queue) -
+        profile('HICAPS.OUTBOUND.REQ') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(put, setall, setid, passall, passid, inq, dsp)
+
+set authrec -
+        objtype(queue) -
+        profile('ACCTIONREPLICAHICAPS.**') -
+        principal('__CLUSUSER__') -
+        authrmv(all) -
+        authadd(put, setall)
+
+set authrec -
+        objtype(queue) -
+        profile('HICAPSMESSAGELOG.**') -
+        principal('__CLUSUSER__') -
+        authrmv(all) -
+        authadd(put, setall)
+
+set authrec -
+        objtype(queue) -
+        profile('HICAPSREPOSITORY.**') -
+        principal('__CLUSUSER__') -
+        authrmv(all) -
+        authadd(put, setall)
+
+set authrec -
+        objtype(queue) -
+        profile('HICAPSREPOSITORYEXTRACT.**') -
+        principal('__CLUSUSER__') -
+        authrmv(all) -
+        authadd(put, setall)
+
+set authrec -
+        objtype(queue) -
+        profile('HICAPS.BOQ.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+ 
+set authrec -
+        objtype(queue) -
+        profile('HICAPS.EX.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+		
+set authrec -
+        objtype(queue) -
+        profile('HICAPS.OUTBOUND.RES') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp)
+ 
+set authrec -
+        objtype(queue) -
+        profile('HICAPSMESSAGELOG.REQ.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+ 	
+set authrec -
+        objtype(queue) -
+        profile('HICAPSMESSAGELOG.BOQ.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+ 
+set authrec -
+        objtype(queue) -
+        profile('HICAPSMESSAGELOG.EX.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+		
+set authrec -
+        objtype(queue) -
+        profile('HICAPSMESSAGELOG.RES.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+		
+set authrec -
+        objtype(queue) -
+        profile('ACCTIONREPLICAHICAPS.REQ.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+
+set authrec -
+        objtype(queue) -
+        profile('ACCTIONREPLICAHICAPS.BOQ.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+ 
+set authrec -
+        objtype(queue) -
+        profile('ACCTIONREPLICAHICAPS.EX.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+
+set authrec -
+        objtype(queue) -
+        profile('ACCTIONREPLICAHICAPS.RES.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+		
+set authrec -
+        objtype(queue) -
+        profile('HICAPSREPOSITORY.REQ.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+		
+set authrec -
+        objtype(queue) -
+        profile('HICAPSREPOSITORY.BOQ.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+		
+set authrec -
+        objtype(queue) -
+        profile('HICAPSREPOSITORY.EX.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+		
+set authrec -
+        objtype(queue) -
+        profile('HICAPSREPOSITORY.RES.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+		
+set authrec -
+        objtype(queue) -
+        profile('HICAPSREPOSITORYEXTRACT.REQ.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+		
+set authrec -
+        objtype(queue) -
+        profile('HICAPSREPOSITORYEXTRACT.BOQ.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+		
+set authrec -
+        objtype(queue) -
+        profile('HICAPSREPOSITORYEXTRACT.EX.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+		
+set authrec -
+        objtype(queue) -
+        profile('HICAPSREPOSITORYEXTRACT.RES.V1') -
+        principal('__IIBUSER__') -
+        authrmv(all) -
+        authadd(get, browse, inq, dsp, put, setall, setid, passall, passid)
+
+		
+define ql('HICAPS.REQ.V1') -
+	descr('HICAPS inbound requests from Adapter on IIBRAD') -
+	cluster('__CLUSNAME__') -
+	boqname('HICAPS.BOQ.V1') -
+	bothresh(3) -
+	replace
+	
+define ql('HICAPS.BOQ.V1') -
+	descr('Backout HICAPS incoming requests') -
+	replace  
+  
+define ql('HICAPS.EX.V1') -
+	descr('Exceptions from HICAPS inbound requests') -
+	replace  
+  	
+define ql('HICAPS.OUTBOUND.RES') -
+  descr('Responses from HICAPS outbound messages') -
+  cluster('__CLUSNAME__') -
+  replace
+  
+define ql('HICAPSMESSAGELOG.REQ.V1') -
+	descr('HICAPS msg log requests from HICAPS flow') -
+	cluster('__CLUSNAME__') -
+	boqname('HICAPSMESSAGELOG.BOQ.V1') -
+	bothresh(3) -
+	replace
+	
+define ql('HICAPSMESSAGELOG.BOQ.V1') -
+	descr('Backout HICAPS msg log requests') -
+	replace  
+  
+define ql('HICAPSMESSAGELOG.EX.V1') -
+	descr('Exceptions from HICAPS msg log requests') -
+	replace  
+  
+define ql('HICAPSMESSAGELOG.RES.V1') replace
+
+
+define ql('ACCTIONREPLICAHICAPS.REQ.V1') -
+	descr('HICAPS AcctionR requests from HICAPS flow') -
+	cluster('__CLUSNAME__') -
+	boqname('ACCTIONREPLICAHICAPS.BOQ.V1') -
+	bothresh(3) -
+	replace
+	
+define ql('ACCTIONREPLICAHICAPS.BOQ.V1') -
+	descr('Backout HICAPS AcctionR requests') -
+	replace  
+  
+define ql('ACCTIONREPLICAHICAPS.EX.V1') -
+	descr('Exceptions from HICAPS AcctionR requests') -
+	replace  
+ 
+define ql('ACCTIONREPLICAHICAPS.RES.V1') replace
+
+define ql('HICAPSREPOSITORY.REQ.V1') -
+	descr('HICAPS Repository requests from HICAPS flow') -
+	cluster('__CLUSNAME__') -
+	boqname('HICAPSREPOSITORY.BOQ.V1') -
+	bothresh(3) -
+	replace
+	
+define ql('HICAPSREPOSITORY.BOQ.V1') -
+	descr('Backout HICAPS Repository requests') -
+	replace  
+  
+define ql('HICAPSREPOSITORY.EX.V1') -
+	descr('Exceptions from HICAPS Repository requests') -
+	replace  
+ 
+define ql('HICAPSREPOSITORY.RES.V1') replace
+
+define ql('HICAPSREPOSITORYEXTRACT.REQ.V1') -
+	descr('HICAPS repository extract requests from HICAPS flow') -
+	cluster('__CLUSNAME__') -
+	boqname('HICAPSREPOSITORYEXTRACT.BOQ.V1') -
+	bothresh(3) -
+	replace
+	
+define ql('HICAPSREPOSITORYEXTRACT.BOQ.V1') -
+	descr('Backout HICAPS repo extract requests') -
+	replace  
+  
+define ql('HICAPSREPOSITORYEXTRACT.EX.V1') -
+	descr('Exceptions from HICAPS repo extract requests') -
+	replace  
+
+define ql('HICAPSREPOSITORYEXTRACT.RES.V1') replace
+
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)
+
+

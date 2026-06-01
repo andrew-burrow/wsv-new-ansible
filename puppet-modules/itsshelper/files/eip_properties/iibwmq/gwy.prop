@@ -1,0 +1,112 @@
+# Relies on the exported environment variable:
+# ENV
+# Also relies on the config files:
+#  mqrepo.properties
+#  mqldap.properties
+#  mqcertsign.properties
+#  mqgateway.properties
+
+QMGR_TEMPLATE=${CONFIGDIR}/gwy.template
+REPOLIST=${CONFIGDIR}/mqrepo.properties
+source $REPOLIST
+GWYMAP=${CONFIGDIR}/mqgateway.properties
+source $GWYMAP
+LDAPLIST=${CONFIGDIR}/mqldap.properties
+if [ -z "$HOST" ] ; then
+	HOST=$(hostname)
+fi
+E=$(echo $HOST | cut -c 2 | tr "[:lower:]" "[:upper:]")
+T=G
+NUM=$(echo $HOST | cut -c 7-)
+QMGRNAME=$(echo ${ENV}${E}${T}${NUM} | tr "[:lower:]" "[:upper:]")
+QMPREFIX=$(echo $QMGRNAME | cut -c 1-5)
+SHORTPREFIX=$(echo $QMGRNAME | cut -c 1-4)
+QMHOST=$(echo ${HOST}-${ENV} | tr "[:upper:]" "[:lower:]")
+REPOQM=${MQREPOSLIST[${QMGRNAME}]}
+REPOENV=$(echo $REPOQM | cut -c 4)
+REPONUM=$(echo $REPOQM | cut -c 6-)
+REPOPREFIX=$(echo $REPOQM | cut -c 1-5)
+REPOHOST=$(echo s${REPOENV}uwmq${REPONUM}-${ENV} | tr "[:upper:]" "[:lower:]")
+QMTYPE=Gateway
+QMPORT=1417
+REPOPORT=1415
+CLUSTER=${ENV^^} # upper case
+env=${ENV,,} # lower case
+PROCSTRING="/opt/${env}/mqm/bin/amq"
+AWSQM=${MQGWYLIST[${QMGRNAME}]}
+AWSHOST=${MQAWSADDR[${AWSQM}]}
+AWSPORT=${MQAWSPORT[${AWSQM}]}
+#
+#
+#
+# Fix up roles once they are created in LDAP
+# MONITORROLE=mqmonitor
+# ADMINROLE="ROL-PAM-MQ-ADMIN-"${E}
+# ADMINROLE=mqadmin
+# ADMINROLE=ROL-PAM-APPLICATION-SERVICES
+# MONITORROLE=CARLB1
+# DEVROLE=PULLV1
+# READERROLE=CASEN1
+#
+#
+# Configure the Long, Upper Case environment name (LUENV)
+# Import the mapping file, then declare the variable
+MQENVMAP=${CONFIGDIR}/mqenvironments.properties
+source $MQENVMAP
+LUENV=${MQEnvMap[$E]}
+#
+#
+MONITORUSER=_mq_monitor
+CLUSUSER=_mq_clus
+REPOUSER=_mq_repos
+APPUSER=_mq_clus_app
+MFUSER=_mq_clus_mf
+IIBUSER=_mq_clus_iib
+RATUSER=_mq_clus_ibr
+AWSUSER=_mq_chl_aws
+ADMINROLE=ROL-MQ-${LUENV}-ADMIN
+READERROLE=ROL-MQ-${LUENV}-MONITOR
+DEVROLE=ROL-MQ-${LUENV}-APPADMIN
+#
+#
+#
+# Configure LDAP. Look up Bind User and Password based on the 
+# Environment letter in the host name (<E>)
+#
+# Include declations and data for LDAPBindUsr, LDAPBindPW and LDAPConn
+source $LDAPLIST
+#
+MQAUTHORMD="SEARCHUSR"
+MQBASEDNG="o=vwa"
+MQBASEDNU=$MQBASEDNG
+MQCLASSGRP="groupOfNames"
+MQCLASSUSR="inetOrgPerson"
+MQLDAPCONN=$(echo ${LDAPConn[$E]} | awk -F "//" "{print \$2}")
+MQLDAPPROT=$(echo ${LDAPConn[$E]} | awk -F "//" "{print \$1}")
+if [ "$MQLDAPPROT" == "ldap:" ] ; then
+	MQLDAPPORT=389
+	MQLDAPSEC=NO
+else
+	MQLDAPPORT=636
+	MQLDAPSEC=ANON
+fi
+MQFINDGRP="groupMembership"
+MQGRPFIELD="cn"
+MQLDAPPWD="${LDAPBindPW[$E]}"
+MQLDAPUSER="${LDAPBindUsr[$E]}"
+MQNESTGRP="NO"
+MQSHORTUSR=shortName
+MQUSRFIELD="$MQSHORTUSR"
+#
+#
+#
+# Configure autosigning
+source ${CONFIGDIR}/mqcertsign.properties 
+MQAUTOSIGN=${MQAUTOSIGNLIST[$E]}
+MQCASERVER=${MQCASERVERLIST[$E]}
+MQCACREDFILE=${CONFIGDIR}/${MQCACREDFILELIST[$E]}
+MQCAUSERNAME=${MQCAUSERNAMELIST[$E]}
+#
+# Configure CA Certificates to be trusted for the environment
+CACERTLIST=${CONFIGDIR}/mqcacertlist.properties
+source $CACERTLIST

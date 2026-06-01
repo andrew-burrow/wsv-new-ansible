@@ -1,0 +1,67 @@
+#
+# 
+#
+# program:	"configure-sso.jy"
+# date:		April 08 2015
+# pupose:	Configure SSO
+# usage: 	"configure-sso.jy <props file> 
+#		where <props file> is formatted like a windows .ini file with a [SECURITY] section and the following properties
+#		ltpa_key_file	- full path to LTPA key file
+#		ltpa_password	- LTPA password
+#		sso_domain_name	- SSO domain name, e.g. workcover.vic.gov.au
+
+
+import ConfigParser
+
+def print_usage():
+	print 'USAGE: configure-sso.py <property file>'
+
+
+if len(sys.argv) != 1:
+	print_usage
+	sys.exit(-1)
+	
+props_file = sys.argv[0]
+
+props = ConfigParser.ConfigParser()
+props.read(props_file)
+section = 'SSO'
+
+
+def getProperty(prop_name):
+	prop_value = ''
+	if props.has_option(section, prop_name):
+		prop_value = props.get(section, prop_name)
+		print "PROPERTY: %s = %s" % (prop_name, prop_value)
+		return prop_value
+	else:
+		print 'ERROR: missing property: %s' % prop_name
+		sys.exit(1)
+
+
+		
+		
+		
+		
+ltpa_key_file = getProperty('ltpa_key_file')
+ltpa_password = getProperty('ltpa_password')
+ltpa_timeout = getProperty('ltpa_timeout')
+sso_domain_name = getProperty('sso_domain_name')
+_excp_ = 0
+
+
+
+
+
+
+print('INFO: Importing LTPA token.')
+args = '[-ltpaKeyFile file:%s -password %s ]' % (ltpa_key_file, ltpa_password)
+AdminTask.importLTPAKeys(args)
+print('INFO: Setting LTPA timeout to: %s\n' % ltpa_timeout)
+AdminTask.setLTPATimeout(['-timeout', ltpa_timeout])
+print('INFO: Configuring SSO.')
+AdminTask.configureSingleSignon('-enable true -domainName %s' % sso_domain_name)
+print('INFO: saving...')
+AdminConfig.save()
+print('COMPLETED: SSO configuration')		
+

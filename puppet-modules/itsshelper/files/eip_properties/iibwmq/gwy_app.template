@@ -1,0 +1,437 @@
+* runmqsc command file template
+* gwy_app.template
+* relies on gwy_app.template.map and gwy_app.prop
+
+* ---------------------------------------------------
+* Set Auth Records
+* ---------------------------------------------------
+
+set authrec -
+    objtype(queue) -
+    profile('ACCTION.IVP') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(rqmname) -
+    profile('__MQAWSQM__') -
+    principal('__MQMFUSER__') -
+    authrmv(all) -
+    authadd(put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('XMITQ.__MQAWSQM__') -
+    principal('__MQMFUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('CS.ACCTION.IVP.RESP') -
+    principal('__MQMFUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('CS.PROVIDER.INVOICEMANAGEMENT.REQ.V1') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+	
+set authrec -
+    objtype(queue) -
+    profile('CS.PROVIDER.INVOICEMANAGEMENT.REQ.V2') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+	
+set authrec -
+    objtype(queue) -
+    profile('CS.PROVIDER.MANAGEMENT.REQ.V1') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+	
+set authrec -
+    objtype(queue) -
+    profile('ES.INVOICE.REQ.V2') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+	
+set authrec -
+    objtype(queue) -
+    profile('ES.ELECTRONICDOCUMENTMANAGEMENT.REQ.V1') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+	
+set authrec -
+    objtype(queue) -
+    profile('__MQAWSQM__') -
+    principal('__MQIIBUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('CS.CALLBACK.REQ.V1') -
+    principal('__MQIIBUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('SYSTEM.CLUSTER.TRANSMIT.QUEUE') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall, passall)
+
+set authrec -
+	objtype(rqmname) -
+	profile('__MQIIBQM1__') -
+	principal('__MQAWSUSER__') -
+	authrmv(all) -
+	authadd(put,setall,passall)
+
+set authrec -
+	objtype(rqmname) -
+	profile('__MQIIBQM2__') -
+	principal('__MQAWSUSER__') -
+	authrmv(all) -
+	authadd(put,setall,passall)   
+
+set authrec -
+    objtype(queue) -
+    profile('CS.IOP.ACC.REQ.**') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('CS.DOCUMENT.V1.REQ') -
+    principal('__MQIIBUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('CS.IOP.CREATE.INVOICE.REQ.V1') -
+    principal('__MQIIBUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('CS.IOP.REGISTER.COC.REQ.V1') -
+    principal('__MQIIBUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('CS.IOP.CASE.MGT.REQ.V1') -
+    principal('__MQIIBUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('CS.IOP.DOCNOTIFY.REQ.V1') -
+    principal('__MQIIBUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('CS.IOP.DOCNOTIFY.CLAIM.REQ.V1') -
+    principal('__MQIIBUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('CS.IOP.DOCNOTIFY.COC.REQ.V1') -
+    principal('__MQIIBUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('CS.IOP.DOCNOTIFY.INVOICE.REQ.V1') -
+    principal('__MQIIBUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('CS.IOP.ACC.CLAIMANT.REQ.V1') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+	
+set authrec -
+    objtype(queue) -
+    profile('CS.IOP.ACC.CLAIM.REQ.V1') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+	
+set authrec -
+	objtype(queue) -
+	profile(CS.IOP.ACC.COC.REQ.V1) -
+	principal('__MQAWSUSER__') -
+	authadd(inq,put,setall)
+	
+set authrec -
+	objtype(queue) -
+	profile(SC.CLAIM.EIP.REQ.V1) -
+	principal('__MQAWSUSER__') -
+	authadd(inq,put,setall)
+
+set authrec -
+    objtype(queue) -
+    profile('SC.CLAIMUPDATE.ACC.REQ.V1') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(inq, put, setall)
+	
+* ---------------------------------------------------
+* Channel Authorisation
+* ---------------------------------------------------
+set authrec -
+    objtype(channel) -
+    profile('__MQAWSQM__.__QMGRNAME__') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(dsp,ctrlx)
+
+
+* Access to MQAWSQM __QMGRNAME__
+* Entry exists here also in order to avoid having to re-create the qmgr by deleting the gwy fact. 
+set authrec -
+    objtype(channel) -
+    profile('__MQAWSQM__.__QMGRNAME__') -
+    principal('__MQAWSUSER__') -
+    authrmv(all) -
+    authadd(dsp, -
+        ctrlx)
+* Allows messages to reply back from the IIB QMgr to AWS
+set authrec -
+	objtype(queue) -
+	profile('XMITQ.__MQAWSQM__') -
+	principal('__MQIIBUSER__') -
+	authadd(put,inq,setall)
+
+* ---------------------------------------------------
+* Define Queues
+* ---------------------------------------------------
+define qr('WSV') -
+    descr('QMGR alias to allow cluster qname resolution') -
+    rname(' ') -
+    rqmname(' ') -
+    xmitq(' ') -
+    defbind(notfixed) -
+    replace
+
+define qa('ACCTION.IVP') -
+    descr('Alias to direct IVP messages to ACCTION') -
+    targtype(queue) -
+    target(ACCTION.IVP) -
+    defbind(notfixed) -
+    replace
+
+define qr('__MQAWSQM__') -
+    descr('Alias to allow reply messages to route to AWS') -
+    rname(' ') -
+    rqmname('__MQAWSQM__') -
+    xmitq('XMITQ.__MQAWSQM__') -
+    cluster('__CLUSTER__') -
+    clwlprty(__QPRTY__) -
+    defbind(notfixed) -
+    replace
+
+define qr('CS.ACCTION.IVP.RESP') -
+    descr('IVP queue for sending messages to AWS') -
+    rname('CS.ACCTION.IVP.RESP') -
+    rqmname('__MQAWSQM__') -
+    xmitq('XMITQ.__MQAWSQM__') -
+    cluster('__CLUSTER__') -
+    clwlprty(__QPRTY__) -
+    defbind(notfixed) -
+    replace
+
+define qa('CS.PROVIDER.INVOICEMANAGEMENT.REQ.V1') -
+    descr('Alias to direct Provider Invoice Management message to IIB') -
+    targtype(queue) -
+    target(CS.PROVIDER.INVOICEMANAGEMENT.REQ.V1) -
+    defbind(notfixed) -
+    replace
+
+define qa('CS.PROVIDER.INVOICEMANAGEMENT.REQ.V2') -
+    descr('Alias to direct Provider Invoice Management message to IIB') -
+    targtype(queue) -
+    target(CS.PROVIDER.INVOICEMANAGEMENT.REQ.V2) -
+    defbind(notfixed) -
+    replace
+
+define qa('CS.PROVIDER.MANAGEMENT.REQ.V1') -
+    descr('Alias to direct Provider Management message to IIB') -
+    targtype(queue) -
+    target(CS.PROVIDER.MANAGEMENT.REQ.V1) -
+    defbind(notfixed) -
+    replace
+
+define qa('ES.INVOICE.REQ.V2') -
+    descr('Alias to direct Invoice query message to IIB') -
+    targtype(queue) -
+    target(ES.INVOICE.REQ.V2) -
+    defbind(notfixed) -
+    replace
+
+define qa('ES.ELECTRONICDOCUMENTMANAGEMENT.REQ.V1') -
+    descr('Alias to EDRMS for Claims Enablement') -
+    targtype(queue) -
+    target(ES.ELECTRONICDOCUMENTMANAGEMENT.REQ.V1) -
+    defbind(notfixed) -
+    replace
+
+define qr('CS.CALLBACK.REQ.V1') -
+    descr('Proxy queue for sending messages to AWS') -
+    rname('CS.CALLBACK.REQ') -
+    rqmname('__MQAWSQM__') -
+    xmitq('XMITQ.__MQAWSQM__') -
+    cluster('__CLUSTER__') -
+    clwlprty(__QPRTY__) -
+    defbind(notfixed) -
+    replace
+
+define qa('CS.IOP.ACC.CLAIMANT.REQ.V1') -
+    descr('Alias to direct ACCtion Claimant EntireX messages to MF') -
+    targtype(queue) -
+    target(EIP.ACC.REQ) -
+    defbind(notfixed) -
+    replace
+
+define qa('CS.IOP.ACC.CLAIM.REQ.V1') -
+    descr('Alias to direct ACCtion Claim EntireX messages to MF') -
+    targtype(queue) -
+    target(EIP.ACC.REQ) -
+    defbind(notfixed) -
+    replace
+
+define qa('CS.IOP.ACC.COC.REQ.V1') -
+    descr('Alias to direct ACCtion CoC EntireX messages to MF') -
+    targtype(queue) -
+    target(EIP.ACC.REQ) -
+    defbind(notfixed) -
+    replace
+
+define qa(EIP.ACC.REQ) -
+	descr('Cluster alias to explicitly declare EntireX queue') -
+	targtype(queue) -
+	target(EIP.ACC.REQ) -
+	defbind(notfixed) -
+	replace
+
+define qa('SC.CLAIMUPDATE.ACC.REQ.V1') -
+    descr('Alias to direct ACCtion Update Claim Mgt EntireX messages to MF') -
+    targtype(queue) -
+    target(EIP.ACC.REQ) -
+    defbind(notfixed) -
+    replace
+
+define qa('SC.CLAIM.EIP.REQ.V1') -
+    descr('Alias to direct ValidateClaim reqs to IIB') -
+    targtype(queue) -
+    target(CS.VALIDATECLAIM.REQ) -
+    defbind(notfixed) -
+    replace
+
+define qr('CS.DOCUMENT.V1.REQ') -
+    descr('Document queue sending document messages to AWS') -
+    rname('CS.DOCUMENT.V1.REQ') -
+    rqmname('__MQAWSQM__') -
+    xmitq('XMITQ.__MQAWSQM__') -
+    cluster('__CLUSTER__') -
+    clwlprty(__QPRTY__) -
+    defbind(notfixed) -
+    replace
+
+define qr('CS.IOP.CREATE.CLAIM.REQ.V1') -
+    descr('Claims queue sending create claim messages to AWS') -
+    rname('CS.EIP.CREATE.CLAIM.REQ.V1') -
+    rqmname('__MQAWSQM__') -
+    xmitq('XMITQ.__MQAWSQM__') -
+    cluster('__CLUSTER__') -
+    clwlprty(__QPRTY__) -
+    defbind(notfixed) -
+    replace
+
+define qr('CS.IOP.REGISTER.COC.REQ.V1') -
+    descr('Claims queue sending register coc messages to AWS') -
+    rname('CS.EIP.REGISTER.COC.REQ.V1') -
+    rqmname('__MQAWSQM__') -
+    xmitq('XMITQ.__MQAWSQM__') -
+    cluster('__CLUSTER__') -
+    clwlprty(__QPRTY__) -
+    defbind(notfixed) -
+    replace
+
+define qr('CS.IOP.CASE.MGT.REQ.V1') -
+    descr('Case Management Flag request message') -
+    rname('CS.EIP.CASE.MGT.REQ.V1') -
+    rqmname('__MQAWSQM__') -
+    xmitq('XMITQ.__MQAWSQM__') -
+    cluster('__CLUSTER__') -
+    clwlprty(__QPRTY__) -
+    defbind(notfixed) -
+    replace
+ 
+define qr('CS.IOP.DOCNOTIFY.REQ.V1') -
+    descr('Document Notify message to Salesforce') -
+    rname('CS.DOCNOTIFY.V1.REQ') -
+    rqmname('__MQAWSQM__') -
+    xmitq('XMITQ.__MQAWSQM__') -
+    cluster('__CLUSTER__') -
+    clwlprty(__QPRTY__) -
+    defbind(notfixed) -
+    replace
+
+define qr('CS.IOP.DOCNOTIFY.CLAIM.REQ.V1') -
+    descr('Claim Document Notify message to Salesforce') -
+    rname('CS.DOCNOTIFY.V1.REQ') -
+    rqmname('__MQAWSQM__') -
+    xmitq('XMITQ.__MQAWSQM__') -
+    cluster('__CLUSTER__') -
+    clwlprty(__QPRTY__) -
+    defbind(notfixed) -
+    replace
+
+define qr('CS.IOP.DOCNOTIFY.COC.REQ.V1') -
+    descr('CoC Document Notify message to Salesforce') -
+    rname('CS.DOCNOTIFY.V1.REQ') -
+    rqmname('__MQAWSQM__') -
+    xmitq('XMITQ.__MQAWSQM__') -
+    cluster('__CLUSTER__') -
+    clwlprty(__QPRTY__) -
+    defbind(notfixed) -
+    replace
+
+define qr('CS.IOP.DOCNOTIFY.INVOICE.REQ.V1') -
+    descr('Invoice Document Notify message to Salesforce') -
+    rname('CS.DOCNOTIFY.V1.REQ') -
+    rqmname('__MQAWSQM__') -
+    xmitq('XMITQ.__MQAWSQM__') -
+    cluster('__CLUSTER__') -
+    clwlprty(__QPRTY__) -
+    defbind(notfixed) -
+    replace
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

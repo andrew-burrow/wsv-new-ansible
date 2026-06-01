@@ -1,0 +1,6 @@
+# This file sets the thresholds for the QAS clicks and data set expiry
+# The file is delivered by the itsshelper module and lives in the 
+# /files/xymon_scripts/qas folder.
+# <Data Set>:<Clicks - yellow>:<clicks - red>:<DS - yellow>:<DS - red>
+AUG:1000:500:30:7
+AUS:1000:500:30:7

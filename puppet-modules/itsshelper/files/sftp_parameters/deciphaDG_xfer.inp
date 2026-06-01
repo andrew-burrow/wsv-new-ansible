@@ -1,0 +1,7 @@
+# DeciphaDG SFTP parameter file - assumes SSH keys are used
+
+SFTP_HOST=<sftp host>
+SFTP_USER=<sftp user>
+SRC_DIR=<sftp download directory>
+TGT_DIR=/AusPost/Prod/DeciphaDG
+FILE_REGEX=content_[0-9]{6}_p4300_s3_n28.{1}4300

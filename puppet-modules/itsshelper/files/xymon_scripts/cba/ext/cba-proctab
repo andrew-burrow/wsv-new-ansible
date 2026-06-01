@@ -1,0 +1,9 @@
+# File managed by Puppet
+#
+# cba-proctab: configuration file for Avaya Call Back Assist process checking
+#
+# Format: same as $BBHOME/etc/bb-proctab
+#
+
+tpucba0301: :"opt/Avaya/callbackassist/jdk/bin/java;>=1"
+tpucba0301: :"opt/Avaya/callbackassist/PostgreSQL/9.4/bin/postgres;>=1"

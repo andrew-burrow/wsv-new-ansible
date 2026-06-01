@@ -1,0 +1,20 @@
+# Define properties for the IIB audit queues application
+#
+QMGR_TEMPLATE=${CONFIGDIR}/iibjumbo_audit.template
+IIBUSER=iibadmin
+HOST=$(hostname)
+E=$(echo $HOST | cut -c 2 | tr "[:lower:]" "[:upper:]")
+T=J
+NUM=$(echo $HOST | cut -c 7-)
+QMGRNAME=$(echo ${ENV}${E}${T}${NUM} | tr "[:lower:]" "[:upper:]")
+CLUSTER=${ENV,,} # lower case
+EXHIBITION="02"
+HANSEN="01"
+CLUSUSER=_mq_clus
+#CLWLPRTY set to route traffic to HANSEN queues by default
+if [ "${NUM:0:2}" == "$HANSEN" ]; then
+        QPRIORITY=0
+else
+        QPRIORITY=0
+fi
+

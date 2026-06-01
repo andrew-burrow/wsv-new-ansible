@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://localhost/groupMan/reporting" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://localhost/groupMan/reporting">
+<types>
+<xsd:schema targetNamespace="http://localhost/groupMan/reporting">
+ <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+ <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+</xsd:schema>
+</types>
+<message name="ws_generateAppAdminReportRequest">
+  <part name="email" type="xsd:string" />
+  <part name="adminDN" type="xsd:string" />
+  <part name="env" type="xsd:string" />
+</message>
+<message name="ws_generateAppAdminReportResponse">
+  <part name="return" type="xsd:string" />
+</message>
+
+<portType name="ws_generateAppAdminReportPortType">
+  <operation name="generateAppAdminReport">
+    <input message="tns:ws_generateAppAdminReportRequest"/>
+    <output message="tns:ws_generateAppAdminReportResponse"/>
+  </operation>
+</portType>
+<binding name="ws_generateAppAdminReportBinding" type="tns:ws_generateAppAdminReportPortType">
+  <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+  <operation name="generateAppAdminReport">
+    <soap:operation soapAction="http://linvm110.services.workcover.vic.gov.au/groupMan/reporting/ws_generateAppAdminReport.php" style="rpc"/>
+    <input><soap:body use="encoded" namespace="http://localhost/groupMan/reporting" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="http://localhost/groupMan/reporting" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
+</binding>
+<service name="ws_generateAppAdminReportService">
+  <port name="ws_generateAppAdminReportPort" binding="ws_generateAppAdminReportBinding">
+    <soap:address location="http://linvm110.services.workcover.vic.gov.au/groupMan/reporting/ws_generateAppAdminReport.php"/>
+  </port>
+</service>
+</definitions>
+

@@ -1,0 +1,96 @@
+#
+#
+#
+# program:      "configure-cluster-ports.jy"
+# date:         June 03 2015
+# pupose:       Configure cluster ports using ports def file
+# usage:        "configure-federated-ldap.jy <props file>
+#               where <props file> is formatted like a windows .ini file with a [JVM-PORTS] section and [CONFIG] section defining steps for port ranges
+
+
+import ConfigParser
+
+def print_usage():
+        print "USAGE: configure-cluster-ports.jy 'ports-file'"
+
+if len(sys.argv) != 1:
+        print_usage()
+        sys.exit(-1)
+
+props_file = sys.argv[0]
+
+props = ConfigParser.ConfigParser()
+props.optionxform=str
+props.read(props_file)
+
+
+def getProperty(prop_name, section):
+        prop_value = ''
+        if props.has_option(section, prop_name):
+                prop_value = props.get(section, prop_name)
+                print "PROPERTY: %s = %s" % (prop_name, prop_value)
+                return prop_value
+        else:
+                print 'ERROR: missing property: %s' % prop_name
+                sys.exit(1)
+
+#config
+vertical_step = getProperty('VERTICAL_STEP', 'CONFIG')
+cluster_step = getProperty('CLUSTER_STEP', 'CONFIG')
+
+cluster_names = []
+clusters = AdminConfig.getid('/ServerCluster:/').split()
+for cluster in clusters:
+        cluster_names.append(AdminConfig.showAttribute(cluster, 'name'))
+
+
+#determine cluster members
+cluster_idx = 0
+for cluster_name in cluster_names:
+        members = AdminConfig.getid('/ServerCluster:%s/ClusterMember:/' % cluster_name).split()
+        nodes = {}
+        for member in members:
+                node = AdminConfig.showAttribute(member, 'nodeName')
+                if not nodes.has_key(node):
+                        nodes[node]=[]
+        #populate dictionary
+        for node in nodes.keys():
+                nodeArray=[]
+                for member in members:
+                        if node == AdminConfig.showAttribute(member, 'nodeName'):
+                                nodeArray.append(member)
+                nodes[node]=nodeArray
+
+        #for each node
+        for node in nodes.keys():
+                jvm_idx=0
+                for member in nodes[node]:
+                        section = "JVM_PORTS"
+                        member_name = AdminConfig.showAttribute(member, 'memberName')
+                        print "INFO: configuring ports for %s" % member_name
+                        ports = AdminTask.listServerPorts(member_name)
+                        #for each port in ports file
+                        for port_name in props.options(section):
+                                port_name = str(port_name)
+                                if ports.find(port_name) > 0:
+                                        port_number = props.get(section, port_name)
+                                        port_number = int(port_number) + int(vertical_step) * int(jvm_idx) + int(cluster_step) * int(cluster_idx)
+                                        print "INFO: setting %s to %s..." % (port_name, port_number)
+                                        AdminTask.modifyServerPort(member_name, '[-endPointName %s -port %i -modifyShared]' % (port_name, port_number))
+                                else:
+                                        print "INFO: %s not defined on %s" % (port_name, member_name)
+                                #end if
+                        #end for
+                        jvm_idx = jvm_idx + 1
+                #end for
+        #end for
+        cluster_idx = cluster_idx + 1
+
+#end for
+
+
+
+print "INFO: saving..."
+AdminConfig.save()
+
+

@@ -1,0 +1,76 @@
+* runmqsc command file template
+* servicenowintegration_iib_app.template
+* relies on servicenowintegration_iib_apps.template.map
+
+* ---------------------------------------------------
+
+
+ 
+* ---------------------------------------------------
+* Set Auth Records - Entity Service Queues
+* ---------------------------------------------------
+
+set authrec -
+ objtype(queue) -
+ profile('ES.SPLSNOWINTEGRATION.**') -
+ principal('__IIBUSER__') -
+ authrmv(all) -
+ authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+ 
+set authrec -
+ objtype(queue) -    
+ profile('ES.SPLSNOWINTEGRATION.**') -
+ principal('__CLUSUSER__') -
+ authrmv(all) -
+ authadd(put, inq, setall)
+ 
+
+* ---------------------------------------------------
+* Set Auth Records - Service Component Queues
+* ---------------------------------------------------
+
+set authrec -
+ objtype(queue) -
+ profile('SC.SPLUNKEIPREPOSITORY.**') -
+ principal('__IIBUSER__') -
+ authrmv(all) -
+ authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+ 
+set authrec -
+ objtype(queue) -
+ profile('SC.SPLUNKEIPREPOSITORY.**') -
+ principal('__CLUSUSER__') -
+ authrmv(all) -
+ authadd(put, inq, setall)
+ 
+ 
+
+
+* ---------------------------------------------------
+* Define Queues - ES_ServiceNowIntegration.
+* ---------------------------------------------------
+
+ 
+define ql('ES.SPLSNOWINTEGRATION.RESP.V1') -
+ descr('Response queue for ES_ServiceNowIntegration') -
+ replace
+
+* ---------------------------------------------------
+* Define Queues - SC_SplunkEIPReposiroty
+* ---------------------------------------------------
+
+define ql('SC.SPLUNKEIPREPOSITORY.BOQ.V1') -
+ descr('Backout queue for SC_SplunkEIPReposiroty') -
+ replace
+  
+define ql('SC.SPLUNKEIPREPOSITORY.REQ.V1') -
+ descr('Request queue for SC_SplunkEIPReposiroty') -
+ cluster(__CLUSNAME__) -
+ clwlprty(__QPRIORITY__) -
+ boqname('SC.SPLUNKEIPREPOSITORY.BOQ.V1') -
+ bothresh(1) -
+ replace
+ 
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

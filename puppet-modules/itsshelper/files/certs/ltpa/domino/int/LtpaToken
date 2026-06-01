@@ -1,0 +1,9 @@
+#IBM WebSphere Application Server key file
+#Wed Jul 10 15:59:47 EST 2013
+com.ibm.websphere.CreationDate=Wed Jul 10 15\:59\:47 EST 2013
+com.ibm.websphere.ltpa.version=1.0
+com.ibm.websphere.ltpa.3DESKey=kDRHJ5J0HAYq8CdVmGRymn2O70dYQnyPk9w+r0l9bJA\=
+com.ibm.websphere.CreationHost=ttuffo0105
+com.ibm.websphere.ltpa.PrivateKey=Ij8GM4ZWyHNYoAqPAhl/4uy7v/wm2kfXsJcqDa//0316i3tfnH4VSgdBcef2QlXTOxP6ML7l6HIxCY3+mgsOkm+6d9Ij8r1m82dXkgKanXFSHWhmZsneGouysZWIfL1jeotwnVi/YeuoYfWDMUKLJXkOws5XD8JmpQQtqC+Xj+sV7F7Gy/3zCwmgQl+Mu5KnGMYg0EZpQupSekNwmDT/dM5AVUSF0c0hm8bbnInYrnR3YJil1pzVfuezNjyh/sQ0Iw4oMUx/DXZ+riqYnOKNOq1p93C8rivkWGMpufZVJ/89F9EcIbIICifoI2kBPoXGNFB0uYu9Oixi7X8/CwRzYWChn3h7HJr7PyvXzh7VW+M\=
+com.ibm.websphere.ltpa.Realm=ldbldapint.dev.tac\:389
+com.ibm.websphere.ltpa.PublicKey=ALTDRM/qrRhurES2JUliaWw+PdkfbTVzLZgf55da8ihYxdgBBuDtFs4/kk+wOa/tUHp/75CaT+Uzy2ugUnKRdJqLHFz4id2Mu48GlkZHOIriLwhdl6ZYDK9j+emiPn58qNePkbCEX6nZAgzbhGBo8JqxWMWrigUtKEYdrqhYykFHAQAB

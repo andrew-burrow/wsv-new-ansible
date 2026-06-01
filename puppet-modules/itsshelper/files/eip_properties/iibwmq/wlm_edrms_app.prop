@@ -1,0 +1,32 @@
+WLM_LIST=(ElectronicDocumentManagement PublishElectronicDocument PublichClaimUpdate EDRMS FileNet AcctionReplicaInbound EDRMS_Batch Novus_EDRMS EMS)
+
+declare -A WLM_POLICY_NAME ADDITIONAL_INSTANCES
+
+for WLM in ${WLM_LIST[*]} ; do
+  WLM_POLICY_NAME[${WLM}]=WLM_${WLM}
+done
+
+case "${env}" in
+  "sv1" | "pr1")
+    ADDITIONAL_INSTANCES[ElectronicDocumentManagement]=2
+    ADDITIONAL_INSTANCES[PublishElectronicDocument]=2
+    ADDITIONAL_INSTANCES[PublichClaimUpdate]=2
+    ADDITIONAL_INSTANCES[EDRMS]=2
+    ADDITIONAL_INSTANCES[FileNet]=2
+    ADDITIONAL_INSTANCES[AcctionReplicaInbound]=0
+    ADDITIONAL_INSTANCES[EDRMS_Batch]=0
+    ADDITIONAL_INSTANCES[Novus_EDRMS]=2
+    ADDITIONAL_INSTANCES[EMS]=2
+    ;;
+  *)
+    ADDITIONAL_INSTANCES[ElectronicDocumentManagement]=2
+    ADDITIONAL_INSTANCES[PublishElectronicDocument]=2
+    ADDITIONAL_INSTANCES[PublichClaimUpdate]=2
+    ADDITIONAL_INSTANCES[EDRMS]=2
+    ADDITIONAL_INSTANCES[FileNet]=2
+    ADDITIONAL_INSTANCES[AcctionReplicaInbound]=0
+    ADDITIONAL_INSTANCES[EDRMS_Batch]=0
+    ADDITIONAL_INSTANCES[Novus_EDRMS]=2
+    ADDITIONAL_INSTANCES[EMS]=2
+  	;;
+esac
