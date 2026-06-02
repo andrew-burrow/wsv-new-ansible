@@ -58,14 +58,12 @@
     mode: '0600'
   loop: >-
     {{
-      ibm_ace_host_mounts
-      | selectattr('type', 'equalto', 'cifs')
-      | list
-      | community.general.groupby_as_dict('credential_file')
-      | dict2items
-      | map(attribute='value')
-      | map('first')
-      | list
+      dict(
+        ibm_ace_host_mounts
+        | selectattr('type', 'equalto', 'cifs')
+        | map(attribute='credential_file')
+        | zip(ibm_ace_host_mounts | selectattr('type', 'equalto', 'cifs'))
+      ).values() | list
     }}
   no_log: true
 
