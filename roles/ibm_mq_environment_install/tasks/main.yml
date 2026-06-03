@@ -115,36 +115,45 @@
 
 # Queue Manager Creation
 
-- name: Create queue managers
+- name: Create queue managers via itsshelper
   become: true
-  become_user: "{{ ibm_mq_host_user }}"
   ansible.builtin.command:
-    cmd: crtmqm -lf {{ item.log_size }} {{ item.name }}
-    creates: /var/mqm/qmgrs/{{ item.name }}
-  environment:
-    PATH: >-
-      {{ ibm_mq_host_base_dir }}/{{
-        ibm_mq_environment
-      }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
-  loop: "{{ ibm_mq_environment_queue_managers }}"
+    cmd: >-
+      /opt/scripts/createQMGR.bash
+      {{ ibm_mq_environment }}
+      {{ item.name }}
+    creates: >-
+      /var/mqm/qmgrs/{{ item.queue_manager }}/ssl/key.kdb
+  loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
 
 - name: Start queue managers
+   become: true
+   become_user: "{{ ibm_mq_host_user }}"
+   ansible.builtin.command:
+     cmd: strmqm {{ item.queue_manager }}
+   environment:
+     PATH: >-
+       {{ ibm_mq_host_base_dir }}/{{
+         ibm_mq_environment
+       }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
+   register: start_qm
+   changed_when: "'started' in start_qm.stdout"
+   failed_when:
+     - start_qm.rc != 0
+     - "'already running' not in start_qm.stderr"
+     - "'queue manager running' not in start_qm.stderr"
+   loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
+
+- name: Configure MQ application queues via itsshelper
   become: true
-  become_user: "{{ ibm_mq_host_user }}"
   ansible.builtin.command:
-    cmd: strmqm {{ item.name }}
-  environment:
-    PATH: >-
-      {{ ibm_mq_host_base_dir }}/{{
-        ibm_mq_environment
-      }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
-  register: start_qm
-  changed_when: "'started' in start_qm.stdout"
-  failed_when:
-    - start_qm.rc != 0
-    - "'already running' not in start_qm.stderr"
-    - "'queue manager running' not in start_qm.stderr"
-  loop: "{{ ibm_mq_environment_queue_managers }}"
+    cmd: >-
+      /opt/scripts/createMQApp.bash
+      {{ ibm_mq_environment }}
+      {{ item.name }}
+    creates: >-
+      /opt/properties/{{ ibm_mq_environment }}_{{ item.qmtype }}_{{ item.name }}.mqsc
+  loop: "{{ ibm_mq_environment_itsshelper_mqapp_props }}"
 
 # User Configuration
 

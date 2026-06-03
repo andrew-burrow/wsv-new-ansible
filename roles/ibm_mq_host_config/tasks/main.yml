@@ -70,12 +70,14 @@
     name: bc
     state: present
 
-- name: Deploy itsshelper repository
+- name: Copy itsshelper files to host
   become: true
-  ansible.builtin.git:
-    repo: "ssh://git@spudopa201.melb.ad:7999/pup/itsshelper.git"
-    dest: /opt/itsshelper
-    version: eip_ansible_app
+  ansible.builtin.copy:
+    src: itsshelper/
+    dest: /opt/itsshelper/
+    owner: root
+    group: root
+    mode: "0755"
 
 - name: Symlink MQ scripts
   become: true

@@ -33,24 +33,39 @@ ibm_mq_environment_build_dir: "/var/tmp/{{ ibm_mq_environment }}/mq-build"
 ibm_mq_environment_fixpack_version: "9.3.0.16"
 ibm_mq_environment_fixpack_package: "9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz"
 
-# Queue managers to create
+# Queue manager creation
 #
-# What is the list of queue managers to create on each host in the
-# environment?  The specifications comprise a list of objects that define the
-# following keys:
+# Which itsshelper prop files should be run to create queue managers in
+# this environment?  The specifications comprise a list of objects that
+# define the following keys:
 #
-# - `name` -- What is the host-specific name of the queue manager?
-# - `log_size` -- What is the log file size?
+# - `name` -- What is the name of the prop file, without the `.prop`
+#   suffix?  This is passed as the second argument to `createQMGR.bash`.
+# - `queue_manager` -- What is the host-specific name of the queue manager?
+# - `desc` -- What is a human-readable description of the queue manager
+#   created by this prop file?
 #
 # HOST OVERRIDE CONVENTIONS:
 #
-# - The `name` value is environment-specific AND host-specific
+# - The `queue_manager` value is environment-specific AND host-specific
 # - The host specific value is computed at task execution time from an
 #   expression that uses `ibm_host_index`
 # - The variable SHOULD NOT and NEED NOT be overridden in the host variables
 #   IF expressed in terms of `ibm_host_index`
-ibm_mq_environment_queue_managers:
-  - name: "ASX1J{{ ibm_host_index }}"
-    log_size: 65535
-  - name: "ASX1I{{ ibm_host_index }}"
-    log_size: 65535
+ibm_mq_environment_itsshelper_qmgr_props: []
+
+# MQ application queue configuration
+#
+# Which itsshelper prop files should be run against the queue managers
+# in this environment?  The specifications comprise a list of objects
+# that define the following keys:
+#
+# - `name` -- What is the name of the prop file, without the `.prop`
+#   suffix?  This is passed as the second argument to `createMQApp.bash`.
+# - `qmtype` -- What is the queue manager type as recorded in the `itsshelper`
+#   properties file?  This is required to detect when the script has run by
+#   virtue of the creation of the file `/opt/properties/{{ ibm_mq_environment
+#   }}_{{ qmtype }}_{{ name }}.mqsc`
+# - `desc` -- What is a human-readable description of the queues
+#   configured by this prop file?
+ibm_mq_environment_itsshelper_mqapp_props: []

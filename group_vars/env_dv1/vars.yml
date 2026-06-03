@@ -36,27 +36,156 @@ ibm_mq_environment_build_dir: "/var/tmp/{{ ibm_mq_environment }}/mq-build"
 ibm_mq_environment_fixpack_version: "9.3.0.16"
 ibm_mq_environment_fixpack_package: "9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz"
 
-# Queue managers to create
+# Queue manager creation
 #
-# What is the list of queue managers to create on each host in the
-# environment?  The specifications comprise a list of objects that define the
-# following keys:
+# Which itsshelper prop files should be run to create queue managers in
+# this environment?  The specifications comprise a list of objects that
+# define the following keys:
 #
-# - `name` -- What is the host-specific name of the queue manager?
-# - `log_size` -- What is the log file size?
+# - `name` -- What is the name of the prop file, without the `.prop`
+#   suffix?  This is passed as the second argument to `createQMGR.bash`.
+# - `queue_manager` -- What is the host-specific name of the queue manager?
+# - `desc` -- What is a human-readable description of the queue manager
+#   created by this prop file?
 #
 # HOST OVERRIDE CONVENTIONS:
 #
-# - The `name` value is environment-specific AND host-specific
+# - The `queue_manager` value is environment-specific AND host-specific
 # - The host specific value is computed at task execution time from an
 #   expression that uses `ibm_host_index`
 # - The variable SHOULD NOT and NEED NOT be overridden in the host variables
 #   IF expressed in terms of `ibm_host_index`
-ibm_mq_environment_queue_managers:
-  - name: "ADV1J{{ ibm_host_index }}"
-    log_size: 65535
-  - name: "ADV1I{{ ibm_host_index }}"
-    log_size: 65535
+ibm_mq_environment_itsshelper_qmgr_props:
+  - name: jumboiib
+    queue_manager: "ADV1J{{ ibm_host_index }}"
+    desc: Jumbo IIB queue manager
+  - name: apps
+    queue_manager: "ADV1I{{ ibm_host_index }}"
+    desc: Default IIB queue manager
+
+# MQ application queue configuration
+#
+# Which itsshelper prop files should be run against the queue managers
+# in this environment?  The specifications comprise a list of objects
+# that define the following keys:
+#
+# - `name` -- What is the name of the prop file, without the `.prop`
+#   suffix?  This is passed as the second argument to `createMQApp.bash`.
+# - `qmtype` -- What is the queue manager type as recorded in the `itsshelper`
+#   properties file?  This is required to detect when the script has run by
+#   virtue of the creation of the file `/opt/properties/{{ ibm_mq_environment
+#   }}_{{ qmtype }}_{{ name }}.mqsc`
+# - `desc` -- What is a human-readable description of the queues
+#   configured by this prop file?
+ibm_mq_environment_itsshelper_mqapp_props:
+  - name: iibjumbo
+    qmtype: ""
+    desc: IIB Jumbo queue manager base configuration
+  - name: jumboiib_ssl
+    qmtype: ""
+    desc: IIB Jumbo queue manager SSL configuration
+  - name: lnr_iib_app
+    qmtype: Jumbo
+    desc: LNR queues on Jumbo
+  - name: online_document_iib_app
+    qmtype: Apps
+    desc: Online document queues on Jumbo
+  - name: email_iib_app
+    qmtype: Apps
+    desc: Email adapter queues on Jumbo
+  - name: pcs_jumbo_iib_app
+    qmtype: Apps
+    desc: PCS queues on Jumbo
+  - name: pbs_jumbo_iib_app
+    qmtype: Apps
+    desc: PBS queues on Jumbo
+  - name: mytac_jumbo_iib_app
+    qmtype: Apps
+    desc: MyTAC queues on Jumbo
+  - name: squiz_jumbo_iib_app
+    qmtype: Apps
+    desc: Squiz CMS queues on Jumbo
+  - name: qualtrics_jumbo_iib_app
+    qmtype: Apps
+    desc: Qualtrics survey queues on Jumbo
+  - name: iib
+    qmtype: ""
+    desc: IIB default queue manager base configuration
+  - name: iib_audit
+    qmtype: ""
+    desc: IIB audit queues
+  - name: iib_error
+    qmtype: ""
+    desc: IIB error queues
+  - name: nup_iib_app
+    qmtype: Apps
+    desc: NOVUS User Provisioning queues
+  - name: els_iib_app
+    qmtype: Apps
+    desc: ELS queues
+  - name: pos_iib_app
+    qmtype: Apps
+    desc: POS queues
+  - name: pcs_iib_app
+    qmtype: Apps
+    desc: PCS queues
+  - name: oes_iib_app
+    qmtype: Apps
+    desc: OES queues
+  - name: tempus_iib_app
+    qmtype: Apps
+    desc: Tempus queues
+  - name: edrms_iib_app
+    qmtype: Apps
+    desc: EDRMS queues
+  - name: online_iib_app
+    qmtype: Apps
+    desc: Online queues
+  - name: tbc_iib_app
+    qmtype: Apps
+    desc: TAC Bonus Calculation queues
+  - name: extracts_iib_app
+    qmtype: Apps
+    desc: Extracts queues
+  - name: tsp_iib_app
+    qmtype: Apps
+    desc: TSP queues
+  - name: msg_iib_app
+    qmtype: Apps
+    desc: Messaging queues
+  - name: csp_iib_app
+    qmtype: Apps
+    desc: CSP queues
+  - name: lpa_iib_app
+    qmtype: Apps
+    desc: LPA queues
+  - name: lms_iib_app
+    qmtype: Apps
+    desc: LMS queues
+  - name: servicenowintegration_iib_app
+    qmtype: Apps
+    desc: ServiceNow integration queues
+  - name: oraclefin_iib_app
+    qmtype: Apps
+    desc: Oracle Financials integration queues
+  - name: mainframecloud_iib_app
+    qmtype: Apps
+    desc: Mainframe cloud queues
+  - name: mytac_iib_app
+    qmtype: Apps
+    desc: MyTAC queues
+  - name: riskware_iib_app
+    qmtype: Apps
+    desc: Riskware queues
+  - name: efile_iib_app
+    qmtype: Apps
+    desc: eFile queues
+  - name: lms_v2_iib_app
+    qmtype: Apps
+    desc: LMS v2 queues
+  - name: fms_iib_app
+    qmtype: Apps
+    desc: FMS queues
 
 #
 # From `/roles/ibm_ace_environment_define/defaults/main.yml`
