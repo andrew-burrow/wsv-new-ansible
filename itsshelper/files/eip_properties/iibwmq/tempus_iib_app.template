@@ -1,0 +1,1502 @@
+* runmqsc command file template
+* tempus_iib_app.template
+* relies on tempus_iib_apps.template.map
+* ------------------------------------------------------------
+* Set Auth Records - Replies back to GWY QMGR to AWS from IIB / GWY QMGR to Mule MQ from IIB
+* ------------------------------------------------------------
+
+set authrec -
+	objtype(rqmname) -
+	profile('__MQAWSQM__') -
+	principal('__IIBUSER__') -
+	authadd(put,setall,setid,passall,passid)
+
+set authrec -
+	objtype(rqmname) -
+	profile('__MQMULEQM__') -
+	principal('__IIBUSER__') -
+	authadd(put,setall,setid,passall,passid)
+
+set authrec -
+	objtype(rqmname) -
+	profile('__MQMULEQMB__') -
+	principal('__IIBUSER__') -
+	authadd(put,setall,setid,passall,passid)
+
+* ---------------------------------------------------
+* Set Auth Records - Consumer Service Queues
+* ---------------------------------------------------
+
+
+set authrec -
+	objtype(queue) -
+	profile('CS.INVOICE.MANAGEMENT.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('CS.INVOICE.MANAGEMENT.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('CS.PROVIDER.INVOICEMANAGEMENT.REQ.V1') -
+	principal('__CLUSUSER__') -
+	authadd(put,inq,setall)
+
+set authrec -
+	objtype(queue) -
+	profile('CS.PROVIDER.INVOICEMANAGEMENT.REQ.V2') -
+	principal('__CLUSUSER__') -
+	authadd(put,inq,setall)
+
+set authrec -
+	objtype(queue) -
+	profile('CS.PROVIDER.MANAGEMENT.REQ.V1') -
+	principal('__CLUSUSER__') -
+	authadd(put,inq,setall)
+
+set authrec -
+	objtype(queue) -
+	profile('CS.DOCMERGE.RES.V1') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(inq, put, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('CS.VALIDATECLAIM.REQ') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(inq, put, setall)
+
+* ---------------------------------------------------
+* Set Auth Records - Entity Service Queues
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('ES.IOPPROXY.RES.V1') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(inq, put, setall)
+	
+set authrec -
+	objtype(queue) -
+	profile('ES.AGENT.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.AGENT.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.DRUGGROUPAPPROVAL.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.DRUGGROUPAPPROVAL.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.EMPLOYER.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.EMPLOYER.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.INJUREDWORKER.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.INJUREDWORKER.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.INVOICE.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.INVOICE.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.PAYEE.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.PAYEE.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+		
+set authrec -
+	objtype(queue) -
+	profile('ES.PRACTICELOCATION.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.PRACTICELOCATION.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.PROVIDER.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.PROVIDER.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.PROVIDERAGREEMENT.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.PROVIDERAGREEMENT.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.REFERENCEDATA.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.REFERENCEDATA.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.SERVICEITEM.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.SERVICEITEM.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.SERVICELIMIT.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.SERVICELIMIT.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.TPC.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.TPC.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.TRANSPORTACCIDENTCLAIM.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.TRANSPORTACCIDENTCLAIM.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.WORKINJURYCLAIM.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.WORKINJURYCLAIM.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.WORKPLACE.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.WORKPLACE.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.INVOICERULES.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.INVOICERULES.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+* ---------------------------------------------------
+* Set Auth Records - Service Component Queues
+* ---------------------------------------------------
+
+
+set authrec -
+	objtype(queue) -
+	profile('SC.ACCTIONR.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.ACCTIONR.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.AVANTI.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.AVANTI.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.COMMON.EMAIL.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.COMMON.EMAIL.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.CPS.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.CPS.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.NOVUS.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.NOVUS.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.TPC.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.TPC.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+
+* ---------------------------------------------------
+* Set Auth Records - TAC MF Integration Queues
+* ---------------------------------------------------
+
+
+set authrec -
+	objtype(queue) -
+	profile('CPS.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('CPS.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+
+* ---------------------------------------------------
+* Define Queues - CS_InvoiceManagement
+* ---------------------------------------------------
+
+define ql('CS.INVOICE.MANAGEMENT.RESP.V1') -
+	descr('Response to CS_InvoiceManagement') -
+	replace
+	
+define ql('CS.INVOICE.MANAGEMENT.RESP.V2') -
+	descr('Response to CS_InvoiceManagement V2') -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - CS_ProviderInvoiceManagement
+* ---------------------------------------------------
+define ql('CS.PROVIDER.INVOICEMANAGEMENT.BOQ.V1') -
+	descr('Backout queue to CS_ProviderInvoiceManagement') -
+	replace
+
+define ql('CS.PROVIDER.INVOICEMANAGEMENT.REQ.V1') -
+	descr('Request to CS_ProviderInvoiceManagement') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('CS.PROVIDER.INVOICEMANAGEMENT.BOQ.V1') -
+	bothresh(1) -
+	replace
+
+define ql('CS.PROVIDER.INVOICEMANAGEMENT.BOQ.V2') -
+	descr('Backout queue to CS_ProviderInvoiceManagement') -
+	replace
+
+define ql('CS.PROVIDER.INVOICEMANAGEMENT.REQ.V2') -
+	descr('Request to CS_ProviderInvoiceManagement') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('CS.PROVIDER.INVOICEMANAGEMENT.BOQ.V2') -
+	bothresh(1) -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - CS_ProviderManagement
+* ---------------------------------------------------
+define ql('CS.PROVIDER.MANAGEMENT.BOQ.V1') -
+	descr('Backout queue to CS_ProviderManagement') -
+	replace
+
+define ql('CS.PROVIDER.MANAGEMENT.REQ.V1') -
+	descr('Request to CS_ProviderManagement') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('CS.PROVIDER.MANAGEMENT.BOQ.V1') -
+	bothresh(1) -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - CS_ValidateClaim
+* ---------------------------------------------------
+define ql('CS.VALIDATECLAIM.REQ.BOQ') -
+	descr('Backout queue to CS_ValidateClaim') -
+	replace
+
+define ql('CS.VALIDATECLAIM.REQ') -
+	descr('Request to CS_ValidateClaim') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('CS.VALIDATECLAIM.REQ.BOQ') -
+	bothresh(1) -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - ES_Agent
+* ---------------------------------------------------
+
+define ql('ES.AGENT.BOQ.V1') -
+	descr('Backout Queue for ES_Agent') -
+	replace
+	
+define ql('ES.AGENT.REQ.V1') -
+	descr('Request Queue for ES_Agent') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.AGENT.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.AGENT.RESP.V1') -
+	descr('Response to ES_Agent') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_DrugGroupApproval
+* ---------------------------------------------------
+
+define ql('ES.DRUGGROUPAPPROVAL.BOQ.V1') -
+	descr('Backout Queue for ES_DrugGroupApproval') -
+	replace
+	
+define ql('ES.DRUGGROUPAPPROVAL.REQ.V1') -
+	descr('Request Queue for ES_DrugGroupApproval') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.DRUGGROUPAPPROVAL.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.DRUGGROUPAPPROVAL.RESP.V1') -
+	descr('Response to ES_DrugGroupApproval') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_Employer
+* ---------------------------------------------------
+
+define ql('ES.EMPLOYER.BOQ.V1') -
+	descr('Backout Queue for ES_Employer') -
+	replace
+	
+define ql('ES.EMPLOYER.REQ.V1') -
+	descr('Request Queue for ES_Employer') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.EMPLOYER.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.EMPLOYER.RESP.V1') -
+	descr('Response to ES_Employer') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_InjuredWorker
+* ---------------------------------------------------
+
+define ql('ES.INJUREDWORKER.BOQ.V1') -
+	descr('Backout Queue for ES_InjuredWorker') -
+	replace
+	
+define ql('ES.INJUREDWORKER.REQ.V1') -
+	descr('Request Queue for ES_InjuredWorker') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.INJUREDWORKER.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.INJUREDWORKER.RESP.V1') -
+	descr('Response to ES_InjuredWorker') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_Invoice
+* ---------------------------------------------------
+
+define ql('ES.INVOICE.BOQ.V1') -
+	descr('Backout Queue for ES_Invoice') -
+	replace
+	
+define ql('ES.INVOICE.BOQ.V2') -
+	descr('Backout Queue for ES_Invoice') -
+	replace
+	
+define ql('ES.INVOICE.REQ.V1') -
+	descr('Request Queue for ES_Invoice') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.INVOICE.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.INVOICE.REQ.V2') -
+	descr('Request Queue for ES_Invoice V2') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.INVOICE.BOQ.V2') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.INVOICE.RESP.V1') -
+	descr('Response to ES_Invoice') -
+	replace
+
+define ql('ES.INVOICE.BOQ.V1_1') -
+	descr('Backout Queue for ES_Invoice') -
+	replace
+	
+define ql('ES.INVOICE.REQ.V1_1') -
+	descr('Request Queue for ES_Invoice') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.INVOICE.BOQ.V1_1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.INVOICE.RESP.V1_1') -
+	descr('Response to ES_Invoice') -
+	replace
+
+define ql('ES.INVOICE.RESP.V2') -
+	descr('Response to ES_Invoice V2') -
+	replace
+* ---------------------------------------------------
+* Define Queues - ES_InvoiceLineItem
+* ---------------------------------------------------
+
+define ql('ES.INVOICE.LINEITEM.BOQ.V1') -
+	descr('Backout Queue for ES_InvoiceLineItem') -
+	replace
+	
+define ql('ES.INVOICE.LINEITEM.BOQ.V2') -
+	descr('Backout Queue for ES_InvoiceLineItem') -
+	replace
+	
+define ql('ES.INVOICE.LINEITEM.REQ.V1') -
+	descr('Request Queue for ES_InvoiceLineItem') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.INVOICE.LINEITEM.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.INVOICE.LINEITEM.REQ.V2') -
+	descr('Request Queue for ES_InvoiceLineItem v2') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.INVOICE.LINEITEM.BOQ.V2') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.INVOICE.LINEITEM.RESP.V1') -
+	descr('Response to ES_InvoiceLineItem') -
+	replace
+
+define ql('ES.INVOICE.LINEITEM.RESP.V2') -
+	descr('Response to ES_InvoiceLineItem V2') -
+	replace
+	
+* ---------------------------------------------------
+* Define Queues - ES_Payee
+* ---------------------------------------------------
+
+define ql('ES.PAYEE.BOQ.V1') -
+	descr('Backout Queue for ES_Payee') -
+	replace
+	
+define ql('ES.PAYEE.BOQ.V2') -
+	descr('Backout Queue for ES_Payee') -
+	replace
+	
+define ql('ES.PAYEE.REQ.V1') -
+	descr('Request Queue for ES_Payee') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.PAYEE.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.PAYEE.REQ.V2') -
+	descr('Request Queue for ES_Payee V2') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.PAYEE.BOQ.V2') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.PAYEE.RESP.V1') -
+	descr('Response to ES_Payee') -
+	replace
+
+define ql('ES.PAYEE.RESP.V2') -
+	descr('Response to ES_Payee V2') -
+	replace
+* ---------------------------------------------------
+* Define Queues - ES_PracticeLocation
+* ---------------------------------------------------
+
+define ql('ES.PRACTICELOCATION.BOQ.V1') -
+	descr('Backout Queue for ES_PracticeLocation') -
+	replace
+	
+define ql('ES.PRACTICELOCATION.REQ.V1') -
+	descr('Request Queue for ES_PracticeLocation') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.PRACTICELOCATION.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.PRACTICELOCATION.RESP.V1') -
+	descr('Response to ES_PracticeLocation') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_Provider
+* ---------------------------------------------------
+
+define ql('ES.PROVIDER.BOQ.V1') -
+	descr('Backout Queue for ES_Provider') -
+	replace
+	
+define ql('ES.PROVIDER.BOQ.V2') -
+	descr('Backout Queue for ES_Provider v2') -
+	replace
+	
+define ql('ES.PROVIDER.REQ.V1') -
+	descr('Request Queue for ES_Provider') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.PROVIDER.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.PROVIDER.REQ.V2') -
+	descr('Request Queue for ES_Provider V2') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.PROVIDER.BOQ.V2') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.PROVIDER.RESP.V1') -
+	descr('Response to ES_Provider') -
+	replace
+	
+define ql('ES.PROVIDER.RESP.V2') -
+	descr('Response to ES_Provider V2') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_ProviderAgreement
+* ---------------------------------------------------
+
+define ql('ES.PROVIDERAGREEMENT.BOQ.V1') -
+	descr('Backout Queue for ES_ProviderAgreement') -
+	replace
+	
+define ql('ES.PROVIDERAGREEMENT.REQ.V1') -
+	descr('Request Queue for ES_ProviderAgreement') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.PROVIDERAGREEMENT.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.PROVIDERAGREEMENT.RESP.V1') -
+	descr('Response to ES_ProviderAgreement') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_ReferenceData
+* ---------------------------------------------------
+
+define ql('ES.REFERENCEDATA.BOQ.V1') -
+	descr('Backout Queue for ES_ReferenceData') -
+	replace
+	
+define ql('ES.REFERENCEDATA.BOQ.V2') -
+	descr('Backout Queue for ES_ReferenceData V2') -
+	replace
+	
+define ql('ES.REFERENCEDATA.REQ.V1') -
+	descr('Request Queue for ES_ReferenceData') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.REFERENCEDATA.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.REFERENCEDATA.REQ.V2') -
+	descr('Request Queue for ES_ReferenceData V2') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.REFERENCEDATA.BOQ.V2') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.REFERENCEDATA.RESP.V1') -
+	descr('Response to ES_ReferenceData') -
+	replace
+
+define ql('ES.REFERENCEDATA.RESP.V2') -
+	descr('Response to ES_ReferenceData V2') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_ServiceItem
+* ---------------------------------------------------
+
+define ql('ES.SERVICEITEM.BOQ.V1') -
+	descr('Backout Queue for ES_ServiceItem') -
+	replace
+	
+define ql('ES.SERVICEITEM.REQ.V1') -
+	descr('Request Queue for ES_ServiceItem') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.SERVICEITEM.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.SERVICEITEM.RESP.V1') -
+	descr('Response to ES_ServiceItem') -
+	replace
+
+
+
+* ---------------------------------------------------
+* Define Queues - ES_ServiceItem V2
+* ---------------------------------------------------
+
+define ql('ES.SERVICEITEM.BOQ.V2') -
+	descr('Backout Queue for ES_ServiceItem V2') -
+	replace
+	
+define ql('ES.SERVICEITEM.REQ.V2') -
+	descr('Request Queue for ES_ServiceItem V2') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.SERVICEITEM.BOQ.V2') -
+	bothresh(1) -
+	replace
+
+define ql('ES.SERVICEITEM.RESP.V2') -
+	descr('Response to ES_ServiceItem V2') -
+	replace
+
+
+
+* ---------------------------------------------------
+* Define Queues - ES_ServiceLimit
+* ---------------------------------------------------
+
+define ql('ES.SERVICELIMIT.BOQ.V1') -
+	descr('Backout Queue for ES_ServiceLimit') -
+	replace
+	
+define ql('ES.SERVICELIMIT.REQ.V1') -
+	descr('Request Queue for ES_ServiceLimit') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.SERVICELIMIT.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.SERVICELIMIT.RESP.V1') -
+	descr('Response to ES_ServiceLimit') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_TEMPUSBatch
+* ---------------------------------------------------
+
+define ql('ES.TPC.EXTRACT.BOQ.V1') -
+	descr('Backout Queue for ES_TEMPUSBatch Extract') -
+	replace
+	
+define ql('ES.TPC.EXTRACT.REQ.V1') -
+	descr('Request Queue for ES_TEMPUSBatch Extract') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.TPC.EXTRACT.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.TPC.EXTRACT.RESP.V1') -
+	descr('Response to ES_TEMPUSBatch Extract') -
+	replace
+
+define ql('ES.TPC.LOAD.BOQ.V1') -
+	descr('Backout Queue for ES_TEMPUSBatch Load') -
+	replace
+	
+define ql('ES.TPC.LOAD.REQ.V1') -
+	descr('Request Queue for ES_TEMPUSBatch Load') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.TPC.LOAD.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.TPC.LOAD.RESP.V1') -
+	descr('Response to ES_TEMPUSBatch Load') -
+	replace
+
+define ql('ES.TPC.EXTRACT.BOQ.V1_1') -
+	descr('Backout Queue for ES_TEMPUSBatch Extract') -
+	replace
+	
+define ql('ES.TPC.EXTRACT.REQ.V1_1') -
+	descr('Request Queue for ES_TEMPUSBatch Extract') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.TPC.EXTRACT.BOQ.V1_1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.TPC.EXTRACT.RESP.V1_1') -
+	descr('Response to ES_TEMPUSBatch Extract') -
+	replace
+
+define ql('ES.TPC.LOAD.BOQ.V1_1') -
+	descr('Backout Queue for ES_TEMPUSBatch Load') -
+	replace
+	
+define ql('ES.TPC.LOAD.REQ.V1_1') -
+	descr('Request Queue for ES_TEMPUSBatch Load') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.TPC.LOAD.BOQ.V1_1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.TPC.LOAD.RESP.V1_1') -
+	descr('Response to ES_TEMPUSBatch Load') -
+	replace
+	
+* ---------------------------------------------------
+* Define Queues - ES_TransportAccidentClaim
+* ---------------------------------------------------
+
+define ql('ES.TRANSPORTACCIDENTCLAIM.BOQ.V1') -
+	descr('Backout Queue for ES_TransportAccidentClaim') -
+	replace
+	
+define ql('ES.TRANSPORTACCIDENTCLAIM.REQ.V1') -
+	descr('Request Queue for ES_TransportAccidentClaim') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.TRANSPORTACCIDENTCLAIM.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.TRANSPORTACCIDENTCLAIM.RESP.V1') -
+	descr('Response to ES_TransportAccidentClaim') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_WorkInjuryClaim
+* ---------------------------------------------------
+
+define ql('ES.WORKINJURYCLAIM.BOQ.V1') -
+	descr('Backout Queue for ES_WorkInjuryClaim') -
+	replace
+	
+define ql('ES.WORKINJURYCLAIM.REQ.V1') -
+	descr('Request Queue for ES_WorkInjuryClaim') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.WORKINJURYCLAIM.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.WORKINJURYCLAIM.RESP.V1') -
+	descr('Response to ES_WorkInjuryClaim') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_Workplace
+* ---------------------------------------------------
+
+define ql('ES.WORKPLACE.BOQ.V1') -
+	descr('Backout Queue for ES_Workplace') -
+	replace
+	
+define ql('ES.WORKPLACE.REQ.V1') -
+	descr('Request Queue for ES_Workplace') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.WORKPLACE.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.WORKPLACE.RESP.V1') -
+	descr('Response to ES_Workplace') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - SC_AcctionReplica
+* ---------------------------------------------------
+
+define ql('SC.ACCTIONR.BOQ.V1') -
+	descr('Backout Queue for SC_AcctionReplica') -
+	replace
+	
+define ql('SC.ACCTIONR.REQ.V1') -
+	descr('Request Queue for SC_AcctionReplica') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.ACCTIONR.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.ACCTIONR.EX.V1') -
+	descr('Exception for one-way calls to SC_AcctionReplica') -
+	replace
+	
+define ql('SC.ACCTIONR.EX.V2') -
+	descr('Exception for one-way calls to SC_AcctionReplica') -
+	replace
+
+define ql('SC.ACCTIONR.BOQ.V2') -
+	descr('Backout Queue for SC_AcctionReplica V2') -
+	replace
+	
+define ql('SC.ACCTIONR.REQ.V2') -
+	descr('Request Queue for SC_AcctionReplica V2') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.ACCTIONR.BOQ.V2') -
+	bothresh(1) -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - SC_AcctionReplicaAgent
+* ---------------------------------------------------
+
+define ql('SC.ACCTIONR.AGENT.BOQ.V1') -
+	descr('Backout Queue for SC_AcctionReplicaAgent') -
+	replace
+	
+define ql('SC.ACCTIONR.AGENT.REQ.V1') -
+	descr('Request Queue for SC_AcctionReplicaAgent') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.ACCTIONR.AGENT.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.ACCTIONR.AGENT.EX.V1') -
+	descr('Exception for one-way calls to SC_AcctionReplicaAgent') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_AcctionReplicaClaim
+* ---------------------------------------------------
+
+define ql('SC.ACCTIONR.CLAIM.BOQ.V1') -
+	descr('Backout Queue for SC_AcctionReplicaClaim') -
+	replace
+	
+define ql('SC.ACCTIONR.CLAIM.REQ.V1') -
+	descr('Request Queue for SC_AcctionReplicaClaim') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.ACCTIONR.CLAIM.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.ACCTIONR.CLAIM.EX.V1') -
+	descr('Exception for one-way calls to SC_AcctionReplicaClaim') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_AcctionReplicaProvider
+* ---------------------------------------------------
+
+define ql('SC.ACCTIONR.PROVIDER.BOQ.V1') -
+	descr('Backout Queue for SC_AcctionReplicaProvider') -
+	replace
+	
+define ql('SC.ACCTIONR.PROVIDER.BOQ.V2') -
+	descr('Backout Queue for SC_AcctionReplicaProvider V2') -
+	replace
+	
+define ql('SC.ACCTIONR.PROVIDER.REQ.V1') -
+	descr('Request Queue for SC_AcctionReplicaProvider') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.ACCTIONR.PROVIDER.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.ACCTIONR.PROVIDER.REQ.V2') -
+	descr('Request Queue for SC_AcctionReplicaProvider V2') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.ACCTIONR.PROVIDER.BOQ.V2') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.ACCTIONR.PROVIDER.EX.V1') -
+	descr('Exception for one-way calls to SC_AcctionReplicaProvider') -
+	replace
+	
+define ql('SC.ACCTIONR.PROVIDER.EX.V2') -
+	descr('Exception for one-way calls to SC_AcctionReplicaProvider V2') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_AcctionReplicaServiceItem
+* ---------------------------------------------------
+
+define ql('SC.ACCTIONR.SERVICEITEM.BOQ.V1') -
+	descr('Backout Queue for SC_AcctionReplicaServiceItem') -
+	replace
+	
+define ql('SC.ACCTIONR.SERVICEITEM.REQ.V1') -
+	descr('Request Queue for SC_AcctionReplicaServiceItem') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.ACCTIONR.SERVICEITEM.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.ACCTIONR.SERVICEITEM.EX.V1') -
+	descr('Exception for one-way calls to SC_AcctionReplicaServiceItem') -
+	replace
+
+
+
+* ---------------------------------------------------
+* Define Queues - SC_AcctionReplicaServiceItem V2
+* ---------------------------------------------------
+
+define ql('SC.ACCTIONR.SERVICEITEM.BOQ.V2') -
+	descr('Backout Queue for SC_AcctionReplicaServiceItem V2') -
+	replace
+	
+define ql('SC.ACCTIONR.SERVICEITEM.REQ.V2') -
+	descr('Request Queue for SC_AcctionReplicaServiceItem V2') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.ACCTIONR.SERVICEITEM.BOQ.V2') -
+	bothresh(1) -
+	replace
+
+
+
+* ---------------------------------------------------
+* Define Queues - SC_Avanti
+* ---------------------------------------------------
+
+define ql('SC.AVANTI.BOQ.V1') -
+	descr('Backout Queue for SC_Avanti') -
+	replace
+	
+define ql('SC.AVANTI.REQ.V1') -
+	descr('Request Queue for SC_Avanti') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.AVANTI.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.AVANTI.EX.V1') -
+	descr('Exception for one-way calls to SC_Avanti') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_CommonEmail
+* ---------------------------------------------------
+
+define ql('SC.COMMON.EMAIL.BOQ.V1') -
+	descr('Backout Queue for SC_CommonEmail') -
+	replace
+	
+define ql('SC.COMMON.EMAIL.REQ.V1') -
+	descr('Request Queue for SC_CommonEmail') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.COMMON.EMAIL.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.COMMON.EMAIL.EX.V1') -
+	descr('Exception for one-way calls to SC_CommonEmail') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_CPS-CASS
+* ---------------------------------------------------
+
+define ql('SC.CPS.CASS.BOQ.V1') -
+	descr('Backout Queue for SC_CPS-CASS') -
+	replace
+	
+define ql('SC.CPS.CASS.REQ.V1') -
+	descr('Request Queue for SC_CPS-CASS') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.CPS.CASS.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.CPS.CASS.EX.V1') -
+	descr('Exception for one-way calls to SC_CPS-CASS') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_CPS-TAPS
+* ---------------------------------------------------
+
+define ql('SC.CPS.TAPS.BOQ.V1') -
+	descr('Backout Queue for SC_CPS-TAPS') -
+	replace
+	
+define ql('SC.CPS.TAPS.REQ.V1') -
+	descr('Request Queue for SC_CPS-TAPS') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.CPS.TAPS.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.CPS.TAPS.EX.V1') -
+	descr('Exception for one-way calls to SC_CPS-TAPS') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_CPS-TIFS
+* ---------------------------------------------------
+
+define ql('SC.CPS.TIFS.BOQ.V1') -
+	descr('Backout Queue for SC_CPS-TIFS') -
+	replace
+	
+define ql('SC.CPS.TIFS.REQ.V1') -
+	descr('Request Queue for SC_CPS-TIFS') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.CPS.TIFS.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.CPS.TIFS.EX.V1') -
+	descr('Exception for one-way calls to SC_CPS-TIFS') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_Novus
+* ---------------------------------------------------
+
+define ql('SC.NOVUS.BOQ.V1') -
+	descr('Backout Queue for SC_Novus') -
+	replace
+	
+define ql('SC.NOVUS.REQ.V1') -
+	descr('Request Queue for SC_Novus') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.NOVUS.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.NOVUS.EX.V1') -
+	descr('Exception for one-way calls to SC_Novus') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_TPC
+* ---------------------------------------------------
+
+define ql('SC.TPC.BOQ.V1') -
+	descr('Backout Queue for SC_TPC') -
+	replace
+	
+define ql('SC.TPC.REQ.V1') -
+	descr('Request Queue for SC_TPC') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.TPC.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.TPC.EX.V1') -
+	descr('Exception for one-way calls to SC_TPC') -
+	replace
+
+define ql('SC.TPC.BOQ.V1_1') -
+	descr('Backout Queue for SC_TPC') -
+	replace
+	
+define ql('SC.TPC.REQ.V1_1') -
+	descr('Request Queue for SC_TPC') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.TPC.BOQ.V1_1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.TPC.EX.V1_1') -
+	descr('Exception for one-way calls to SC_TPC') -
+	replace
+	
+define ql('SC.TPC.EX.V2') -
+	descr('Exception for one-way calls to SC_TPC V2') -
+	replace
+
+define ql('SC.TPC.BOQ.V2') -
+	descr('Backout Queue for SC_TPC V2') -
+	replace
+	
+define ql('SC.TPC.REQ.V2') -
+	descr('Request Queue for SC_TPC V2') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.TPC.BOQ.V2') -
+	bothresh(1) -
+	replace
+* ---------------------------------------------------
+* Define Queues - SC_TPCBatch-Extract
+* ---------------------------------------------------
+
+define ql('SC.TPC.EXTRACT.BOQ.V1') -
+	descr('Backout Queue for SC_TPCBatch-Extract') -
+	replace
+	
+define ql('SC.TPC.EXTRACT.REQ.V1') -
+	descr('Request Queue for SC_TPCBatch-Extract') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.TPC.EXTRACT.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.TPC.EXTRACT.EX.V1') -
+	descr('Exception for one-way calls to SC_TPCBatch-Extract') -
+	replace
+
+define ql('SC.TPC.EXTRACT.BOQ.V1_1') -
+	descr('Backout Queue for SC_TPCBatch-Extract') -
+	replace
+	
+define ql('SC.TPC.EXTRACT.REQ.V1_1') -
+	descr('Request Queue for SC_TPCBatch-Extract') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.TPC.EXTRACT.BOQ.V1_1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.TPC.EXTRACT.EX.V1_1') -
+	descr('Exception for one-way calls to SC_TPCBatch-Extract') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_TPCBatch-Load
+* ---------------------------------------------------
+
+define ql('SC.TPC.LOAD.BOQ.V1') -
+	descr('Backout Queue for SC_TPCBatch-Load') -
+	replace
+	
+define ql('SC.TPC.LOAD.REQ.V1') -
+	descr('Request Queue for SC_TPCBatch-Load') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.TPC.LOAD.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.TPC.LOAD.EX.V1') -
+	descr('Exception for one-way calls to SC_TPCBatch-Load') -
+	replace
+
+define ql('SC.TPC.LOAD.BOQ.V1_1') -
+	descr('Backout Queue for SC_TPCBatch-Load') -
+	replace
+	
+define ql('SC.TPC.LOAD.REQ.V1_1') -
+	descr('Request Queue for SC_TPCBatch-Load') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.TPC.LOAD.BOQ.V1_1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.TPC.LOAD.EX.V1_1') -
+	descr('Exception for one-way calls to SC_TPCBatch-Load') -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - TAC MF Integration Queues
+* ---------------------------------------------------
+
+define qr('CPS.REQ.V1') -
+	descr('Request Q for TAC MF') -
+	rqmname('__TAC_MF_QMGR__') -
+	rname('CPS.TPC.REQUEST') -
+	replace
+
+define qr('CPS.RESP.ALIAS.V1') -
+	descr('Reply Q Alias for Response from TAC MF') -
+	rqmname('__QMGRNAME__') -
+	rname('CPS.RESP.V1') -
+	replace
+
+define ql('CPS.RESP.V1') -
+	descr('Replies from TAC MF') -
+	replace
+	
+* ---------------------------------------------------
+* Define Queues - ES.Proxy Integration Queues
+* ---------------------------------------------------
+	
+define qa('ES.IOPPROXY.REQ.V1') targtype(QUEUE) target(CS.CALLBACK.REQ.V1) replace
+
+define ql('ES.IOPPROXY.BOQ.V1') -
+	descr('Backout Queue for ES.IOPPROXY.RES.V1') -
+	replace
+
+define ql('ES.IOPPROXY.RES.V1') -
+	descr('Response Queue for ES_Proxy module from IOP') -
+	boqname('ES.IOPPROXY.BOQ.V1') -
+	bothresh(1) -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - ES_InvoiceRules
+* ---------------------------------------------------
+
+define ql('ES.INVOICERULES.BOQ.V3') -
+	descr('Backout Queue for ES_InvoiceRules V3') -
+	replace
+	
+define ql('ES.INVOICERULES.REQ.V3') -
+	descr('Request Queue for ES_InvoiceRules V3') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.INVOICERULES.BOQ.V3') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.INVOICERULES.RESP.V3') -
+	descr('Response to ES_InvoiceRules V3') -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - CS_RenderAssemblyOutcome for Doc Merge
+* ---------------------------------------------------
+	
+define qa('CS.DOCMERGE.REQ.V1') targtype(QUEUE) target(CS.DOCUMENT.V1.REQ) replace
+
+define ql('CS.DOCMERGE.BOQ.V1') -
+	descr('Backout Queue for CS.DOCMERGE.RES.V1') -
+	replace
+
+define ql('CS.DOCMERGE.RES.V1') -
+	descr('Response Queue for CS_Document_EIP module from IOP') -
+	boqname('CS.DOCMERGE.BOQ.V1') -
+	bothresh(1) -
+	replace
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

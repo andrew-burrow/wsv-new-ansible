@@ -1,0 +1,87 @@
+* runmqsc command file template
+* els_iib_app.template
+* relies on els_iib_apps.template.map
+
+* ---------------------------------------------------
+* Set Auth Records - Entity Service Queues
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('ES.EMPLOYER.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.EMPLOYER.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+
+* ---------------------------------------------------
+* Set Auth Records - Service Component Queues
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('SC.ACCTIONR.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.ACCTIONR.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+
+* ---------------------------------------------------
+* Define Queues - ES_Employer
+* ---------------------------------------------------
+
+define ql('ES.EMPLOYER.BOQ.V1') -
+	descr('Backout Queue for ES_Employer') -
+	replace
+	
+define ql('ES.EMPLOYER.REQ.V1') -
+	descr('Request Queue for ES_Employer') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.EMPLOYER.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.EMPLOYER.RESP.V1') -
+	descr('Response to ES_Employer') -
+	replace
+	
+
+* ---------------------------------------------------
+* Define Queues - SC_AcctionReplicaClaim
+* ---------------------------------------------------
+
+define ql('SC.ACCTIONR.CLAIM.BOQ.V1') -
+	descr('Backout Queue for SC_AcctionReplicaClaim') -
+	replace
+	
+define ql('SC.ACCTIONR.CLAIM.REQ.V1') -
+	descr('Request Queue for SC_AcctionReplicaClaim') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.ACCTIONR.CLAIM.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.ACCTIONR.CLAIM.EX.V1') -
+	descr('Exception for one-way calls to SC_AcctionReplicaClaim') -
+	replace
+
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

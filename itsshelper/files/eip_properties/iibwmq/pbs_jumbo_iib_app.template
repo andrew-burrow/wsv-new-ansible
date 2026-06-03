@@ -1,0 +1,82 @@
+* runmqsc command file template
+* pbs_jumbo_iib_app.template
+* relies on pbs_jumbo_iib_apps.template.map
+
+* ---------------------------------------------------
+
+
+* ---------------------------------------------------
+* Set Auth Records - Entity Service Queues
+* ---------------------------------------------------
+
+set authrec -
+ objtype(queue) -
+ profile('ES.PBSSCHEDULEDATA.**') -
+ principal('__IIBUSER__') -
+ authrmv(all) -
+ authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+ 
+set authrec -
+ objtype(queue) -    
+ profile('ES.PBSSCHEDULEDATA.**') -
+ principal('__CLUSUSER__') -
+ authrmv(all) -
+ authadd(put, inq, setall)
+ 
+
+* ---------------------------------------------------
+* Set Auth Records - Service Component Queues
+* ---------------------------------------------------
+
+set authrec -
+ objtype(queue) -
+ profile('SC.PBSSCHEDULEDATA.**') -
+ principal('__IIBUSER__') -
+ authrmv(all) -
+ authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+ 
+set authrec -
+ objtype(queue) -
+ profile('SC.PBSSCHEDULEDATA.**') -
+ principal('__CLUSUSER__') -
+ authrmv(all) -
+ authadd(put, inq, setall)
+
+
+* ---------------------------------------------------
+* Define Queues - SC_PBS
+* ---------------------------------------------------
+
+define ql('SC.PBSSCHEDULEDATA.REQ.BOQ.V1') -
+ descr('Backout Queue for SC_PBS') -
+ replace
+                
+define ql('SC.PBSSCHEDULEDATA.REQ.V1') -
+ descr('Request Queue for SC_PBS') -
+ boqname('SC.PBSSCHEDULEDATA.REQ.BOQ.V1') -
+ bothresh(3) -
+ replace
+                
+define ql('SC.PBSSCHEDULEDATA.EX.V1') -
+ descr('Exception Queue for any failures in SC_PBS') -
+ replace
+
+
+* ---------------------------------------------------
+* Define Queues - ES_PBS
+* ---------------------------------------------------
+
+define ql('ES.PBSSCHEDULEDATA.REQ.BOQ.V1') -
+ descr('Backout Queue for ES_PBS') -
+ replace
+                
+define ql('ES.PBSSCHEDULEDATA.REQ.V1') -
+ descr('Request Queue for ES_PBS') -
+ boqname('ES.PBSSCHEDULEDATA.REQ.BOQ.V1') -
+ bothresh(3) -
+ replace
+
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

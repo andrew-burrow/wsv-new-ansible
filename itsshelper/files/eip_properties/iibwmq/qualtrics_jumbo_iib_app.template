@@ -1,0 +1,74 @@
+* runmqsc command file template
+* qualtrics_jumbo_iib_app.template
+* relies on qualtrics_jumbo_iib_apps.template.map
+
+
+* ---------------------------------------------------
+* Set Auth Records - Service Component Queues
+* ---------------------------------------------------
+
+set authrec -
+    objtype(queue) -
+    profile('SC.SURVEYEXPORT.QUALTRICS.**') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+ 
+set authrec -
+    objtype(queue) -
+    profile('SC.SURVEYEXPORT.QUALTRICS.**') -
+    principal('__CLUSUSER__') -
+    authrmv(all) -
+    authadd(put, inq, setall)
+
+
+* ---------------------------------------------------
+* Set Auth Records - Entity Service Queues
+* ---------------------------------------------------
+
+set authrec -
+    objtype(queue) -
+    profile('ES.SAP.SURVEYEXPORT.**') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+ 
+set authrec -
+    objtype(queue) -    
+    profile('ES.SAP.SURVEYEXPORT.**') -
+    principal('__CLUSUSER__') -
+    authrmv(all) -
+    authadd(put, inq, setall)
+
+
+* ---------------------------------------------------
+* Define Queues - ES_SAPSurvey
+* ---------------------------------------------------
+
+define ql('ES.SAP.SURVEYEXPORT.RESP.V1') -
+                descr('Response Queue for ES_SAPSurvey') -
+                replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_SurveyQualtrics
+* ---------------------------------------------------
+
+define ql('SC.SURVEYEXPORT.QUALTRICS.REQ.BOQ.V1') -
+                descr('Backout Queue for SC_SurveyQualtrics') -
+                replace
+                
+define ql('SC.SURVEYEXPORT.QUALTRICS.REQ.V1') -
+                descr('Request Queue for SC_SurveyQualtrics') -
+                boqname('SC.SURVEYEXPORT.QUALTRICS.REQ.BOQ.V1') -
+                bothresh(3) -
+                replace
+                
+define ql('SC.SURVEYEXPORT.QUALTRICS.EX.V1') -
+                descr('Exception Queue for any failures in SC_SurveyQualtrics') -
+                replace
+
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

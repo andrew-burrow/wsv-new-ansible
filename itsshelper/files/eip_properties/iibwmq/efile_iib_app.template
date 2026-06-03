@@ -1,0 +1,45 @@
+* runmqsc command file template
+* efile_iib_app.template
+* relies on efile_iib_app.template.map
+
+
+* ---------------------------------------------------
+* Set Auth Records - Service Component Queues
+* ---------------------------------------------------
+
+set authrec -
+    objtype(queue) -
+    profile('SC.CREATETASK.**') -
+    principal('__CLUSUSER__') -
+    authrmv(all) -
+    authadd(put, inq, setall)
+
+set authrec -
+    objtype(queue) -
+    profile('SC.CREATETASK.**') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+
+* ---------------------------------------------------
+* Define Queues - SC_Avanti_Task_Repo
+* ---------------------------------------------------
+
+define ql('SC.CREATETASK.BOQ.V1') -
+    descr('Backout Queue for SC_Avanti_Task_Repo') -
+    replace
+
+define ql('SC.CREATETASK.REQ.V1') -
+    descr('Request Queue for SC_Avanti_Task_Repo') -
+    boqname('SC.CREATETASK.BOQ.V1') -
+    bothresh(3) -
+    replace
+
+define ql('SC.CREATETASK.RSP.V1') -
+	descr('Response to SC_Avanti_Task_Repo') -
+	replace
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)

@@ -1,0 +1,159 @@
+
+
+* -----------------------------------------------------------
+*
+* Novus requirements on the brokers
+*
+*------------------------------------------------------------
+
+define ql(IDVAULT.NOVUS.REQ) cluster(__CLUSTER__) CLWLPRTY(__QPRIORITY__) replace
+
+set authrec -
+    objtype(queue) -
+    profile('IDVAULT.NOVUS.REQ') -
+    principal('__MQCLUSUSER__') -
+    authrmv(all) -
+    authadd(put, setall, get, browse, dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('SYSTEM.DEFAULT.MODEL.QUEUE') -
+    principal('__MQCLUSUSER__') -
+    authrmv(all) -
+    authadd(dsp, get)
+
+set authrec -
+    objtype(queue) -
+    profile('SYSTEM.ADMIN.COMMAND.QUEUE') -
+    principal('__MQCLUSUSER__') -
+    authrmv(all) -
+    authadd(put)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.POT.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.CFGD.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.CFGM.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.STGA.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.DEVA.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.DEVB.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.TSTA.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.TSTB.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.SYSTA.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.SYSTB.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.SYSTC.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.SVT.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.PSUP.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.PAT.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.PROD.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.PRDA.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+set authrec -
+    objtype(queue) -
+    profile('NOVUS.SNDP.IDM.REQ') -
+    principal('__IIBUSER__') -
+    authrmv(all) -
+    authadd(put,setall, setid, passall, passid,inq,dsp)
+
+
+
+refresh security(*) type(authserv)
+
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)
+

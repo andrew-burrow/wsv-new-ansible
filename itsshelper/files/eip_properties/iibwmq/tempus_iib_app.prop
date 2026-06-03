@@ -1,0 +1,66 @@
+# Relies on some exported environment variables:
+# ENV
+QMGR_TEMPLATE=${CONFIGDIR}/tempus_iib_app.template
+QMTYPE=Apps
+CLUSTER=${ENV^^} # upper case
+env=${ENV,,} # lower case
+if [ -z "$HOST" ] ; then
+        HOST=$(hostname)
+fi
+E=$(echo $HOST | cut -c 2 | tr "[:lower:]" "[:upper:]")
+T=$(echo $HOST | cut -c 5 | tr "[:lower:]" "[:upper:]")
+NUM=$(echo $HOST | cut -c 7-)
+QMGRNAME=$(echo ${ENV}${E}${T}${NUM} | tr "[:lower:]" "[:upper:]")
+QMHOST=$HOST
+IIBMAP=${CONFIGDIR}/mqgateway.properties
+source $IIBMAP
+AWSQM=${MQIIBLIST[${QMGRNAME}]}
+
+# MuleSoft MQ
+GWYQMGR=$(echo ${ENV}${E}G${NUM} | tr "[:lower:]" "[:upper:]")
+MULEQM=${MQMULELIST[${GWYQMGR}]}
+if [[ "$env" == "ts1"  ||  "$env" == "pr1" ]] ; then
+	MULEQMB=${MQMULELIST[${GWYQMGR}B]}
+else
+	MULEQMB=${MQMULELIST[${GWYQMGR}]}
+fi
+
+# Set the userids which will be assigned onto non-admin
+# client channels
+EXHIBITION="02"
+HANSEN="01"
+CLUSUSER=_mq_clus
+IIBUSER=iibadmin
+
+#CLWLPRTY set to route traffic to both systems equally by default
+if [ "${NUM:0:2}" == "$HANSEN" ]; then
+        QPRIORITY=0
+else
+        QPRIORITY=0
+fi
+
+# Set TAC MF QMGR for each environment
+TAC_MF_QMGR=""
+case "${env}" in
+	"ci1" | "dv1" | "sv1" | "pa1" | "tr1") 
+		TAC_MF_QMGR=MQA2 
+		;;
+	"ps1") 
+		TAC_MF_QMGR=MQAQ
+		;;
+	"ts1") 
+		TAC_MF_QMGR=MQA7 
+		;;
+	"ts2") 
+		TAC_MF_QMGR=MQA3 
+		;;
+	"ts3") 
+		TAC_MF_QMGR=MQAD
+		;;
+	"pr1") 
+		TAC_MF_QMGR=MQCP 
+		;;
+	*) 
+		TAC_MF_QMGR="dummy" 
+		;;
+esac

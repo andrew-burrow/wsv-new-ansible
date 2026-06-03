@@ -1,0 +1,32 @@
+# Relies on some exported environment variables:
+# ENV
+QMGR_TEMPLATE=${CONFIGDIR}/lnr_iib_app.template
+QMTYPE=Jumbo
+CLUSTER=${ENV^^} # upper case
+env=${ENV,,} # lower case
+if [ -z "$HOST" ] ; then
+        HOST=$(hostname)
+fi
+E=$(echo $HOST | cut -c 2 | tr "[:lower:]" "[:upper:]")
+T=J
+NUM=$(echo $HOST | cut -c 7-)
+QMGRNAME=$(echo ${ENV}${E}${T}${NUM} | tr "[:lower:]" "[:upper:]")
+QMHOST=$HOST
+
+#
+# Set the userids which will be assigned onto non-admin
+# client channels
+CLUSUSER=_mq_clus
+IIBUSER=iibadmin
+
+#
+# Define site specific host values
+EXHIBITION="02"
+HANSEN="01"
+
+HOSTSITE=${NUM:0:2}
+if [ "$HOSTSITE" = "$HANSEN" ] ; then
+	QLOCATION="HANSEN"
+else
+	QLOCATION="EXHIBITION"
+fi

@@ -1,0 +1,265 @@
+* runmqsc command file template
+* pcs_iib_app.template
+* relies on pcs_jumbo_iib_apps.template.map
+
+* ---------------------------------------------------
+
+* ---------------------------------------------------
+* Set Auth Records - Consumer Service Queues
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('CS.CALCULATE.PREMIUM.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('CS.CALCULATE.PREMIUM.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('CS.PRICING.PERIOD.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('CS.PRICING.PERIOD.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+
+* ---------------------------------------------------
+* Set Auth Records - Entity Service Queues
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('ES.PREMIUM.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.PREMIUM.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+* ---------------------------------------------------
+* Set Auth Records - Service Component Queues
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('SC.PREMIUM.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.PREMIUM.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.PCS.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('SC.PCS.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, setid, passall, passid, dsp)
+
+* ---------------------------------------------------
+* Define Queues - CS_CalulatePremium
+* ---------------------------------------------------
+
+define ql('CS.CALCULATE.PREMIUM.RESP.V1') -
+	descr('Replies to CS_CalulatePremium') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - CS_PricingPeriod
+* ---------------------------------------------------
+
+define ql('CS.PRICING.PERIOD.RESP.V1') -
+	descr('Replies to CS_PricingPeriod') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - ES_PremiumParameters
+* ---------------------------------------------------
+
+define ql('ES.PREMIUM.PARAMETERS.BOQ.V1') -
+	descr('Backout Queue for ES_PremiumParameters') -
+	replace
+	
+define ql('ES.PREMIUM.PARAMETERS.REQ.V1') -
+	descr('Request Queue for ES_PremiumParameters') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.PREMIUM.PARAMETERS.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.PREMIUM.PARAMETERS.RESP.V1') -
+	descr('Replies to ES_PremiumParameters') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_PremiumReference
+* ---------------------------------------------------
+
+define ql('ES.PREMIUM.REFERENCE.BOQ.V1') -
+	descr('Backout Queue for ES_PremiumReferenceData') -
+	replace
+	
+define ql('ES.PREMIUM.REFERENCE.REQ.V1') -
+	descr('Request Queue for ES_PremiumReferenceData') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.PREMIUM.REFERENCE.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.PREMIUM.REFERENCE.RESP.V1') -
+	descr('Replies to ES_PremiumReferenceData') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - ES_PremiumTransaction
+* ---------------------------------------------------
+
+define ql('ES.PREMIUM.TRANSACTION.BOQ.V1') -
+	descr('Backout Queue for ES_PremiumTransaction') -
+	replace
+	
+define ql('ES.PREMIUM.TRANSACTION.REQ.V1') -
+	descr('Request Queue for ES_PremiumTransaction') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('ES.PREMIUM.TRANSACTION.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('ES.PREMIUM.TRANSACTION.RESP.V1') -
+	descr('Replies to ES_PremiumTransaction') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - SC_PremiumRules
+* ---------------------------------------------------
+
+define ql('SC.PREMIUM.RULES.BOQ.V1') -
+	descr('Backout Queue for SC_PremiumRules') -
+	replace
+	
+define ql('SC.PREMIUM.RULES.REQ.V1') -
+	descr('Request Queue for SC_PremiumRules') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.PREMIUM.RULES.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.PREMIUM.RULES.EX.V1') -
+	descr('Exception for one-way calls to SC_PremiumRules') -
+	replace
+
+
+* ---------------------------------------------------
+* Define Queues - SC_PCSRepository
+* ---------------------------------------------------
+
+define ql('SC.PCS.BOQ.V1') -
+	descr('Backout Queue for SC_PCSRepository') -
+	replace
+	
+define ql('SC.PCS.REQ.V1') -
+	descr('Request Queue for SC_PCSRepository') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.PCS.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.PCS.EX.V1') -
+	descr('Exception for one-way calls to SC_PCSRepository') -
+	replace
+
+	
+* ---------------------------------------------------
+* Define Queues - SC_PCSTransactionRepository
+* ---------------------------------------------------
+
+define ql('SC.PCS.TRANSACTION.BOQ.V1') -
+	descr('Backout Queue for SC_PCSTransactionRepository') -
+	replace
+	
+define ql('SC.PCS.TRANSACTION.REQ.V1') -
+	descr('Request Queue for SC_PCSTransactionRepository') -
+	cluster(__CLUSNAME__) -
+	clwlprty(__QPRIORITY__) -
+	boqname('SC.PCS.TRANSACTION.BOQ.V1') -
+	bothresh(1) -
+	replace
+	
+define ql('SC.PCS.TRANSACTION.EX.V1') -
+	descr('Exception for one-way calls to SC_PCSTransactionRepository') -
+	replace
+
+* ---------------------------------------------------
+* Define Queues - PCS Notification
+* ---------------------------------------------------
+
+set authrec -
+	objtype(queue) -
+	profile('ES.PCS.NOTIFICATION.**') -
+	principal('__CLUSUSER__') -
+	authrmv(all) -
+	authadd(put, inq, setall)
+
+set authrec -
+	objtype(queue) -
+	profile('ES.PCS.NOTIFICATION.**') -
+	principal('__IIBUSER__') -
+	authrmv(all) -
+	authadd(browse, get, inq, put, setall, dsp)
+
+Define qLocal('ES.PCS.NOTIFICATION.BOQ') - 
+	DESCR('PCS Notification Backout Queue') - 
+	REPLACE
+
+Define qLocal('ES.PCS.NOTIFICATION.REQ.V1') -
+	DESCR('PCS Notification Queue') - 
+	BOQNAME('ES.PCS.NOTIFICATION.BOQ') -
+	MSGDLVSQ(FIFO) -
+	CLUSTER(__CLUSNAME__) -
+	DEFBIND(NOTFIXED) -
+	REPLACE
+
+* ---------------------------------------------------
+* Refresh security to activate the new rules
+refresh security(*) type(authserv)
