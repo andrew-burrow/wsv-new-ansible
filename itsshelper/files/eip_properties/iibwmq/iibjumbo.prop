@@ -3,10 +3,8 @@
 QMGR_TEMPLATE=${CONFIGDIR}/iib.template
 IIBUSER=iibadmin
 HOST=$(hostname)
-E=$(echo $HOST | cut -c 2 | tr "[:lower:]" "[:upper:]")
-T=J
-NUM=$(echo $HOST | cut -c 7-)
-QMGRNAME=$(echo ${ENV}${E}${T}${NUM} | tr "[:lower:]" "[:upper:]")
+NUM=$(echo $HOST | grep -o '[0-9]*$')
+QMGRNAME=$(echo A${ENV}J${NUM} | tr "[:lower:]" "[:upper:]")
 CLUSTER=${ENV,,} # lower case
 EXHIBITION="02"
 HANSEN="01"
