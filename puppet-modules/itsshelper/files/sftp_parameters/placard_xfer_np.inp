@@ -1,7 +1,0 @@
-# Placard Nonprod SFTP parameter file - assumes SSH keys are used
-
-SFTP_HOST=<sftp host>
-SFTP_USER=<sftp user>
-SRC_DIR=<sftp download directory>
-TGT_DIR=/Placard/NonProd/Card
-FILE_REGEX=

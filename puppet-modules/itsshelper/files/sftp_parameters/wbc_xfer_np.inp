@@ -1,7 +1,0 @@
-# Westpac Nonprod SFTP parameter file - assumes SSH keys are used
-
-SFTP_HOST=<sftp host>
-SFTP_USER=<sftp user>
-SRC_DIR=<sftp download directory>
-TGT_DIR=/Westpac/NonProd/Payments
-FILE_REGEX=paymentFile[0-9]{8}.xml

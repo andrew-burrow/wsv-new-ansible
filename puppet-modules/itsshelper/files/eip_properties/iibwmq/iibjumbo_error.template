@@ -1,8 +1,0 @@
-define ql(MQ.IIB.ERROR.QUEUE) replace
-
-set authrec -
-objtype(queue) -
-profile(MQ.IIB.ERROR.QUEUE) -
-principal('__IIBUSER__') -
-authrmv(all) -
-authadd(put, setall, setid, passall, passid, get, browse, dsp)

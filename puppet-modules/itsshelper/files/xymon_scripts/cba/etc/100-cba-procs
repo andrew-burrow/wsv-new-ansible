@@ -1,5 +1,0 @@
-[cba_procs]
-        ENVFILE $XYMONCLIENTHOME/etc/xymonclient.cfg
-        CMD $XYMONCLIENTHOME/ext/cba-procs.sh
-        LOGFILE $XYMONCLIENTHOME/logs/cba-procs.log
-        INTERVAL 5m
