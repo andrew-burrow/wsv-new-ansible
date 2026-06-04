@@ -70,39 +70,47 @@
     name: bc
     state: present
 
-- name: Copy itsshelper files to host
+- name: Copy itsshelper MQ property files
   become: true
   ansible.builtin.copy:
-    src: itsshelper/
-    dest: /opt/itsshelper/
+    src: itsshelper/files/eip_properties/iibwmq/
+    dest: /opt/properties/
     owner: root
     group: root
-    mode: "0755"
+    mode: "0644"
 
-- name: Symlink MQ scripts
+- name: Copy itsshelper MQ scripts
   become: true
-  ansible.builtin.file:
-    src: /opt/itsshelper/files/eip_scripts/iibwmq
-    dest: /opt/scripts
-    state: link
+  ansible.builtin.copy:
+    src: itsshelper/files/eip_scripts/iibwmq/
+    dest: /opt/scripts/
+    owner: root
+    group: root
+    mode: "0744"
 
-- name: Symlink MQ scripts mqapps
+- name: Copy itsshelper MQ mqapp scripts
   become: true
-  ansible.builtin.file:
-    src: /opt/itsshelper/files/eip_scripts/mqapps
-    dest: /opt/scripts/mqapps
-    state: link
+  ansible.builtin.copy:
+    src: itsshelper/files/eip_scripts/mqapps/
+    dest: /opt/scripts/mqapps/
+    owner: mqm
+    group: mqm
+    mode: "0744"
 
-- name: Symlink MQ properties
+- name: Copy in password salt from vault
   become: true
-  ansible.builtin.file:
-    src: /opt/itsshelper/files/eip_properties/iibwmq
-    dest: /opt/properties
-    state: link
+  ansible.builtin.copy:
+    content: "{{ ibm_mq_host_pwd_salt }}"
+    dest: /opt/properties/pwd_salt
+    owner: root
+    group: root
+    mode: "0400"
 
-- name: Symlink MQ properties for mqapps
+- name: Copy in CA identity from vault
   become: true
-  ansible.builtin.file:
-    src: /opt/itsshelper/files/eip_properties/iibwmq
-    dest: /opt/scripts/properties
-    state: link
+  ansible.builtin.copy:
+    content: "{{ ibm_mq_host_ca_identity_rsa }}"
+    dest: /opt/properties/caIdentity_rsa
+    owner: root
+    group: root
+    mode: "0600"

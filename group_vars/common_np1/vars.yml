@@ -73,11 +73,33 @@ ibm_mq_host_brokers_group: mqbrkrs
 # system will auto-assign.
 ibm_mq_host_brokers_gid: 5002
 
-# Version of itsshelpers repository to deploy
+# Contents of password salt
 #
-# Which branch/commit/tag of the itsshelper Git repository is aligned with
-# this repository?
-ibm_mq_host_itsshelper_version: eip_ansible_app
+# What is the contents of the password salt file deployed to
+# `/opt/properties/pwd_salt`?  This value must match the salt in use on
+# existing Puppet-managed hosts
+#
+# VAULT NAMING CONVENTIONS:
+#
+# - `ibm_mq_host_pwd_salt`
+#
+#   Use `vault_ibm_mq_host_pwd_salt`.
+#
+ibm_mq_host_pwd_salt: "{{ vault_ibm_mq_host_pwd_salt }}"
+
+# CA identity private key
+#
+# What is the contents of the CA identity private key deployed to
+# `/opt/properties/caIdentity_rsa`?  This key is used by `createQMGR.bash`
+# to authenticate via SSH to the CA server for certificate auto-signing.
+#
+# VAULT NAMING CONVENTIONS:
+#
+# - `ibm_mq_host_ca_identity_rsa`
+#
+#   Use `vault_ibm_mq_host_ca_identity_rsa`.
+#
+ibm_mq_host_ca_identity_rsa: "{{ vault_ibm_mq_host_ca_identity_rsa }}"
 
 #
 # From `/roles/ibm_ace_host_define/defaults/main.yml`
