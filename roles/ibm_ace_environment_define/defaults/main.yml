@@ -133,18 +133,19 @@ ibm_ace_environment_webadmin_ip: 10.51.35.72
 #
 # HOST OVERRIDE CONVENTIONS:
 #
-# - This value is environment-specific AND host-specific
-# - Mark the value as host specific in the environment variables by setting
-#   the value to "HOST-SPECIFIC" , e.g. in `group_vars/env_dv1/vars.yml`
-# - Set the host-specific value in the host variables of the virtual host of
-#   the environment, e.g, `host_vars/sduace0101-dv1/vars.yml`
+# - The `ibm_ace_environment_cert_p12` value is environment-specific AND
+#   host-specific
+# - The host specific value is computed at task execution time from an
+#   expression that uses `ibm_host_index`
+# - The variable SHOULD NOT and NEED NOT be overridden in the host variables
+#   IF expressed in terms of `ibm_host_index`
 #
 # VAULT NAMING CONVENTIONS:
 #
 # - `.ibm_ace_environment_cert_secret`
 #
 #   Use `vault_ibm_ace_cert_secret`
-ibm_ace_environment_cert_p12: test-cert.p12
+ibm_ace_environment_cert_p12: "sduace{{ ibm_host_index }}.services.workcover.vic.gov.au.p12"
 ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_cert_secret }}"
 
 # Directories and symbolic links for the environment
