@@ -127,22 +127,22 @@
   loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
 
 - name: Start queue managers
-   become: true
-   become_user: "{{ ibm_mq_host_user }}"
-   ansible.builtin.command:
-     cmd: strmqm {{ item.queue_manager }}
-   environment:
-     PATH: >-
-       {{ ibm_mq_host_base_dir }}/{{
-         ibm_mq_environment
-       }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
-   register: start_qm
-   changed_when: "'started' in start_qm.stdout"
-   failed_when:
-     - start_qm.rc != 0
-     - "'already running' not in start_qm.stderr"
-     - "'queue manager running' not in start_qm.stderr"
-   loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
+  become: true
+  become_user: "{{ ibm_mq_host_user }}"
+  ansible.builtin.command:
+    cmd: strmqm {{ item.queue_manager }}
+  environment:
+    PATH: >-
+      {{ ibm_mq_host_base_dir }}/{{
+        ibm_mq_environment
+      }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
+  register: start_qm
+  changed_when: "'started' in start_qm.stdout"
+  failed_when:
+    - start_qm.rc != 0
+    - "'already running' not in start_qm.stderr"
+    - "'queue manager running' not in start_qm.stderr"
+  loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
 
 - name: Configure MQ application queues via itsshelper
   become: true
