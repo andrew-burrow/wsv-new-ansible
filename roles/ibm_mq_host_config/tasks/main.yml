@@ -88,15 +88,6 @@
     group: root
     mode: "0744"
 
-- name: Copy itsshelper MQ mqapp scripts
-  become: true
-  ansible.builtin.copy:
-    src: itsshelper/files/eip_scripts/mqapps/
-    dest: /opt/scripts/mqapps/
-    owner: mqm
-    group: mqm
-    mode: "0744"
-
 - name: Copy in password salt from vault
   become: true
   ansible.builtin.copy:
