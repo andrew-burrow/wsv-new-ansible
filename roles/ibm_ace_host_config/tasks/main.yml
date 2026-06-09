@@ -65,7 +65,7 @@
         | zip(ibm_ace_host_mounts | selectattr('type', 'equalto', 'cifs'))
       ).values() | list
     }}
-  no_log: true
+  no_log: false
 
 - name: Mount network filesystems for ACE
   become: true

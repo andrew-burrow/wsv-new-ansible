@@ -160,7 +160,7 @@
     - create_login.rc != 0
     - "'BIP2832E' not in create_login.stdout"
   loop: "{{ ibm_ace_environment_integration_nodes }}"
-  no_log: true
+  no_log: false
 
 # SSL Certificate Configuration
 
