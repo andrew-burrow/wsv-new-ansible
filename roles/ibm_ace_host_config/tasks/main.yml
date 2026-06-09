@@ -48,6 +48,23 @@
       - nfs-utils
     state: present
 
+- name: Create folders for CIFS credential files
+  become: true
+  ansible.builtin.file:
+    state: directory
+    dest: "{{ item | dirname }}"
+    owner: root
+    group: root
+    mode: '0700'
+  loop: >-
+    {{
+      ibm_ace_host_mounts
+        | selectattr('type', 'equalto', 'cifs')
+        | map(attribute='credential_file')
+        | unique
+        | list
+    }}
+
 - name: Create CIFS credential files for mount points
   become: true
   ansible.builtin.copy:
