@@ -392,7 +392,7 @@ ibm_ace_environment_webadmin_role: admin
 #   the value to "HOST-SPECIFIC" , e.g. in `group_vars/env_dv1/vars.yml`
 # - Set the host-specific value in the host variables of the virtual host of
 #   the environment, e.g, `host_vars/sduace0101-dv1/vars.yml`
-ibm_ace_environment_webadmin_ip: 10.51.35.72
+ibm_ace_environment_webadmin_ip: HOST-SPECIFIC
 
 # SSL certificate configuration
 #
