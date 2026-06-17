@@ -102,7 +102,7 @@ assertBuildTarget()
 			fi
 			;;
 		'MQM')
-			VERIFYCMD=/opt/${ENV}/mqm/bin/dspmqver
+			VERIFYCMD=/opt/ibm/${ENV}/mqm/bin/dspmqver
 			if [ ! -e $VERIFYCMD ] ; then
 				log "$S - warning: no dspmqver command was found for $PRODUCT"
 				VERIFYCMD=""
@@ -112,7 +112,7 @@ assertBuildTarget()
 			fi
 			;;
 		'IIB')
-			VERIFYCMD=/opt/${ENV}/iib-${INSTALLBASE_IIB}/iib
+			VERIFYCMD=/opt/ibm/${ENV}/iib-${INSTALLBASE_IIB}/iib
 			VERSIONOPTS="level"
 			if [ ! -e $VERIFYCMD ] ; then
 				log "$S - warning: no iib command was found for $PRODUCT"
@@ -339,11 +339,11 @@ declareDefaults()
     #
     IGNOREERRORS=false					# fail on an error occuring - used by try() subroutine
     
-    INSTALLROOT=/opt/IBM				# common target root for binary install
+    INSTALLROOT=/opt/ibm				# common target root for binary install
 							# NOTE: this is a local var and has no PROPSFILE equivalent
    
     INSTALLBV_MQM=8.0.0.0				# Base Version of IBM WebSphere MQ Series Server (MQM)
-    INSTALLDIR_MQM=/opt/${ENV}/mqm				# installation target directory for MQ Series
+    INSTALLDIR_MQM=/opt/ibm/${ENV}/mqm				# installation target directory for MQ Series
 							# IMPORTANT: INSTALLDIR_MQM is used to set up RPM config
     INSTALLFP_MQM=8.0.0.4				# MQM fixpack
     INSTALLFS_MQM=/opt					# target filesystem

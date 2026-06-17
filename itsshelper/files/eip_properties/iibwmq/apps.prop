@@ -29,7 +29,7 @@ QMPORT=1414
 REPOPORT=1415
 CLUSTER=${ENV^^} # upper case
 env=${ENV,,} # lower case
-PROCSTRING="/opt/${env}/mqm/bin/amq"
+PROCSTRING="/opt/ibm/${env}/mqm/bin/amq"
 #
 #
 #

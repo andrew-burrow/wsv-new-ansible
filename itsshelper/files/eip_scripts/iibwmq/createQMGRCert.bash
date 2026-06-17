@@ -67,7 +67,7 @@ for base in $MQBASE ; do
 done
 
 # Set the MQ environment to the requested environment name
-source $MQBASE/bin/setmqenv -p /opt/${env}/mqm
+source $MQBASE/bin/setmqenv -p /opt/ibm/${env}/mqm
 if [ $? -ne 0 ] ; then
   echo "Failed to set MQ environment. Does $env MQ installation exist?"
   exit 1

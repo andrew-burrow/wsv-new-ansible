@@ -28,7 +28,7 @@ QMPORT=1416
 REPOPORT=1415
 CLUSTER=${ENV^^} # upper case
 env=${ENV,,} # lower case
-PROCSTRING="/opt/${env}/mqm/bin/amq"
+PROCSTRING="/opt/ibm/${env}/mqm/bin/amq"
 #
 #
 # Configure the Long, Upper Case environment name (LUENV)
