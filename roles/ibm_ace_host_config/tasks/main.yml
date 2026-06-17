@@ -14,6 +14,9 @@
     group: "{{ ibm_ace_host_group }}"
     groups: "{{ ibm_ace_host_additional_groups }}"
     password: "!"
+    password_lock: true
+    password_expire_min: 0
+    password_expire_max: 99999
     state: present
 
 - name: Create ACE data directory

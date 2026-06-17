@@ -34,6 +34,9 @@
     uid: "{{ ibm_mq_host_uid | default(omit) }}"
     group: "{{ ibm_mq_host_group }}"
     password: "!"
+    password_lock: true
+    password_expire_min: 0
+    password_expire_max: 99999
     state: present
 
 - name: Create MQ data directory
@@ -70,13 +73,30 @@
     name: bc
     state: present
 
+- name: Create itsshelper properties directory
+  become: true
+  ansible.builtin.file:
+    path: /opt/properties
+    state: directory
+    mode: '0775'
+    group: "{{ ibm_mq_host_group }}"
+
+- name: Create itsshelper scripts directory
+  become: true
+  ansible.builtin.file:
+    path: /opt/scripts
+    state: directory
+    owner: root
+    group: "{{ ibm_mq_host_group }}"
+    mode: '0775'
+
 - name: Copy itsshelper MQ property files
   become: true
   ansible.builtin.copy:
     src: itsshelper/files/eip_properties/iibwmq/
     dest: /opt/properties/
     owner: root
-    group: root
+    group: "{{ ibm_mq_host_group }}"
     mode: "0644"
 
 - name: Copy itsshelper MQ scripts
@@ -85,8 +105,8 @@
     src: itsshelper/files/eip_scripts/iibwmq/
     dest: /opt/scripts/
     owner: root
-    group: root
-    mode: "0744"
+    group: "{{ ibm_mq_host_group }}"
+    mode: "0755"
 
 - name: Copy in password salt from vault
   become: true
