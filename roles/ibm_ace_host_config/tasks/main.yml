@@ -68,6 +68,16 @@
         | list
     }}
 
+- name: Create mount points
+  become: true
+  ansible.builtin.file:
+    state: directory
+    dest: "{{ item.mount_point }}"
+    owner: root
+    group: root
+    mode: '0755'
+  loop: "{{ ibm_ace_host_mounts }}"
+
 - name: Create CIFS credential files for mount points
   become: true
   ansible.builtin.copy:
