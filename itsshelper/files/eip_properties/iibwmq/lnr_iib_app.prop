@@ -15,7 +15,7 @@ QMHOST=$HOST
 # Set the userids which will be assigned onto non-admin
 # client channels
 CLUSUSER=_mq_clus
-IIBUSER=iibadmin
+IIBUSER=aceadmin
 
 #
 # Define site specific host values

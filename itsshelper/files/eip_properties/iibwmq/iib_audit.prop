@@ -1,7 +1,7 @@
 # Define properties for the IIB audit queues application
 #
 QMGR_TEMPLATE=${CONFIGDIR}/iib_audit.template
-IIBUSER=iibadmin
+IIBUSER=aceadmin
 HOST=$(hostname)
 NUM=$(echo $HOST | grep -o '[0-9]*$')
 QMGRNAME=$(echo A${ENV}I${NUM} | tr "[:lower:]" "[:upper:]")

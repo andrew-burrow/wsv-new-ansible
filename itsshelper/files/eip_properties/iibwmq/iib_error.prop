@@ -1,7 +1,7 @@
 # Define properties for the IIB application
 #
 QMGR_TEMPLATE=${CONFIGDIR}/iib_error.template
-IIBUSER=iibadmin
+IIBUSER=aceadmin
 HOST=$(hostname)
 NUM=$(echo $HOST | grep -o '[0-9]*$')
 QMGRNAME=$(echo A${ENV}I${NUM} | tr "[:lower:]" "[:upper:]")

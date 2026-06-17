@@ -20,7 +20,7 @@ QMHOST=$HOST
 EXHIBITION="02"
 HANSEN="01"
 CLUSUSER=_mq_clus
-IIBUSER=iibadmin
+IIBUSER=aceadmin
 
 #CLWLPRTY set to route traffic to both systems equally by default
 if [ "${NUM:0:2}" == "$HANSEN" ]; then

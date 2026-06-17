@@ -16,7 +16,7 @@ QMGRNAME=$(echo A${ENV}I${NUM} | tr "[:lower:]" "[:upper:]")
 EXHIBITION="02"
 HANSEN="01"
 CLUSUSER=_mq_clus
-IIBUSER=iibadmin
+IIBUSER=aceadmin
 
 #CLWLPRTY set to route traffic to EXHIBITION queues by default
 if [ "${NUM:0:2}" == "$HANSEN" ]; then
