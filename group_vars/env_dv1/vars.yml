@@ -56,12 +56,12 @@ ibm_mq_environment_fixpack_package: "9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz"
 # - The variable SHOULD NOT and NEED NOT be overridden in the host variables
 #   IF expressed in terms of `ibm_host_index`
 ibm_mq_environment_itsshelper_qmgr_props:
-  - name: jumboiib
-    queue_manager: "ADV1J{{ ibm_host_index }}"
-    desc: Jumbo IIB queue manager
   - name: apps
     queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: Default IIB queue manager
+  - name: jumboiib
+    queue_manager: "ADV1J{{ ibm_host_index }}"
+    desc: Jumbo IIB queue manager
 
 # MQ application queue configuration
 #
