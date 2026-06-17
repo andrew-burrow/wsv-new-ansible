@@ -164,23 +164,23 @@ ibm_ace_host_mounts:
     type: cifs
     server: "//SDWFTP0101/Interface/tac/iiblanding"
     options: "rw,sec=ntlmssp"
-    uid: iibadmin
-    gid: mqbrkrs
+    uid: "{{ ibm_ace_host_user }}"
+    gid: "{{ ibm_ace_host_group }}"
     credential_file: /usr/local/.auth/SDWFTP0101.auth
     credential_secret: "{{ vault_ibm_ace_host_mounts_SDWFTP0101_secret }}"
   - mount_point: /mnt/wsv
     type: cifs
     server: "//SDWFTP0101/Interface/wsv/iiblanding"
     options: "rw,sec=ntlmssp"
-    uid: iibadmin
-    gid: mqbrkrs
+    uid: "{{ ibm_ace_host_user }}"
+    gid: "{{ ibm_ace_host_group }}"
     credential_file: /usr/local/.auth/SDWFTP0101.auth
     credential_secret: "{{ vault_ibm_ace_host_mounts_SDWFTP0101_secret }}"
   - mount_point: /mnt/alert
     type: cifs
     server: "//sdstn20101-c.melb.devad/alert_dev"
     options: "rw,sec=ntlmssp"
-    uid: iibadmin
-    gid: mqbrkrs
+    uid: "{{ ibm_ace_host_user }}"
+    gid: "{{ ibm_ace_host_group }}"
     credential_file: /usr/local/.auth/alert_dev.auth
     credential_secret: "{{ vault_ibm_ace_host_mounts_alert_dev_secret }}"

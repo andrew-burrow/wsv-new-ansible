@@ -281,8 +281,8 @@
     path: "{{ item.path }}"
     state: directory
     mode: "{{ item.perm }}"
-    owner: iibadmin
-    group: mqbrkrs
+    owner: "{{ ibm_ace_host_user }}"
+    group: "{{ ibm_ace_host_group }}"
   loop: "{{ ibm_ace_environment_directories }}"
 
 - name: Create file-system symbolic links for environment
@@ -302,8 +302,8 @@
   ansible.builtin.template:
     src: "{{ item }}.j2"
     dest: "/var/ace/{{ ibm_ace_environment }}/config/{{ item }}"
-    owner: aceadmin
-    group: mqbrkrs
+    owner: "{{ ibm_ace_host_user }}"
+    group: "{{ ibm_ace_host_group }}"
     mode: "u=rw,go=r"
   loop: "{{ ibm_ace_environment_jvm_configs }}"
 
@@ -348,8 +348,8 @@
   become: true
   ansible.builtin.file:
     path: "{{ ibm_ace_host_base_dir }}/{{ ibm_ace_environment }}/ace-13.0.6.2/swidtag"
-    owner: aceadmin
-    group: mqbrkrs
+    owner: "{{ ibm_ace_host_user }}"
+    group: "{{ ibm_ace_host_group }}"
     recurse: yes
 
 - name: Set ACE operation mode
@@ -392,8 +392,8 @@
   ansible.builtin.template:
     src: "{{ item }}.j2"
     dest: "{{ ibm_ace_environment_work_path }}/config/{{ item }}"
-    owner: aceadmin
-    group: mqbrkrs
+    owner: "{{ ibm_ace_host_user }}"
+    group: "{{ ibm_ace_host_group }}"
     mode: "u=rw,go=r"
   loop: "{{ ibm_ace_environment_odbc_configs }}"
 
