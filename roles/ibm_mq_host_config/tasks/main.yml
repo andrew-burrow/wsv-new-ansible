@@ -116,12 +116,3 @@
     owner: root
     group: root
     mode: "0400"
-
-- name: Copy in CA identity from vault
-  become: true
-  ansible.builtin.copy:
-    content: "{{ ibm_mq_host_ca_identity_rsa }}"
-    dest: /opt/properties/caIdentity_rsa
-    owner: root
-    group: root
-    mode: "0600"

@@ -73,16 +73,3 @@ MQLDAPUSER="${LDAPBindUsr[$E]}"
 MQNESTGRP="NO"
 MQSHORTUSR=shortName
 MQUSRFIELD="$MQSHORTUSR"
-#
-#
-# Configure autosigning
-source ${CONFIGDIR}/mqcertsign.properties
-MQAUTOSIGN=${MQAUTOSIGNLIST[$E]}
-MQCASERVER=${MQCASERVERLIST[$E]}
-MQCACREDFILE=${CONFIGDIR}/${MQCACREDFILELIST[$E]}
-MQCAUSERNAME=${MQCAUSERNAMELIST[$E]}
-#
-# Configure CA Certificates to be trusted for the environment
-CACERTLIST=${CONFIGDIR}/mqcacertlist.properties
-source $CACERTLIST
-#
