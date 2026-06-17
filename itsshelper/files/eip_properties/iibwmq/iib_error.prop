@@ -1,11 +1,47 @@
-# Define properties for the IIB application
 #
+# -   Define properties for MQ app
+#
+# -   Depends on the exported environment variable:
+#
+#         ENV
+#
+# -   Depends on the variables in `common_vars.bash`:
+#
+#         HOST
+#         NUM
+#         CONFIGDIR
+#
+# -   Depends on the properties files:
+#
+#         mqenvironments.properties
+#
+# -   Derived from properties file in `itsshelper` repository
+#
+
+#
+#
+# Obtain case-specific versions of ENV
+LENV=${ENV,,}            # lower case
+UENV=${ENV^^}            # upper case
+#
+#
+# Specify the template, and cluster
 QMGR_TEMPLATE=${CONFIGDIR}/iib_error.template
+CLUSTER=${LENV}
+#
+#
+# Derive the indices for environment and type
+source ${CONFIGDIR}/mqenvironments.properties
+E=${MQRevEnvMap[$UENV]}
+T=I
+#
+#
+# Compute the queue manager name and host elements
+QMGRNAME=$(echo A${ENV}${T}${NUM} | tr "[:lower:]" "[:upper:]")
+QMHOST=$HOST
+#
+#
 IIBUSER=aceadmin
-HOST=$(hostname)
-NUM=$(echo $HOST | grep -o '[0-9]*$')
-QMGRNAME=$(echo A${ENV}I${NUM} | tr "[:lower:]" "[:upper:]")
-CLUSTER=${ENV,,} # lower case
 EXHIBITION="02"
 HANSEN="01"
 CLUSUSER=_mq_clus
@@ -15,4 +51,3 @@ if [ "${NUM:0:2}" == "$HANSEN" ]; then
 else
         QPRIORITY=0
 fi
-

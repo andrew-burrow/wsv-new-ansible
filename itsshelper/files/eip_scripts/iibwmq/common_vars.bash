@@ -7,6 +7,12 @@
 # -   Derived from `itsshelper` scripts
 #
 
+# What host are the scripts running on?
+HOST=$(hostname)
+
+# What is the index of the host that the scripts are running on?
+NUM=$(echo $HOST | grep -o '[0-9]*$')
+
 # What is the name of the account to run the MQ daemon?
 MQMUSR="mqm"
 

@@ -1,23 +1,52 @@
-# Relies on exported environment variable:
-# ENV
-# Requires config file
-#  mqrepo.properties
-# Get the mapping from queue managers to Full Repository QMs
-REPOLIST=${CONFIGDIR}/mqrepo.properties
-. $REPOLIST
+#
+# -   Define properties for MQ app
+#
+# -   Depends on the exported environment variable:
+#
+#         ENV
+#
+# -   Depends on the variables in `common_vars.bash`:
+#
+#         HOST
+#         NUM
+#         CONFIGDIR
+#
+# -   Depends on the properties files:
+#
+#         mqenvironments.properties
+#
+# -   Derived from properties file in `itsshelper` repository
+#
+
+#
+#
+# Obtain case-specific versions of ENV
+LENV=${ENV,,}            # lower case
+UENV=${ENV^^}            # upper case
+#
+#
+# Specify the template, and cluster
 QMGR_TEMPLATE=${CONFIGDIR}/apps_ssl.template
-HOST=$(hostname)
-NUM=$(echo $HOST | grep -o '[0-9]*$')
-QMGRNAME=$(echo A${ENV}J${NUM} | tr "[:lower:]" "[:upper:]")
+CLUSTER=${UENV}
+#
+#
+# Derive the indices for environment and type
+source ${CONFIGDIR}/mqenvironments.properties
+E=${MQRevEnvMap[$UENV]}
+T=J
+#
+#
+# Compute the queue manager name and host elements
+QMGRNAME=$(echo A${ENV}${T}${NUM} | tr "[:lower:]" "[:upper:]")
+SHORTPREFIX=$(echo ${ENV}${E}$ | tr "[:lower:]" "[:upper:]")
+#
+#
+# Derive the full repository details
+source ${CONFIGDIR}/mqrepo.properties
 REPOQM=${MQREPOSLIST[${QMGRNAME}]}
 REPOENV=$(echo $REPOQM | cut -c 4)
 REPONUM=$(echo $REPOQM | cut -c 6-)
 REPOPREFIX=$(echo $REPOQM | cut -c 1-5)
-REPOHOST=$(echo s${REPOENV}uwmq${REPONUM}-${ENV} | tr "[:upper:]" "[:lower:]")
-SHORTPREFIX=$(echo $QMGRNAME | cut -c 1-4)
-CLUSTER=${ENV^^} # upper case
-env=${ENV,,} # lower case
-#
 #
 #
 # Set the userids which will be assigned onto message channels and non-admin

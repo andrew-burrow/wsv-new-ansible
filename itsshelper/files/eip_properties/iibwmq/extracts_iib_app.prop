@@ -1,16 +1,46 @@
-# Relies on some exported environment variables:
-# ENV
+#
+# -   Define properties for MQ app
+#
+# -   Depends on the exported environment variable:
+#
+#         ENV
+#
+# -   Depends on the variables in `common_vars.bash`:
+#
+#         HOST
+#         NUM
+#         CONFIGDIR
+#
+# -   Depends on the properties files:
+#
+#         mqenvironments.properties
+#
+# -   Derived from properties file in `itsshelper` repository
+#
+
+#
+#
+# Obtain case-specific versions of ENV
+LENV=${ENV,,}            # lower case
+UENV=${ENV^^}            # upper case
+#
+#
+# Specify the template, type, and cluster
 QMGR_TEMPLATE=${CONFIGDIR}/extracts_iib_app.template
 QMTYPE=Apps
-CLUSTER=${ENV^^} # upper case
-env=${ENV,,} # lower case
-if [ -z "$HOST" ] ; then
-        HOST=$(hostname)
-fi
-NUM=$(echo $HOST | grep -o '[0-9]*$')
-QMGRNAME=$(echo A${ENV}I${NUM} | tr "[:lower:]" "[:upper:]")
+CLUSTER=${UENV}
+#
+#
+# Derive the indices for environment and type
+source ${CONFIGDIR}/mqenvironments.properties
+E=${MQRevEnvMap[$UENV]}
+T=I
+#
+#
+# Compute the queue manager name and host elements
+QMGRNAME=$(echo A${ENV}${T}${NUM} | tr "[:lower:]" "[:upper:]")
 QMHOST=$HOST
-
+#
 #
 # Set the userids which will be assigned onto non-admin
 # client channels
@@ -18,8 +48,9 @@ EXHIBITION="02"
 HANSEN="01"
 CLUSUSER=_mq_clus
 IIBUSER=aceadmin
-
-#CLWLPRTY set to route traffic to both systems equally by default
+#
+#
+# CLWLPRTY set to route traffic to both systems equally by default
 if [ "${NUM:0:2}" == "$HANSEN" ]; then
         QPRIORITY=0
 else
