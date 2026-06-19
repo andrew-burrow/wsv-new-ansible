@@ -48,6 +48,7 @@ QMHOST=$(echo ${HOST}-${ENV} | tr "[:upper:]" "[:lower:]")
 #
 #
 # Derive the full repository details
+source ${CONFIGDIR}/mqrepo.properties
 REPOQM=${MQREPOSLIST[${QMGRNAME}]}
 REPOENV=$(echo $REPOQM | cut -c 4)
 REPONUM=$(echo $REPOQM | cut -c 6-)
