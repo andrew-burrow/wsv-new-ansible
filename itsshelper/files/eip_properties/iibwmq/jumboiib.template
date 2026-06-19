@@ -842,17 +842,6 @@ define chl(__CLUSNAME__.__REPOQM__) -
 	replace
 
 * ---------------------------------------------------
-* Delete SYSTEM.EVENT queues so that they can be replaced
-* with Pub/Sub
-delete ql(SYSTEM.ADMIN.CHANNEL.EVENT) purge
-delete ql(SYSTEM.ADMIN.COMMAND.EVENT) purge
-delete ql(SYSTEM.ADMIN.CONFIG.EVENT) purge
-delete ql(SYSTEM.ADMIN.LOGGER.EVENT) purge
-delete ql(SYSTEM.ADMIN.PERFM.EVENT) purge
-delete ql(SYSTEM.ADMIN.PUBSUB.EVENT) purge
-delete ql(SYSTEM.ADMIN.QMGR.EVENT) purge
-
-* ---------------------------------------------------
 * Define TOPIC root for MQ events
 define topic(MQ.EVENTS) -
 	topicstr('/system/admin/events') -
@@ -872,37 +861,6 @@ define topic(MQ.LOGGER.EVENTS) topicstr('/system/admin/events/logger') replace
 define topic(MQ.PERFM.EVENTS) topicstr('/system/admin/events/perfm') replace
 define topic(MQ.PUBSUB.EVENTS) topicstr('/system/admin/events/pubsub') replace
 define topic(MQ.QMGR.EVENTS) topicstr('/system/admin/events/qmgr') replace
-
-* ---------------------------------------------------
-* Define Aliases for SYSTEM.EVENT queues
-define qalias(SYSTEM.ADMIN.CHANNEL.EVENT) -
-	targtype(topic) -
-	target(MQ.CHANNEL.EVENTS) -
-	replace
-define qalias(SYSTEM.ADMIN.COMMAND.EVENT) -
-	targtype(topic) -
-	target(MQ.COMMAND.EVENTS) -
-	replace
-define qalias(SYSTEM.ADMIN.CONFIG.EVENT) -
-	targtype(topic) -
-	target(MQ.CONFIG.EVENTS) -
-	replace
-define qalias(SYSTEM.ADMIN.LOGGER.EVENT) -
-	targtype(topic) -
-	target(MQ.LOGGER.EVENTS) -
-	replace
-define qalias(SYSTEM.ADMIN.PERFM.EVENT) -
-	targtype(topic) -
-	target(MQ.PERFM.EVENTS) -
-	replace
-define qalias(SYSTEM.ADMIN.PUBSUB.EVENT) -
-	targtype(topic) -
-	target(MQ.PUBSUB.EVENTS) -
-	replace
-define qalias(SYSTEM.ADMIN.QMGR.EVENT) -
-	targtype(topic) -
-	target(MQ.QMGR.EVENTS) -
-	replace
 
 * ---------------------------------------------------
 * Set up qmgr to publish all events
