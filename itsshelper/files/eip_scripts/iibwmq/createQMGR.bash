@@ -117,7 +117,7 @@ source ${PROPSFILE}
 #
 # It must not be blank
 # It must not be the current (new) queue manager
-# It must start with the same 4 characters (cluster and environment)
+# It must share the same 3 character environment string
 # The fifth character must be F
 #
 if [ -z "${REPOQM}" ]
@@ -130,10 +130,10 @@ then
     echo "Invalid mqrepo.prop. ${REPOQM} cannot be the created qmgr ${QMGRNAME}"
     exit 1
 fi
-if [ "${QMGRNAME:0:4}" != "${REPOQM:0:4}" ]
+if [ "${QMGRNAME:1:3}" != "${REPOQM:0:3}" ]
 then
     echo "Invalid Repository QM name ${REPOQM} defined in mqrepo.prop"
-    echo "It must be in the same cluster and environment as the new QM"
+    echo "It must be in the same environment as the new QM"
     exit 1
 fi
 if [ "${REPOQM:4:1}" != "F" ]
@@ -193,11 +193,12 @@ else
 fi
 
 # ----------------------------------------------------------------------------
-# Set queue manager to command level 801 to enable LDAP
+# Set queue manager to command level 930 to enable LDAP
 #
 if [ "$(qmgrStatus)" != "Running" ]
 then
-  doExec "strmqm -e CMDLEVEL=801 ${QMGRNAME}"
+  #doExec "strmqm -e CMDLEVEL=930 ${QMGRNAME}"
+  doExec "strmqm ${QMGRNAME}"
 fi
 
 # ----------------------------------------------------------------------------
@@ -275,20 +276,6 @@ SSL.INI
     echo "Security stanza set for ${QMGRNAME}"
 fi
 
-# ----------------------------------------------------------------------------
-# Create symlink in init.d for controlling queue manager as a service
-#
-echo "Setting up service mq_${QMGRNAME} to manage queue manager"
-ln -s /etc/init.d/mqm.init /etc/init.d/mq_${QMGRNAME}
-
-# ----------------------------------------------------------------------------
-# Create rc?.d entries to automatically control queue manager at startup
-# and shutdown of server
-#
-echo "Setting up auto start/stop service for ${QMGRNAME}"
-chkconfig --add mq_${QMGRNAME}
-
-# ----------------------------------------------------------------------------
 # Start QUEUE MANAGER
 #
 if [ "$(qmgrStatus)" != "Running" ]

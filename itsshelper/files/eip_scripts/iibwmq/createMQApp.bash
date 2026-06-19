@@ -122,7 +122,7 @@ MAPPING=${TEMPLATE}.map
 # ----------------------------------------------------------------------------
 # Check existence of files required for templating
 #
-for f in $TEMPLATE $PROPS $MAPPING
+for f in $TEMPLATE $PROPSFILE $MAPPING
 do
     if [ ! -f $f ]
     then
