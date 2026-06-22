@@ -39,11 +39,13 @@ ibm_mq_environment_fixpack_package: "9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz"
 # this environment?  The specifications comprise a list of objects that
 # define the following keys:
 #
-# - `name` -- What is the name of the prop file, without the `.prop`
-#   suffix?  This is passed as the second argument to `createQMGR.bash`.
 # - `queue_manager` -- What is the host-specific name of the queue manager?
 # - `desc` -- What is a human-readable description of the queue manager
 #   created by this prop file?
+# - `propfile` -- What is the basename of the prop file, less the `.prop`
+#   extension?  This is passed as the second argument to `translate.bash`.
+# - `qmtype` -- What is the queue manager typed?  For example, `Apps` or
+#   `Jumbo`
 #
 # HOST OVERRIDE CONVENTIONS:
 #
