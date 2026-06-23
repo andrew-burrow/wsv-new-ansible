@@ -2,45 +2,80 @@
 #
 # /opt/scripts/translate.bash
 #
-# -   Translate a template using a mapping and a properties file
-#     with args:
-#
-#     1) template - contains tokens to be substituted
-#     2) properties file - contains variables
-#     3) mapping - name=value pairs where name is the token and value is the
-#        variable name whose value is substituted for the token
-#     4) output - translated output file
+# -   Generate an MQSC file from a properties file by expansion of the
+#     template named in the properties file
 #
 # -   Derived from script in `itsshelper` repository
 #
 
 usage()
 {
-    echo "USAGE: $(basename $0) TEMPLATE-FILE PROPS-FILE MAPPING-FILE OUT-FILE"
+    echo "usage: $(basename $0) ENV PROPS OUTFILE"
+    echo ""
+    echo "Generate an MQSC file from PROPS by expansion of the template named in"
+    echo "PROPS, and write the output to OUTFILE.  Accept the following arguments:"
+    echo ""
+    echo "ENV        Environment identifier, e.g. 'dv1'"
+    echo "PROPS      Basename of properties file located in '/opt/properties'"
+    echo "OUTFILE    Filename to which translated output is written"
+    echo ""
+    echo "Note that the basename of the template file is read from PROPS, and the"
+    echo "matching template mapping file is used."
 }
 
 # ----------------------------------------------------------------------------
 # Check command line argument count
 #
-if [ $# -ne 4 ] ; then
-  usage
-  exit 1
+if [ $# -ne 3 ] ; then
+    echo "error:  Three arguments expected" >&2
+    echo
+    usage
+    exit 1
 fi
 
 # ----------------------------------------------------------------------------
 # Collect command line arguments
 #
-TEMPLATE=$1
-PROPSFILE=$2
-MAPPING=$3
-OUTFILE=$4
+ENV=$1
+PROPS=$2
+OUTFILE=$3
+
+# ----------------------------------------------------------------------------
+# Source the properties file to get TEMPLATE
+#
+PROPSFILE="/opt/properties/${PROPS}.prop"
+if [ ! -f "${PROPSFILE}" ]
+then
+    echo "error: Props file does not exist: ${PROPSFILE}" >&2
+    echo
+    usage
+    exit 1
+fi
+source ${PROPSFILE}
 
 # ----------------------------------------------------------------------------
 # Check existence of files required for templating
 #
-if [ ! -f $TEMPLATE ] || [ ! -f $PROPSFILE ] || [ ! -f $MAPPING ]
+if [ -z "${TEMPLATE}" ]
 then
-    echo "ERROR: check arguments are valid full paths"
+    echo "error: Props file does not define 'TEMPLATE': ${PROPSFILE}" >&2
+    echo
+    usage
+    exit 1
+else
+    MAPPING="${TEMPLATE}.map"
+fi
+if [ ! -f "${TEMPLATE}" ]
+then
+    echo "error: Template file does not exist: ${TEMPLATE}" >&2
+    echo
+    usage
+    exit 1
+fi
+if [ ! -f "${MAPPING}" ]
+then
+    echo "error: Template map file does not exist: ${MAPPING}" >&2
+    echo
     usage
     exit 1
 fi
@@ -48,44 +83,38 @@ fi
 # ----------------------------------------------------------------------------
 # Check write access to output file
 #
-cp -f $TEMPLATE $OUTFILE
-if [ $? -ne 0 ]; then
-  echo "Unable to write output file."
-  exit 1
+cp -f "${TEMPLATE}" "${OUTFILE}"
+if [ $? -ne 0 ]
+then
+    echo "error: Unable to write output file: ${OUTFILE}" >&2
+    echo
+    usage
+    exit 1
 fi
-
-# ----------------------------------------------------------------------------
-# Source the common build info
-#
-ROOTDIR=$(dirname $0)
-source ${ROOTDIR}/common_vars.bash
 
 # ----------------------------------------------------------------------------
 # Rewrite template to output file
 #
-source ${PROPSFILE}
 ( cat ${MAPPING};echo ) | \
     while read line
     do
-        #ignore comments
         if [[ $line =~ "^#" ]]
         then
             echo "Skipping comment line..."
         else
-            #extrapolate token in the template
             TOKEN=$(echo $line | cut -d= -f1)
             VAR=$(echo $line | cut -d= -f2)
             if [ -z "${TOKEN}" -o -z "${VAR}" ]
             then
                 echo "Skipping empty line... $line"
             else
-                VAL=${!VAR}
+                VAL="${!VAR}"
                 if [ -z "${VAL}" ]
                 then
-                    echo "ERROR: ${VAR} is not defined in ${PROPSFILE}"
+                    echo "error: '${VAR}' is not defined in '${PROPSFILE}'" >&2
                     exit 1
                 fi
-                sed -i -e "s/${TOKEN}/${VAL}/g" $OUTFILE
+                sed -i -e "s/${TOKEN}/${VAL}/g" "${OUTFILE}"
             fi
         fi
     done
