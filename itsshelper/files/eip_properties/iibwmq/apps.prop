@@ -30,7 +30,7 @@ UENV=${ENV^^}            # upper case
 #
 #
 # Specify the template
-QMGR_TEMPLATE=${CONFIGDIR}/apps.template
+TEMPLATE=${CONFIGDIR}/apps.template
 #
 #
 # Derive the indices for environment and type

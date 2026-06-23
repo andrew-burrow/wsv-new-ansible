@@ -26,7 +26,7 @@ UENV=${ENV^^}            # upper case
 #
 #
 # Specify the template, type, and cluster
-QMGR_TEMPLATE=${CONFIGDIR}/pbs_jumbo_iib_app.template
+TEMPLATE=${CONFIGDIR}/pbs_jumbo_iib_app.template
 QMTYPE=Apps
 CLUSTER=${UENV}
 #
