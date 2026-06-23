@@ -115,33 +115,41 @@
 
 # Queue Manager Creation
 
-- name: Create /var/mqm folder
+- name: Copy queue manager ini overrides
   become: true
-  ansible.builtin.file:
-    path: "/var/mqm"
+  ansible.builtin.copy:
+    src: qm_overrides.ini
+    dest: >-
+      /var/mqm/qmgrs/{{ item.queue_manager }}/autoconfig.ini
     owner: "{{ ibm_mq_host_user }}"
     group: "{{ ibm_mq_host_group }}"
-    mode: 'u=rwx,g=rwx,o=rx'
-    state: directory
-
-- name: Create /var/mqm queue manager folders
-  become: true
-  ansible.builtin.file:
-    path: "/var/mqm/qmgrs/{{ item.queue_manager }}"
-    owner: "{{ ibm_mq_host_user }}"
-    group: "{{ ibm_mq_host_group }}"
-    mode: 'u=rwx,g=rwxs,o=rx'
-    state: directory
+    mode: 'u=rw,g=r'
   loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
 
-- name: Create /var/mqm queue manager SSL folders with restricted permissions
+- name: Create queue managers
   become: true
-  ansible.builtin.file:
-    path: "/var/mqm/qmgrs/{{ item.queue_manager }}/ssl"
-    owner: "{{ ibm_mq_host_user }}"
-    group: "{{ ibm_mq_host_group }}"
-    mode: 'u=rwx,g=rwxs'
-    state: directory
+  become_user: "{{ ibm_mq_host_user }}"
+  ansible.builtin.command:
+    cmd: >-
+      crtmqm
+      -c "{{ item.qmtype }}"
+      -lc
+      -lf 4096
+      -lp 10
+      -ls 4
+      -ii /var/mqm/qmgrs/{{ item.queue_manager }}/autoconfig.ini
+      -u SYSTEM.DEAD.LETTER.QUEUE
+      {{ item.queue_manager }}
+  environment:
+    PATH: >-
+      {{ ibm_mq_host_base_dir }}/{{
+        ibm_mq_environment
+      }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
+  register: create_qm
+  changed_when: "'created' in create_qm.stdout"
+  failed_when:
+    - create_qm.rc != 0
+    - "'already exists' not in create_qm.stderr"
   loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
 
 - name: Install queue manager certificate stores
@@ -157,58 +165,83 @@
     owner: "{{ ibm_mq_host_user }}"
     group: "{{ ibm_mq_host_group }}"
     mode: 'u=rw,g=rw'
-  loop: "{{ ibm_mq_environment_itsshelper_qmgr_props | product(['kdb', 'rdb', 'sth', 'crl']) | list }}"
+  loop: >-
+    {{
+      ibm_mq_environment_itsshelper_qmgr_props
+      | product(['kdb', 'rdb', 'sth', 'crl'])
+      | list
+    }}
 
-- name: Collate status of each queue manager
+- name: Generate MQSC files for queue manager configuration
   become: true
   become_user: "{{ ibm_mq_host_user }}"
   ansible.builtin.command:
-    cmd: "dspmq -m {{ item.queue_manager }}"
-  environment:
-    PATH: >-
-      {{ ibm_mq_host_base_dir }}/{{
-        ibm_mq_environment
-      }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
-  register: dspmq_check
-  failed_when: false
+    cmd: >-
+      /opt/scripts/translate.bash
+      {{ ibm_mq_environment }}
+      {{ item.propfile }}
+      /tmp/{{ ibm_mq_environment }}_{{ item.queue_manager }}.mqsc
   changed_when: false
   loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
 
-- name: Create each non-existent queue manager via itsshelper
+- name: Install MQSC files for queue manager configuration
   become: true
-  ansible.builtin.command:
-    cmd: >-
-      /opt/scripts/createQMGR.bash
-      {{ ibm_mq_environment }}
-      {{ result.item.name }}
-  environment:
-    PATH: >-
-      {{ ibm_mq_host_base_dir }}/{{
-        ibm_mq_environment
-      }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
-  loop: "{{ dspmq_check.results }}"
-  loop_control:
-    loop_var: result
-    label: "{{ result.item.queue_manager }}"
-  when: "'AMQ7048E' in result.stderr"
+  ansible.builtin.copy:
+    src: /tmp/{{ ibm_mq_environment }}_{{ item.queue_manager }}.mqsc
+    dest: >-
+      /opt/properties/{{ ibm_mq_environment }}_{{ item.qmtype }}.mqsc
+    remote_src: true
+    owner: "{{ ibm_mq_host_user }}"
+    group: "{{ ibm_mq_host_group }}"
+    mode: 'u=rw,g=r'
+  register: install_mqsc
+  loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
 
-- name: Start queue managers
+- name: Run MQSC files for queue manager configuration
   become: true
   become_user: "{{ ibm_mq_host_user }}"
   ansible.builtin.command:
-    cmd: strmqm {{ item.queue_manager }}
+    cmd: >-
+      runmqsc {{ result.item.queue_manager }}
+      < /opt/properties/{{ ibm_mq_environment }}_{{ result.item.qmtype }}.mqsc
   environment:
     PATH: >-
       {{ ibm_mq_host_base_dir }}/{{
         ibm_mq_environment
       }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
-  register: start_qm
-  changed_when: "'started' in start_qm.stdout"
-  failed_when:
-    - start_qm.rc != 0
-    - "'already running' not in start_qm.stderr"
-    - "'queue manager running' not in start_qm.stderr"
+  register: configure_qm
+  changed_when: true
+  when: result.changed
+  loop: "{{ install_mqsc.results }}"
+  loop_control:
+    loop_var: result
+
+- name: Install systemd unit template for queue managers
+  become: true
+  ansible.builtin.file:
+    src: >-
+      {{ ibm_mq_host_base_dir }}/{{
+        ibm_mq_environment
+      }}/mqm/lib/systemd/system/mq@.service
+    dest: /etc/systemd/system/mq_{{ ibm_mq_environment }}@.service
+    state: link
+
+- name: Enable systemd services for queue managers
+  become: true
+  ansible.builtin.systemd:
+    name: "mq_{{ ibm_mq_environment }}@{{ item.queue_manager }}.service"
+    enabled: true
+    daemon_reload: true
   loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
+
+- name: Start queue managers via systemd
+  become: true
+  ansible.builtin.systemd:
+    name: "mq_{{ ibm_mq_environment }}@{{ item.queue_manager }}.service"
+    state: started
+  loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
+
+# Queue Manager Creation
 
 - name: Configure MQ application queues via itsshelper
   become: true
