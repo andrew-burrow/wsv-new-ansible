@@ -1,12 +1,9 @@
 #
 # -   Define properties for MQ app
 #
-# -   Depends on the exported environment variable:
+# -   Depends on the shell variables:
 #
 #         ENV
-#
-# -   Depends on the variables in `common_vars.bash`:
-#
 #         HOST
 #         NUM
 #         CONFIGDIR

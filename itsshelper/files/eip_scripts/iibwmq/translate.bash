@@ -41,9 +41,16 @@ PROPS=$2
 OUTFILE=$3
 
 # ----------------------------------------------------------------------------
+# Set variables used by props files
+#
+HOST=$(hostname)
+NUM=$(echo $HOST | grep -o '[0-9]*$')
+CONFIGDIR="/opt/properties"
+
+# ----------------------------------------------------------------------------
 # Source the properties file to get TEMPLATE
 #
-PROPSFILE="/opt/properties/${PROPS}.prop"
+PROPSFILE="${CONFIGDIR}/${PROPS}.prop"
 if [ ! -f "${PROPSFILE}" ]
 then
     echo "error: Props file does not exist: ${PROPSFILE}" >&2
