@@ -40,12 +40,14 @@ ibm_mq_environment_fixpack_package: "9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz"
 # define the following keys:
 #
 # - `queue_manager` -- What is the host-specific name of the queue manager?
+#   It must match the queue manager name computed in the `itsshelper` prop
+#   file
 # - `desc` -- What is a human-readable description of the queue manager
 #   created by this prop file?
 # - `propfile` -- What is the basename of the prop file, less the `.prop`
 #   extension?  This is passed as the second argument to `translate.bash`.
 # - `qmtype` -- What is the queue manager typed?  For example, `Apps` or
-#   `Jumbo`
+#   `Jumbo`.  It must match the type recorded in the `itsshelper` prop file
 #
 # HOST OVERRIDE CONVENTIONS:
 #
@@ -62,12 +64,21 @@ ibm_mq_environment_itsshelper_qmgr_props: []
 # in this environment?  The specifications comprise a list of objects
 # that define the following keys:
 #
-# - `name` -- What is the name of the prop file, without the `.prop`
-#   suffix?  This is passed as the second argument to `createMQApp.bash`.
-# - `qmtype` -- What is the queue manager type as recorded in the `itsshelper`
-#   properties file?  This is required to detect when the script has run by
-#   virtue of the creation of the file `/opt/properties/{{ ibm_mq_environment
-#   }}_{{ qmtype }}_{{ name }}.mqsc`
+# - `queue_manager` -- What is the host-specific name of the queue manager to
+#   which the application is being configured?  It must match the queue
+#   manager name computed in the `itsshelper` prop file
 # - `desc` -- What is a human-readable description of the queues
 #   configured by this prop file?
+# - `propfile` -- What is the basename of the prop file, less the `.prop`
+#   extension?  This is passed as the second argument to `translate.bash`.
+# - `qmtype` -- What is the queue manager type.  It must match the type
+#   recorded in the `itsshelper` prop file
+#
+# HOST OVERRIDE CONVENTIONS:
+#
+# - The `queue_manager` value is environment-specific AND host-specific
+# - The host specific value is computed at task execution time from an
+#   expression that uses `ibm_host_index`
+# - The variable SHOULD NOT and NEED NOT be overridden in the host variables
+#   IF expressed in terms of `ibm_host_index`
 ibm_mq_environment_itsshelper_mqapp_props: []

@@ -1,0 +1,35 @@
+#
+# :Precis: Run single MQSC file for MQ app configuration with rescue
+# :Authors: Andrew Burrow
+# :Contact: andrew.burrow@syntegrity.com.au
+# :Copyright: 2026 Syntegrity Solutions
+#
+
+---
+
+- name: Run MQSC file for MQ app configuration
+  block:
+    - name: Run MQ app MQSC file
+      become: true
+      become_user: "{{ ibm_mq_host_user }}"
+      ansible.builtin.command:
+        cmd: >-
+          runmqsc
+          -f /opt/properties/{{ ibm_mq_environment }}_{{ item.qmtype }}_{{ item.propfile }}.mqsc
+          {{ result.item.queue_manager }}
+      environment:
+        PATH: >-
+          {{ ibm_mq_host_base_dir }}/{{
+            ibm_mq_environment
+          }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
+      changed_when: true
+  rescue:
+    - name: Remove MQ app MQSC file after failed run
+      become: true
+      ansible.builtin.file:
+        path: >-
+          /opt/properties/{{ ibm_mq_environment }}_{{ item.qmtype }}_{{ item.propfile }}.mqsc
+        state: absent
+    - name: Stop for MQSC run failure
+      ansible.builtin.fail:
+        msg: "MQSC execution failed for {{ result.item.desc }}"

@@ -115,12 +115,23 @@
 
 # Queue Manager Creation
 
-- name: Copy queue manager ini overrides
+- name: Create directory for queue manager INI overrides
+  become: true
+  ansible.builtin.file:
+    path: "{{ ibm_mq_host_base_dir }}/{{ ibm_mq_environment }}/mqm/config"
+    state: directory
+    owner: "{{ ibm_mq_host_user }}"
+    group: "{{ ibm_mq_host_group }}"
+    mode: "ug=rwx,o=rx"
+
+- name: Copy queue manager INI overrides
   become: true
   ansible.builtin.copy:
     src: qm_overrides.ini
     dest: >-
-      /var/mqm/qmgrs/{{ item.queue_manager }}/autoconfig.ini
+      {{ ibm_mq_host_base_dir }}/{{
+        ibm_mq_environment
+      }}/mqm/config/{{ item.queue_manager }}-autoconfig.ini
     owner: "{{ ibm_mq_host_user }}"
     group: "{{ ibm_mq_host_group }}"
     mode: 'u=rw,g=r'
@@ -134,10 +145,12 @@
       crtmqm
       -c "{{ item.qmtype }}"
       -lc
-      -lf 4096
+      -lf 8192
       -lp 10
       -ls 4
-      -ii /var/mqm/qmgrs/{{ item.queue_manager }}/autoconfig.ini
+      -ii {{ ibm_mq_host_base_dir }}/{{
+        ibm_mq_environment
+      }}/mqm/config/{{ item.queue_manager }}-autoconfig.ini
       -u SYSTEM.DEAD.LETTER.QUEUE
       {{ item.queue_manager }}
   environment:
@@ -164,7 +177,7 @@
     remote_src: true
     owner: "{{ ibm_mq_host_user }}"
     group: "{{ ibm_mq_host_group }}"
-    mode: 'u=rw,g=rw'
+    mode: "u=rw,g=rw"
   loop: >-
     {{
       ibm_mq_environment_itsshelper_qmgr_props
@@ -198,12 +211,82 @@
   loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
 
 - name: Run MQSC files for queue manager configuration
+  ansible.builtin.include_tasks:
+    file: run_qmgr_mqsc.yml
+  when: result.changed
+  loop: "{{ install_mqsc.results }}"
+  loop_control:
+    loop_var: result
+
+# - name: Install systemd unit template for queue managers
+#   become: true
+#   ansible.builtin.file:
+#     src: >-
+#       {{ ibm_mq_host_base_dir }}/{{
+#         ibm_mq_environment
+#       }}/mqm/lib/systemd/system/mq@.service
+#     dest: /etc/systemd/system/mq_{{ ibm_mq_environment }}@.service
+#     state: link
+
+# - name: Enable systemd services for queue managers
+#   become: true
+#   ansible.builtin.systemd:
+#     name: "mq_{{ ibm_mq_environment }}@{{ item.queue_manager }}.service"
+#     enabled: true
+#     daemon_reload: true
+#   loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
+
+# - name: Start queue managers via systemd
+#   become: true
+#   ansible.builtin.systemd:
+#     name: "mq_{{ ibm_mq_environment }}@{{ item.queue_manager }}.service"
+#     state: started
+#   loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
+
+# MQ App Creation
+
+- name: Generate MQSC files for MQ app configuration
   become: true
   become_user: "{{ ibm_mq_host_user }}"
   ansible.builtin.command:
     cmd: >-
-      runmqsc {{ result.item.queue_manager }}
-      < /opt/properties/{{ ibm_mq_environment }}_{{ result.item.qmtype }}.mqsc
+      /opt/scripts/translate.bash
+      {{ ibm_mq_environment }}
+      {{ item.propfile }}
+      /tmp/{{ ibm_mq_environment }}_{{ item.queue_manager }}_{{ item.propfile }}.mqsc
+  changed_when: false
+  loop: "{{ ibm_mq_environment_itsshelper_mqapp_props }}"
+
+- name: Install MQSC files for MQ app configuration
+  become: true
+  ansible.builtin.copy:
+    src: >-
+      /tmp/{{ ibm_mq_environment }}_{{ item.queue_manager }}_{{ item.propfile }}.mqsc
+    dest: >-
+      /opt/properties/{{ ibm_mq_environment }}_{{ item.qmtype }}_{{ item.propfile }}.mqsc
+    remote_src: true
+    owner: "{{ ibm_mq_host_user }}"
+    group: "{{ ibm_mq_host_group }}"
+    mode: 'u=rw,g=r'
+  register: install_mqsc
+  loop: "{{ ibm_mq_environment_itsshelper_mqapp_props }}"
+
+- name: Run MQSC files for MQ app configuration
+  ansible.builtin.include_tasks:
+    file: run_mqapp_mqsc.yml
+  when: result.changed
+  loop: "{{ install_mqsc.results }}"
+  loop_control:
+    loop_var: result
+
+- name: Run MQSC files for MQ app configuration
+  become: true
+  become_user: "{{ ibm_mq_host_user }}"
+  ansible.builtin.command:
+    cmd: >-
+      runmqsc
+      -f /opt/properties/{{ ibm_mq_environment }}_{{ item.qmtype }}_{{ item.propfile }}.mqsc
+      {{ result.item.queue_manager }}
   environment:
     PATH: >-
       {{ ibm_mq_host_base_dir }}/{{
@@ -215,49 +298,6 @@
   loop: "{{ install_mqsc.results }}"
   loop_control:
     loop_var: result
-
-- name: Install systemd unit template for queue managers
-  become: true
-  ansible.builtin.file:
-    src: >-
-      {{ ibm_mq_host_base_dir }}/{{
-        ibm_mq_environment
-      }}/mqm/lib/systemd/system/mq@.service
-    dest: /etc/systemd/system/mq_{{ ibm_mq_environment }}@.service
-    state: link
-
-- name: Enable systemd services for queue managers
-  become: true
-  ansible.builtin.systemd:
-    name: "mq_{{ ibm_mq_environment }}@{{ item.queue_manager }}.service"
-    enabled: true
-    daemon_reload: true
-  loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
-
-- name: Start queue managers via systemd
-  become: true
-  ansible.builtin.systemd:
-    name: "mq_{{ ibm_mq_environment }}@{{ item.queue_manager }}.service"
-    state: started
-  loop: "{{ ibm_mq_environment_itsshelper_qmgr_props }}"
-
-# Queue Manager Creation
-
-- name: Configure MQ application queues via itsshelper
-  become: true
-  ansible.builtin.command:
-    cmd: >-
-      /opt/scripts/createMQApp.bash
-      {{ ibm_mq_environment }}
-      {{ item.name }}
-    creates: >-
-      /opt/properties/{{ ibm_mq_environment }}_{{ item.qmtype }}_{{ item.name }}.mqsc
-  environment:
-    PATH: >-
-      {{ ibm_mq_host_base_dir }}/{{
-        ibm_mq_environment
-      }}/mqm/bin:/usr/local/bin:/usr/bin:/bin
-  loop: "{{ ibm_mq_environment_itsshelper_mqapp_props }}"
 
 # User Configuration
 

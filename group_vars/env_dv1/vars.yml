@@ -43,12 +43,14 @@ ibm_mq_environment_fixpack_package: "9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz"
 # define the following keys:
 #
 # - `queue_manager` -- What is the host-specific name of the queue manager?
+#   It must match the queue manager name computed in the `itsshelper` prop
+#   file
 # - `desc` -- What is a human-readable description of the queue manager
 #   created by this prop file?
 # - `propfile` -- What is the basename of the prop file, less the `.prop`
 #   extension?  This is passed as the second argument to `translate.bash`.
 # - `qmtype` -- What is the queue manager typed?  For example, `Apps` or
-#   `Jumbo`
+#   `Jumbo`.  It must match the type recorded in the `itsshelper` prop file
 #
 # HOST OVERRIDE CONVENTIONS:
 #
@@ -73,123 +75,168 @@ ibm_mq_environment_itsshelper_qmgr_props:
 # in this environment?  The specifications comprise a list of objects
 # that define the following keys:
 #
-# - `name` -- What is the name of the prop file, without the `.prop`
-#   suffix?  This is passed as the second argument to `createMQApp.bash`.
-# - `qmtype` -- What is the queue manager type as recorded in the `itsshelper`
-#   properties file?  This is required to detect when the script has run by
-#   virtue of the creation of the file `/opt/properties/{{ ibm_mq_environment
-#   }}_{{ qmtype }}_{{ name }}.mqsc`
+# - `queue_manager` -- What is the host-specific name of the queue manager to
+#   which the application is being configured?  It must match the queue
+#   manager name computed in the `itsshelper` prop file
 # - `desc` -- What is a human-readable description of the queues
 #   configured by this prop file?
+# - `propfile` -- What is the basename of the prop file, less the `.prop`
+#   extension?  This is passed as the second argument to `translate.bash`.
+# - `qmtype` -- What is the queue manager type.  It must match the type
+#   recorded in the `itsshelper` prop file
+#
+# HOST OVERRIDE CONVENTIONS:
+#
+# - The `queue_manager` value is environment-specific AND host-specific
+# - The host specific value is computed at task execution time from an
+#   expression that uses `ibm_host_index`
+# - The variable SHOULD NOT and NEED NOT be overridden in the host variables
+#   IF expressed in terms of `ibm_host_index`
 ibm_mq_environment_itsshelper_mqapp_props:
-  - name: iibjumbo
-    qmtype: ""
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: IIB Jumbo queue manager base configuration
-  - name: jumboiib_ssl
-    qmtype: ""
-    desc: IIB Jumbo queue manager SSL configuration
-  - name: lnr_iib_app
+    propfile: iibjumbo
     qmtype: Jumbo
+  - queue_manager: "ADV1J{{ ibm_host_index }}"
+    desc: IIB Jumbo queue manager SSL configuration
+    propfile: jumboiib_ssl
+    qmtype: Jumbo
+  - queue_manager: "ADV1J{{ ibm_host_index }}"
     desc: LNR queues on Jumbo
-  - name: online_document_iib_app
-    qmtype: Apps
+    propfile: lnr_iib_app
+    qmtype: Jumbo
+  - queue_manager: "ADV1J{{ ibm_host_index }}"
     desc: Online document queues on Jumbo
-  - name: email_iib_app
+    propfile: online_document_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1J{{ ibm_host_index }}"
     desc: Email adapter queues on Jumbo
-  - name: pcs_jumbo_iib_app
+    propfile: email_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1J{{ ibm_host_index }}"
     desc: PCS queues on Jumbo
-  - name: pbs_jumbo_iib_app
+    propfile: pcs_jumbo_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1J{{ ibm_host_index }}"
     desc: PBS queues on Jumbo
-  - name: mytac_jumbo_iib_app
+    propfile: pbs_jumbo_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1J{{ ibm_host_index }}"
     desc: MyTAC queues on Jumbo
-  - name: squiz_jumbo_iib_app
+    propfile: mytac_jumbo_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1J{{ ibm_host_index }}"
     desc: Squiz CMS queues on Jumbo
-  - name: qualtrics_jumbo_iib_app
+    propfile: squiz_jumbo_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1J{{ ibm_host_index }}"
     desc: Qualtrics survey queues on Jumbo
-  - name: iib
-    qmtype: ""
+    propfile: qualtrics_jumbo_iib_app
+    qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: IIB default queue manager base configuration
-  - name: iib_audit
+    propfile: iib
     qmtype: ""
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: IIB audit queues
-  - name: iib_error
+    propfile: iib_audit
     qmtype: ""
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: IIB error queues
-  - name: nup_iib_app
-    qmtype: Apps
-    desc: NOVUS User Provisioning queues
-  - name: els_iib_app
-    qmtype: Apps
+    propfile: iib_error
+    qmtype: ""
+  # - queue_manager: "ADV1I{{ ibm_host_index }}"
+  #   desc: NOVUS User Provisioning queues
+  #   propfile: nup_iib_app
+  #   qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: ELS queues
-  - name: pos_iib_app
+    propfile: els_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: POS queues
-  - name: pcs_iib_app
+    propfile: pos_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: PCS queues
-  - name: oes_iib_app
+    propfile: pcs_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: OES queues
-  - name: tempus_iib_app
+    propfile: oes_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: Tempus queues
-  - name: edrms_iib_app
+    propfile: tempus_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: EDRMS queues
-  - name: online_iib_app
+    propfile: edrms_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: Online queues
-  - name: tbc_iib_app
+    propfile: online_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: TAC Bonus Calculation queues
-  - name: extracts_iib_app
+    propfile: tbc_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: Extracts queues
-  - name: tsp_iib_app
+    propfile: extracts_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: TSP queues
-  - name: msg_iib_app
+    propfile: tsp_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: Messaging queues
-  - name: csp_iib_app
+    propfile: msg_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: CSP queues
-  - name: lpa_iib_app
+    propfile: csp_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: LPA queues
-  - name: lms_iib_app
+    propfile: lpa_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: LMS queues
-  - name: servicenowintegration_iib_app
+    propfile: lms_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: ServiceNow integration queues
-  - name: oraclefin_iib_app
+    propfile: servicenowintegration_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: Oracle Financials integration queues
-  - name: mainframecloud_iib_app
+    propfile: oraclefin_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: Mainframe cloud queues
-  - name: mytac_iib_app
+    propfile: mainframecloud_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: MyTAC queues
-  - name: riskware_iib_app
+    propfile: mytac_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: Riskware queues
-  - name: efile_iib_app
+    propfile: riskware_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: eFile queues
-  - name: lms_v2_iib_app
+    propfile: efile_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: LMS v2 queues
-  - name: fms_iib_app
+    propfile: lms_v2_iib_app
     qmtype: Apps
+  - queue_manager: "ADV1I{{ ibm_host_index }}"
     desc: FMS queues
+    propfile: fms_iib_app
+    qmtype: Apps
 
 #
 # From `/roles/ibm_ace_environment_define/defaults/main.yml`
