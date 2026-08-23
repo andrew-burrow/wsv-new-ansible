@@ -116,3 +116,18 @@
     owner: root
     group: root
     mode: "0400"
+
+- name: Copy syntegrity-qmcontrol package
+  become: true
+  ansible.builtin.copy:
+    src: qmcontrol-3-11.noarch.rpm
+    dest: "/opt/ibm-software"
+    owner: root
+    group: "{{ ibm_mq_host_group }}"
+    mode: "0644"
+
+- name: Install syntegrity-qmcontrol package
+  become: true
+  ansible.builtin.command:
+    cmd: "rpm -ivh /opt/ibm-software/qmcontrol-3-11.noarch.rpm"
+    creates: "/opt/syntegrity/bin/mqm"

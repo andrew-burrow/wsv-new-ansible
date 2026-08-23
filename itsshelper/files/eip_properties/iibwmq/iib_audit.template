@@ -10,8 +10,6 @@ define ql(VWA.AUDIT.QUEUE) -
 	defpsist(no) -
     replace
 
-delete sub(VWA.AUDIT.SUB)
-
 define sub(VWA.AUDIT.SUB) -
 	topicstr('$SYS/Broker/IB__QMGRNAME__/Monitoring/#') -
 	dest(VWA.AUDIT.QUEUE) -

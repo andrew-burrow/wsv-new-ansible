@@ -15,8 +15,8 @@
       ansible.builtin.command:
         cmd: >-
           runmqsc
-          -f /opt/properties/{{ ibm_mq_environment }}_{{ result.item.qmtype }}.mqsc
           {{ result.item.queue_manager }}
+          -f /opt/properties/{{ ibm_mq_environment }}_{{ result.item.qmtype }}.mqsc
       environment:
         PATH: >-
           {{ ibm_mq_host_base_dir }}/{{

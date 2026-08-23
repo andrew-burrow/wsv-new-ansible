@@ -15,8 +15,8 @@
       ansible.builtin.command:
         cmd: >-
           runmqsc
-          -f /opt/properties/{{ ibm_mq_environment }}_{{ item.qmtype }}_{{ item.propfile }}.mqsc
           {{ result.item.queue_manager }}
+          -f /opt/properties/{{ ibm_mq_environment }}_{{ result.item.qmtype }}_{{ result.item.propfile }}.mqsc
       environment:
         PATH: >-
           {{ ibm_mq_host_base_dir }}/{{
@@ -28,7 +28,7 @@
       become: true
       ansible.builtin.file:
         path: >-
-          /opt/properties/{{ ibm_mq_environment }}_{{ item.qmtype }}_{{ item.propfile }}.mqsc
+          /opt/properties/{{ ibm_mq_environment }}_{{ result.item.qmtype }}_{{ result.item.propfile }}.mqsc
         state: absent
     - name: Stop for MQSC run failure
       ansible.builtin.fail:

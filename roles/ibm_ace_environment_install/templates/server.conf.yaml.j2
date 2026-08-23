@@ -340,28 +340,16 @@ ResourceManagers:
     #asyncHandleTimeoutSeconds: -1  # Sets the expiry time (in seconds) when the reply identifiers expire for asynchronous handles used for HTTP, SOAP, SAP and Callable flow nodes.
 
   GlobalCache:
-    replicateReadsFrom: >-
-      {{
-        node.integration_servers
-        | rejectattr('name', 'equalto', server.name)
-        | map(attribute='name')
-        | join(',')
-      }} # A comma-separated, ordered list of server names, set in the ReplicationServers block, which should be read from in the order specified when replicating a "read" operation.
-    replicateWritesTo: >-
-      {{
-        node.integration_servers
-        | rejectattr('name', 'equalto', server.name)
-        | map(attribute='name')
-        | join(',')
-      }} # A comma-separated, unordered list of server names, set in the ReplicationServers block, which should be written to when replicating a "write" operation.
+    replicateReadsFrom: {{ node.integration_servers | rejectattr('name', 'equalto', server.name) | map(attribute='name') | join(',') }}
+    replicateWritesTo: {{ node.integration_servers | rejectattr('name', 'equalto', server.name) | map(attribute='name') | join(',') }} 
 
     ReplicationServers:
       ## Each block here describes a server that could be connected to during replicated read and write operations. Configure one entry here
       ## for each server you want to connect to. The names given to each server must be unique within this server.
-{% for peer in node.integration_servers | rejectattr('name', 'equalto', server.name) %}
-      {{ peer.name }}:
+      {% for peer in node.integration_servers | rejectattr('name', 'equalto', server.name) %}
+{{ peer.name }}:
         Hostname: 'localhost'                       # Set the hostname of the remote server
-        Port: {{ peer.cache_port }}                                # Set the port number that the replication listener is listening on
+        Port: {{ peer.cache_port }}                 # Set the port number that the replication listener is listening on
         EnableTLS: false                            # Set this to false to disable TLS. You must configure the TLS parameters below to complete TLS setup.
         #TruststoreFile: '/path/to/truststore.p12'  # Set the path to a PEM bundle or PKCS#12 bundle containing the certificates to use to
                                                     # verify the identity of the TLS server.
@@ -375,7 +363,7 @@ ResourceManagers:
         #ClientPrivateKeyPassword 'P4s5w0rd'        # Set the password or alias to a keystore credential containing the password for the PKCS#12 bundle or the PEM private key password.
         #VerifyCertificate: true                    # Set this to false to disable validation of the server's TLS certificate entirely.
         #VerifyHostname: true                       # Set this to false to disable hostname verification of the TLS server against its presented certificate.
-{% endfor %}
+      {% endfor %}
 
     ReplicationListener:
       ## The replication listener allows other integration servers to communicate with the embedded cache inside this integration server.

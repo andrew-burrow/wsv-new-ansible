@@ -1,5 +1,5 @@
 #
-# :Precis: Set role parameters for the EIP DV1 environment
+# :Precis: Set role parameters for the EIP CI1 environment
 # :Authors: Andrew Burrow
 # :Contact: andrew.burrow@syntegrity.com.au
 #
@@ -13,7 +13,7 @@
 #
 # What is the short name for this environment?  This is used in directory
 # paths and queue manager names.  Examples: sx1, ts1, ts2, prod
-ibm_mq_environment: dv1
+ibm_mq_environment: ci1
 
 # MQ version and package
 #
@@ -60,11 +60,11 @@ ibm_mq_environment_fixpack_package: "9.3.0-IBM-MQ-LinuxX64-FP0016.tar.gz"
 # - The variable SHOULD NOT and NEED NOT be overridden in the host variables
 #   IF expressed in terms of `ibm_host_index`
 ibm_mq_environment_itsshelper_qmgr_props:
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: Default IIB queue manager
     propfile: apps
     qmtype: Apps
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
+  - queue_manager: "ACI1J{{ ibm_host_index }}"
     desc: Jumbo IIB queue manager
     propfile: jumboiib
     qmtype: Jumbo
@@ -93,159 +93,147 @@ ibm_mq_environment_itsshelper_qmgr_props:
 # - The variable SHOULD NOT and NEED NOT be overridden in the host variables
 #   IF expressed in terms of `ibm_host_index`
 ibm_mq_environment_itsshelper_mqapp_props:
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: IIB Jumbo queue manager base configuration
     propfile: iibjumbo
     qmtype: Jumbo
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
+  - queue_manager: "ACI1J{{ ibm_host_index }}"
     desc: IIB Jumbo queue manager SSL configuration
     propfile: jumboiib_ssl
     qmtype: Jumbo
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
+  - queue_manager: "ACI1J{{ ibm_host_index }}"
     desc: LNR queues on Jumbo
     propfile: lnr_iib_app
     qmtype: Jumbo
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
+  - queue_manager: "ACI1J{{ ibm_host_index }}"
     desc: Online document queues on Jumbo
     propfile: online_document_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
+  - queue_manager: "ACI1J{{ ibm_host_index }}"
     desc: Email adapter queues on Jumbo
     propfile: email_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
+  - queue_manager: "ACI1J{{ ibm_host_index }}"
     desc: PCS queues on Jumbo
     propfile: pcs_jumbo_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
+  - queue_manager: "ACI1J{{ ibm_host_index }}"
     desc: PBS queues on Jumbo
     propfile: pbs_jumbo_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
+  - queue_manager: "ACI1J{{ ibm_host_index }}"
     desc: MyTAC queues on Jumbo
     propfile: mytac_jumbo_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
+  - queue_manager: "ACI1J{{ ibm_host_index }}"
     desc: Squiz CMS queues on Jumbo
     propfile: squiz_jumbo_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
+  - queue_manager: "ACI1J{{ ibm_host_index }}"
     desc: Qualtrics survey queues on Jumbo
     propfile: qualtrics_jumbo_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: IIB default queue manager base configuration
     propfile: iib
-    qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+    qmtype: ""
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: IIB audit queues
     propfile: iib_audit
-    qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+    qmtype: ""
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: IIB error queues
     propfile: iib_error
-    qmtype: Apps
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
-    desc: IIB default queue manager base configuration
-    propfile: iib
-    qmtype: Jumbo
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
-    desc: IIB audit queues
-    propfile: iib_audit
-    qmtype: Jumbo
-  - queue_manager: "ADV1J{{ ibm_host_index }}"
-    desc: IIB error queues
-    propfile: iib_error
-    qmtype: Jumbo
-  # - queue_manager: "ADV1I{{ ibm_host_index }}"
+    qmtype: ""
+  # - queue_manager: "ACI1I{{ ibm_host_index }}"
   #   desc: NOVUS User Provisioning queues
   #   propfile: nup_iib_app
   #   qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: ELS queues
     propfile: els_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: POS queues
     propfile: pos_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: PCS queues
     propfile: pcs_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: OES queues
     propfile: oes_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: Tempus queues
     propfile: tempus_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: EDRMS queues
     propfile: edrms_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: Online queues
     propfile: online_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: TAC Bonus Calculation queues
     propfile: tbc_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: Extracts queues
     propfile: extracts_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: TSP queues
     propfile: tsp_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: Messaging queues
     propfile: msg_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: CSP queues
     propfile: csp_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: LPA queues
     propfile: lpa_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: LMS queues
     propfile: lms_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: ServiceNow integration queues
     propfile: servicenowintegration_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: Oracle Financials integration queues
     propfile: oraclefin_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: Mainframe cloud queues
     propfile: mainframecloud_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: MyTAC queues
     propfile: mytac_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: Riskware queues
     propfile: riskware_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: eFile queues
     propfile: efile_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: LMS v2 queues
     propfile: lms_v2_iib_app
     qmtype: Apps
-  - queue_manager: "ADV1I{{ ibm_host_index }}"
+  - queue_manager: "ACI1I{{ ibm_host_index }}"
     desc: FMS queues
     propfile: fms_iib_app
     qmtype: Apps
@@ -257,7 +245,7 @@ ibm_mq_environment_itsshelper_mqapp_props:
 #
 # What is the short name for this environment?  This is used in directory
 # paths and integration node names.  Examples: sx1, ts1, ts2, prod
-ibm_ace_environment: dv1
+ibm_ace_environment: ci1
 
 # ACE version and package
 #
@@ -333,87 +321,111 @@ ibm_ace_environment_root_dir: "/var/ace/{{ ibm_ace_environment }}/FILENODES_ROOT
 #   the value of `name` on the credential item, and note that this indicates
 #   the credential secret is not node-specific
 ibm_ace_environment_integration_nodes:
-  - name: "ACEDV1J{{ ibm_host_index }}"
-    queue_manager: "ADV1J{{ ibm_host_index }}"
+  - name: "ACECI1J{{ ibm_host_index }}"
+    queue_manager: "ACI1J{{ ibm_host_index }}"
     webadmin_port: 4543
     webadmin_secret: "{{ vault_ibm_ace_webadmin_secret }}"
     credentials:
     - name: TEMPUS
       type: odbc
-      username: DEV1S_TPC2
+      username: CIN1S_TPC2
       secret: "{{ vault_ibm_ace_credentials_TEMPUS_secret }}"
-    - name: EIP
-      type: odbc
-      username: DEV1S_IIBCFG
-      secret: "{{ vault_ibm_ace_credentials_EIP_secret }}"
-    - name: ACCTIONR
-      type: odbc
-      username: esb_readDB
-      secret: "{{ vault_ibm_ace_credentials_ACCTIONR_secret }}"
-    - name: ACCTIONR_EVENT
-      type: odbc
-      username: eip_wrteDB
-      secret: "{{ vault_ibm_ace_credentials_ACCTIONR_EVENT_secret }}"
-    - name: PCS
-      type: odbc
-      username: pcs_user
-      secret: "{{ vault_ibm_ace_credentials_PCS_secret }}"
     - name: PCS_CFG
       type: odbc
-      username: pcs_cfg_user
+      username: PCS_CFG_USER
       secret: "{{ vault_ibm_ace_credentials_PCS_CFG_secret }}"
+    - name: PCS
+      type: odbc
+      username: PCS_USER
+      secret: "{{ vault_ibm_ace_credentials_PCS_secret }}"
+    - name: EIPREPO
+      type: odbc
+      username: CI1S_EIP
+      secret: "{{ vault_ibm_ace_credentials_EIP_REPO_secret }}"
+    - name: EIP
+      type: odbc
+      username: CIN1S_IIBCFG
+      secret: "{{ vault_ibm_ace_credentials_EIP_secret }}"
+    - name: AVANTI
+      type: odbc
+      username: UAT2T_FINAPP
+      secret: "{{ vault_ibm_ace_credentials_AVANTI_secret }}"
+    - name: AURION
+      type: odbc
+      username: IIB_TAC_AURION
+      secret: "{{ vault_ibm_ace_credentials_AURION_secret }}"      
+    - name: ACCTIONR_EVENT
+      type: odbc
+      username: EIP_WRTEDB
+      secret: "{{ vault_ibm_ace_credentials_ACCTIONR_EVENT_secret }}"
+    - name: ACCTIONR
+      type: odbc
+      username: ESB_READ
+      secret: "{{ vault_ibm_ace_credentials_ACCTIONR_secret }}"
     integration_servers:
-    - name: IS-dv1-common
+    - name: IS-ci1-common
       port: 7601
       jre_version: 8
       cache_port: 7901
-    - name: IS-dv1-tac
+    - name: IS-ci1-tac
       port: 7602
       jre_version: 8
       cache_port: 7902
-    - name: IS-dv1-vwa
+    - name: IS-ci1-vwa
       port: 7603
       jre_version: 8
       cache_port: 7903
-  - name: "ACEDV1I{{ ibm_host_index }}"
-    queue_manager: "ADV1I{{ ibm_host_index }}"
+  - name: "ACECI1I{{ ibm_host_index }}"
+    queue_manager: "ACI1I{{ ibm_host_index }}"
     webadmin_port: 4443
     webadmin_secret: "{{ vault_ibm_ace_webadmin_secret }}"
     credentials:
     - name: TEMPUS
       type: odbc
-      username: DEV1S_TPC2
+      username: CIN1S_TPC2
       secret: "{{ vault_ibm_ace_credentials_TEMPUS_secret }}"
-    - name: EIP
-      type: odbc
-      username: DEV1S_IIBCFG
-      secret: "{{ vault_ibm_ace_credentials_EIP_secret }}"
-    - name: ACCTIONR
-      type: odbc
-      username: esb_readDB
-      secret: "{{ vault_ibm_ace_credentials_ACCTIONR_secret }}"
-    - name: ACCTIONR_EVENT
-      type: odbc
-      username: eip_wrteDB
-      secret: "{{ vault_ibm_ace_credentials_ACCTIONR_EVENT_secret }}"
-    - name: PCS
-      type: odbc
-      username: pcs_user
-      secret: "{{ vault_ibm_ace_credentials_PCS_secret }}"
     - name: PCS_CFG
       type: odbc
-      username: pcs_cfg_user
+      username: PCS_CFG_USER
       secret: "{{ vault_ibm_ace_credentials_PCS_CFG_secret }}"
+    - name: PCS
+      type: odbc
+      username: PCS_USER
+      secret: "{{ vault_ibm_ace_credentials_PCS_secret }}"
+    - name: EIPREPO
+      type: odbc
+      username: CI1S_EIP
+      secret: "{{ vault_ibm_ace_credentials_EIP_REPO_secret }}"
+    - name: EIP
+      type: odbc
+      username: CIN1S_IIBCFG
+      secret: "{{ vault_ibm_ace_credentials_EIP_secret }}"
+    - name: AVANTI
+      type: odbc
+      username: UAT2T_FINAPP
+      secret: "{{ vault_ibm_ace_credentials_AVANTI_secret }}"
+    - name: AURION
+      type: odbc
+      username: IIB_TAC_AURION
+      secret: "{{ vault_ibm_ace_credentials_AURION_secret }}"      
+    - name: ACCTIONR_EVENT
+      type: odbc
+      username: EIP_WRTEDB
+      secret: "{{ vault_ibm_ace_credentials_ACCTIONR_EVENT_secret }}"
+    - name: ACCTIONR
+      type: odbc
+      username: ESB_READ
+      secret: "{{ vault_ibm_ace_credentials_ACCTIONR_secret }}"
     integration_servers:
-    - name: IS-dv1-common
+    - name: IS-ci1-common
       port: 7501
       jre_version: 8
       cache_port: 7801
-    - name: IS-dv1-tac
+    - name: IS-ci1-tac
       port: 7502
       jre_version: 8
       cache_port: 7802
-    - name: IS-dv1-vwa
+    - name: IS-ci1-vwa
       port: 7503
       jre_version: 8
       cache_port: 7803
@@ -452,9 +464,9 @@ ibm_ace_environment_webadmin_role: admin
 #
 # - This value is environment-specific AND host-specific
 # - Mark the value as host specific in the environment variables by setting
-#   the value to "HOST-SPECIFIC" , e.g. in `group_vars/env_dv1/vars.yml`
+#   the value to "HOST-SPECIFIC" , e.g. in `group_vars/env_ci1/vars.yml`
 # - Set the host-specific value in the host variables of the virtual host of
-#   the environment, e.g, `host_vars/sduace0101-dv1/vars.yml`
+#   the environment, e.g, `host_vars/sduace0101-ci1/vars.yml`
 ibm_ace_environment_webadmin_ip: HOST-SPECIFIC
 ibm_ace_environment_is_listener_address: HOST-SPECIFIC
 
@@ -500,7 +512,7 @@ ibm_ace_environment_cert_secret: "{{ vault_ibm_ace_cert_secret }}"
 # environment:
 #
 # - `ibm_host_name` -- The hostname of the target host
-# - `ibm_ace_environment` -- The environment identifier, e.g. `dv1`
+# - `ibm_ace_environment` -- The environment identifier, e.g. `ci1`
 # - `ibm_ace_environment_root_dir` -- The root directory name configured
 #   for ACE file nodes, e.g. `FILENODES_ROOT_DIR` which typically already
 #   includes `ibm_ace_environment`

@@ -238,6 +238,25 @@
       ibm_ace_environment_integration_nodes
       | subelements('integration_servers', skip_missing=True)
     }}
+    
+- name: Set listener address of integration servers
+  become: true
+  become_user: "{{ ibm_ace_host_user }}"
+  ansible.builtin.shell:
+    cmd: >-
+      source {{
+        ibm_ace_host_base_dir
+      }}/{{ ibm_ace_environment }}/ace/server/bin/mqsiprofile ;
+      mqsichangeproperties {{ item.0.name }}
+      -e {{ item.1.name }}
+      -o HTTPConnector
+      -n ListenerAddress
+      -v "{{ inventory_hostname }}.services.workcover.vic.gov.au"
+  loop: >-
+    {{
+      ibm_ace_environment_integration_nodes
+      | subelements('integration_servers', skip_missing=True)
+    }}    
 
 - name: Set port of integration servers
   become: true
@@ -275,8 +294,9 @@
       ibm_ace_environment_integration_nodes
       | subelements('integration_servers', skip_missing=True)
     }}
-
+    
 - name: Create file-system directories for environment
+  become: true
   ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
@@ -286,10 +306,13 @@
   loop: "{{ ibm_ace_environment_directories }}"
 
 - name: Create file-system symbolic links for environment
+  become: true
   ansible.builtin.file:
     src: "{{ item.path }}"
     path: "{{ item.link }}"
     state: link
+    owner: "{{ ibm_ace_host_user }}"
+    group: "{{ ibm_ace_host_group }}"
   loop: >-
     {{
       ibm_ace_environment_directories
@@ -306,7 +329,7 @@
     group: "{{ ibm_ace_host_group }}"
     mode: "u=rw,go=r"
   loop: "{{ ibm_ace_environment_jvm_configs }}"
-
+  
 - name: Set JVM system properties of integration servers
   become: true
   become_user: "{{ ibm_ace_host_user }}"
@@ -324,26 +347,20 @@
     {{
       ibm_ace_environment_integration_nodes
       | subelements('integration_servers', skip_missing=True)
-    }}
-
+    }} 
+  
+# copy the Install ACE server configuration files start 
 - name: Install ACE server configuration files
   become: true
   become_user: "{{ ibm_ace_host_user }}"
   ansible.builtin.template:
     src: server.conf.yaml.j2
-    dest: >-
-      {{ ibm_ace_environment_work_path }}/components/{{
-        node.name
-      }}/servers/{{ server.name }}/server.conf.yaml
+    dest: "{{ ibm_ace_environment_work_path }}/components/{{ node.name }}/servers/{{ server.name }}/server.conf.yaml"
   vars:
     node: "{{ item.0 }}"
     server: "{{ item.1 }}"
-  loop: >-
-    {{
-      ibm_ace_environment_integration_nodes
-      | subelements('integration_servers', skip_missing=True)
-    }}
-
+  loop: "{{ ibm_ace_environment_integration_nodes | subelements('integration_servers', skip_missing=True) }}"       
+     
 - name: Chown ACE software id tag directory to set the operation mode
   become: true
   ansible.builtin.file:
@@ -396,8 +413,8 @@
     group: "{{ ibm_ace_host_group }}"
     mode: "u=rw,go=r"
   loop: "{{ ibm_ace_environment_odbc_configs }}"
-
-# XXX This should be a handler
+  
+  # Restart the Integration Nodes
 - name: Restart integration nodes
   become: true
   become_user: "{{ ibm_ace_host_user }}"

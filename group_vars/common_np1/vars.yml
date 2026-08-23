@@ -156,10 +156,10 @@ ibm_ace_host_users: []
 #   sharing the same server.
 #
 ibm_ace_host_mounts:
-  - mount_point: /mnt/tpc
-    type: nfs
-    server: "SPSTN20202:/vol/EDI_STG_vol01"
-    options: "tcp,nolock,rsize=32768,wsize=32768,intr,noatime,actimeo=3"
+  # - mount_point: /mnt/tpc
+  #   type: nfs
+  #   server: "SPSTN20202:/vol/EDI_STG_vol01"
+  #   options: "tcp,nolock,rsize=32768,wsize=32768,intr,noatime,actimeo=3"
   - mount_point: /mnt/tac
     type: cifs
     server: "//SDWFTP0101/Interface/tac/iiblanding"

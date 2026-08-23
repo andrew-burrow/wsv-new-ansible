@@ -12,6 +12,4 @@
 
 ---
 
-ibm_ace_environment_webadmin_ip: TBA
-ibm_ace_environment_cert_p12: TBA
-ibm_ace_environment_cert_secret: TBA
+ibm_ace_environment_webadmin_ip: 10.51.35.71
